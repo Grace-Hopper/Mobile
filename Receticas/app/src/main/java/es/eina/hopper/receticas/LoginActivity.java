@@ -3,6 +3,8 @@ package es.eina.hopper.receticas;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -90,10 +92,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+        Button RegisterButton = (Button) findViewById(R.id.register_button);
+        RegisterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Formulario de registrarse
+                registrarse();
+            }
+        });
+
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
-
+    private void registrarse(){
+        Intent i = new Intent(this, Registrarse.class);
+        startActivity(i);
+    }
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -189,7 +203,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(email, password, this);
             mAuthTask.execute((Void) null);
         }
     }
@@ -302,10 +316,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private Activity padre;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String email, String password, Activity p) {
             mEmail = email;
             mPassword = password;
+            padre = p;
         }
 
         @Override
@@ -326,9 +342,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     return pieces[1].equals(mPassword);
                 }
             }
+            return false;
 
-            // TODO: register the new account here.
-            return true;
         }
 
         @Override
@@ -337,7 +352,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finish();
+                //Pasar a la siguiente actividad;
+                Intent i = new Intent(padre, Home.class);
+                startActivity(i);
+                //finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
