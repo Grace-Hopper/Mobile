@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -23,10 +24,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Home"
-            android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".Registrarse"
             android:label="@string/title_activity_registrarse"
             android:parentActivityName=".LoginActivity"
@@ -35,6 +32,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.eina.hopper.receticas.LoginActivity" />
         </activity>
+        <activity
+            android:name=".Home"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
