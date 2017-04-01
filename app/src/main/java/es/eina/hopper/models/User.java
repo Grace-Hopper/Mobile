@@ -6,15 +6,6 @@ package es.eina.hopper.models;
 
 import java.io.Serializable;
 
-/**
- * =====================================================================================
- * Filename: User.java
- * Version: 1.0
- * Created: 3/24/17
- * Author: JORGE CHATO (651348)
- * =====================================================================================
- */
-
 public class User{
 
     private long id;
@@ -22,6 +13,11 @@ public class User{
     private String name;
 
     private String password;
+
+    public User(String n, String pass){
+        this.name = n;
+        this.password = pass;
+    }
 
     public long getId() {
         return id;

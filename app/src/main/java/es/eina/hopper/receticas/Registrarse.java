@@ -20,13 +20,21 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
+import es.eina.hopper.models.User;
+import es.eina.hopper.util.UtilService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class Registrarse extends AppCompatActivity {
-    private UserRegisTask mAuthTask = null;
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private EditText mPasswordRepView;
     private View mProgressView;
     private View mLoginFormView;
+    private Activity yo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +56,7 @@ public class Registrarse extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "ACEPTAR EL FORMULARIO", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
                 attemptRegis();
             }
         });
@@ -62,9 +69,6 @@ public class Registrarse extends AppCompatActivity {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptRegis() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -118,70 +122,54 @@ public class Registrarse extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserRegisTask(email, password, this);
-            mAuthTask.execute((Void) null);
-            Log.d("Fallo","FALLITO");
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://receticas.herokuapp.com/api/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            UtilService service = retrofit.create(UtilService.class);
+            User u = new User(email,password);
+            Call<User> call = service.sigin(u);
+            call.enqueue(new Callback<User>() {
+
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    showProgress(false);
+                    int statusCode = response.code();
+                    User user = response.body();
+                    System.out.println(statusCode);
+                    if(statusCode == 200){
+                        //aceptado el login
+                        Intent i = new Intent(yo, Home.class);
+                        startActivity(i);
+                    }
+                    else if(statusCode == 422){
+                        //error de validacion
+                        mPasswordView.setError("Las contras no coinciden loco");
+                        mPasswordView.requestFocus();
+                    }
+                    else if(statusCode == 500){
+                        //error de validacion
+                        mEmailView.setError("Error en el servidor");
+                        mEmailView.requestFocus();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+
+                }
+            });
         }
     }
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return true; //email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
-    }
-
-    public class UserRegisTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-        private Activity padre;
-
-        UserRegisTask(String email, String password, Activity p) {
-            mEmail = email;
-            mPassword = password;
-            padre = p;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-
-            return true;
-
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                //Pasar a la siguiente actividad;
-                Intent i = new Intent(padre, LoginActivity.class);
-                startActivity(i);
-                //finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
     }
 
     /**
