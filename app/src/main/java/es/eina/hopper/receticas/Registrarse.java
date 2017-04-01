@@ -52,6 +52,8 @@ public class Registrarse extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.regis_form);
 
+        yo = this;
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +142,7 @@ public class Registrarse extends AppCompatActivity {
                     System.out.println(statusCode);
                     if(statusCode == 200){
                         //aceptado el login
-                        Intent i = new Intent(yo, Home.class);
+                        Intent i = new Intent(yo, RecetarioLocal.class);
                         startActivity(i);
                     }
                     else if(statusCode == 422){
@@ -157,7 +159,9 @@ public class Registrarse extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
-
+                    showProgress(false);
+                    mEmailView.setError("Error de conexion");
+                    mEmailView.requestFocus();
                 }
             });
         }

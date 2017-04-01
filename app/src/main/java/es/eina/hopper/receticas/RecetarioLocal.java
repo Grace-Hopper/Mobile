@@ -1,5 +1,6 @@
 package es.eina.hopper.receticas;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,8 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
-public class Home extends AppCompatActivity
+public class RecetarioLocal
+        extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
@@ -59,39 +62,43 @@ public class Home extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public void IrARecetarioLocal(){
+        Intent i = new Intent(this, RecetarioLocal.class);
+        startActivity(i);
     }
 
+    public void IrARecetarioGlobal(){
+        Intent i = new Intent(this, RecetarioGlobal.class);
+        startActivity(i);
+    }
+
+    public void IrARecetarioConfiguracion(){
+        Intent i = new Intent(this, Configuracion.class);
+        startActivity(i);
+    }
+
+    /*public void IrARecetarioAcercaDe(){
+        Intent i = new Intent(this, AcercaDe.class);
+        startActivity(i);
+    }*/
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.mis_recetas) {
+            Intent i = new Intent(this, RecetarioLocal.class);
+            startActivity(i);
+        } else if (id == R.id.recetas) {
+            Intent i = new Intent(this, RecetarioGlobal.class);
+            startActivity(i);
+        } else if (id == R.id.configuracion) {
+            Intent i = new Intent(this, Configuracion.class);
+            startActivity(i);
+        } else if (id == R.id.acerca_de) {
+            Intent i = new Intent(this, AcercaDe.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

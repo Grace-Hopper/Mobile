@@ -34,6 +34,22 @@
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".RecetarioLocal"
+            android:label="@string/title_activity_recetario_local"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".RecetarioGlobal"
+            android:label="@string/title_activity_recetario_global"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Configuracion"
+            android:label="@string/title_activity_configuracion"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AcercaDe"
+            android:label="@string/title_activity_acerca_de"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

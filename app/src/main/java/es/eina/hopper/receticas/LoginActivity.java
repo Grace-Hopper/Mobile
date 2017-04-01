@@ -78,6 +78,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
+        yo=this;
+
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -196,6 +198,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
+
         }
 
         if (cancel) {
@@ -224,7 +227,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     System.out.println(statusCode);
                     if(statusCode == 200){
                         //aceptado el login
-                        Intent i = new Intent(yo, Home.class);
+                        Intent i = new Intent(yo, RecetarioLocal.class);
                         startActivity(i);
                     }
                     else if(statusCode == 422){
@@ -241,7 +244,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
-
+                    showProgress(false);
+                    mEmailView.setError("Error de conexion");
+                    mEmailView.requestFocus();
                 }
             });
         }
