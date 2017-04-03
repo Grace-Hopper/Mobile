@@ -13,11 +13,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import es.eina.hopper.adapter.RecipesAdapter;
+import es.eina.hopper.models.Recipe;
 import es.eina.hopper.models.User;
+import es.eina.hopper.util.UtilService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static es.eina.hopper.receticas.R.string.user;
 
@@ -25,6 +34,10 @@ public class RecetarioGlobal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     User user;
+
+    private ListView mList;
+
+    public ArrayList<Recipe> lista_recetas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +68,51 @@ public class RecetarioGlobal extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mList = (ListView)findViewById(R.id.list);
+
+        fillData();
     }
+
+    /**
+     * Rellena el adaptador con la información necesaria
+     */
+    private void fillData() {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://receticas.herokuapp.com/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UtilService service = retrofit.create(UtilService.class);
+        Call<List<Recipe>> call = service.getAllRecipes(user.getName());
+        call.enqueue(new Callback<List<Recipe>>() {
+
+            @Override
+            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                int statusCode = response.code();
+                System.out.println(statusCode);
+                if (statusCode == 200) {
+                    lista_recetas = new ArrayList(response.body());
+
+                    RecipesAdapter adapter = new RecipesAdapter(RecetarioGlobal.this, lista_recetas);
+
+
+                    mList.setAdapter(adapter);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                System.out.println("Fallo to bestia");
+            }
+        });
+
+
+
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -110,4 +167,5 @@ public class RecetarioGlobal extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
