@@ -41,9 +41,9 @@ public class UtilRecipes {
         resul.setPicture(aux.getBlob(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_IMAGE)));
         resul.setTotal_time(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_TOTAL_TIME)));
 
-        Cursor aux2 = mDb.fetchUser(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_ROWID));
+        Cursor aux2 = mDb.fetchUser(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER));
 
-        resul.setUser(new User(aux2.getString(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER)),""));
+        resul.setUser(new User(aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.USERS_KEY_NAME)),""));
 
         return resul;
     }
@@ -68,7 +68,9 @@ public class UtilRecipes {
             resul.setPerson(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_PERSON)));
             resul.setPicture(aux.getBlob(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_IMAGE)));
             resul.setTotal_time(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_TOTAL_TIME)));
-            resul.setUser(new User(aux.getString(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER)),""));
+            Cursor aux2 = mDb.fetchUser(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER));
+
+            resul.setUser(new User(aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.USERS_KEY_NAME)),""));
             listaFinal.add(resul);
             aux.moveToNext();
         }

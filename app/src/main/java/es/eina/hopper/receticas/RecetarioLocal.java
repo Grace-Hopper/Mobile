@@ -1,5 +1,6 @@
 package es.eina.hopper.receticas;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +15,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +41,7 @@ public class RecetarioLocal
     User user;
     private ListView mList;
     public ArrayList<Recipe> lista_recetas;
+    Activity yo;
 
 
     @Override
@@ -50,7 +54,7 @@ public class RecetarioLocal
         if(b != null)
             user = (User)b.getSerializable("user");
 
-
+        yo=this;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -63,6 +67,7 @@ public class RecetarioLocal
             }
         });*/
 
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -72,8 +77,25 @@ public class RecetarioLocal
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user)).setText(user.getName());
         mList = (ListView)findViewById(R.id.list);
 
+        mList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                Recipe a = (Recipe)parent.getItemAtPosition(position);
+                Intent i = new Intent(yo, Receta.class);
+                Bundle b = new Bundle();
+                b.putSerializable("user", user); //Your id
+                b.putLong("rowId",a.getId());
+                b.putBoolean("local",true);
+                i.putExtras(b); //Put your id to your next Intent
+                startActivity(i);
+                //or do your stuff
+            }
+
+        });
         fillData();
 
     }
@@ -89,7 +111,6 @@ public class RecetarioLocal
 
 
         mList.setAdapter(adapter);
-
     }
 
     @Override

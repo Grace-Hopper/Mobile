@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import es.eina.hopper.models.User;
 
@@ -39,6 +40,7 @@ public class AcercaDe extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user)).setText(user.getName());
     }
 
     @Override

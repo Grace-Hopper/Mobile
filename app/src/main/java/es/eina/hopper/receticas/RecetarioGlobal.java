@@ -1,5 +1,6 @@
 package es.eina.hopper.receticas;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,7 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +37,7 @@ public class RecetarioGlobal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     User user;
-
+    Activity yo;
     private ListView mList;
 
     public ArrayList<Recipe> lista_recetas;
@@ -42,6 +45,7 @@ public class RecetarioGlobal extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        yo = this;
         setContentView(R.layout.activity_recetario_global);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -50,6 +54,8 @@ public class RecetarioGlobal extends AppCompatActivity
         user = new User("","");
         if(b != null)
             user = (User)b.getSerializable("user");
+
+        System.out.println(user.getName());
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -68,8 +74,25 @@ public class RecetarioGlobal extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user)).setText(user.getName());
         mList = (ListView)findViewById(R.id.list);
+
+        mList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                Recipe a = (Recipe)parent.getItemAtPosition(position);
+                Intent i = new Intent(yo, Receta.class);
+                Bundle b = new Bundle();
+                b.putSerializable("user", user); //Your id
+                b.putLong("rowId",a.getId());
+                b.putBoolean("local",false);
+                i.putExtras(b); //Put your id to your next Intent
+                startActivity(i);
+                //or do your stuff
+            }
+
+        });
 
         fillData();
     }

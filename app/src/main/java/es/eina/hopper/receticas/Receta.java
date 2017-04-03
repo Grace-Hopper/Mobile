@@ -1,5 +1,6 @@
 package es.eina.hopper.receticas;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,7 +30,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Receta extends AppCompatActivity {
-
+    User user;
+    Activity yo;
+    boolean local;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //"rowId" "local" 1 true 0 false
@@ -37,11 +42,10 @@ public class Receta extends AppCompatActivity {
         setContentView(R.layout.activity_receta);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        yo = this;
         Bundle b = getIntent().getExtras();
         long rowId = 1; // or other values
-        boolean local = false;
-        User user = new User("","");
+        user = new User("","");
         if(b != null)
             rowId = b.getLong("rowId");
             local = b.getBoolean("local");
@@ -56,7 +60,7 @@ public class Receta extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
-        
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final ImageView imagen = (ImageView) findViewById(R.id.imagen);
@@ -111,5 +115,25 @@ public class Receta extends AppCompatActivity {
                     "Nº de comensales: " + resp.getPerson() + "\n" +
                     "Creado: " + resp.getUser().getName() + "\n");
         }
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        System.out.println("Esto se llama puto amo");
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("user",user);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // do something useful
+                System.out.println("ojo");
+                super.getIntent().getExtras().putSerializable("user",user);
+                finish();
+                return(true);
+        }
+
+        return(super.onOptionsItemSelected(item));
     }
 }

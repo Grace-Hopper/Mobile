@@ -255,10 +255,11 @@ public class RecipesDbAdapter {
 
         Cursor mCursor =
 
-                mDb.query(true, DATABASE_TABLE_USERS, new String[] {USERS_KEY_NAME,
-                                }, USERS_KEY_ROWID + "=" + rowId, null,
+                mDb.query(true, DATABASE_TABLE_USERS, new String[]{USERS_KEY_NAME
+                        }, USERS_KEY_ROWID + "=" + rowId, null,
                         null, null, null, null);
         if (mCursor != null) {
+            System.out.println("MATAR A POLLO");
             mCursor.moveToFirst();
         }
         return mCursor;
