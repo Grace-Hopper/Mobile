@@ -60,22 +60,6 @@ public class RecetarioGlobal extends AppCompatActivity
         return true;
     }
 
-
-    public void IrARecetarioLocal(){
-        Intent i = new Intent(this, RecetarioLocal.class);
-        startActivity(i);
-    }
-
-    public void IrARecetarioGlobal(){
-        Intent i = new Intent(this, RecetarioGlobal.class);
-        startActivity(i);
-    }
-
-    public void IrARecetarioConfiguracion(){
-        Intent i = new Intent(this, Configuracion.class);
-        startActivity(i);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

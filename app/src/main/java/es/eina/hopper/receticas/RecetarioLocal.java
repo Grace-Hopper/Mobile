@@ -22,7 +22,7 @@ public class RecetarioLocal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_recetario_local);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -62,25 +62,6 @@ public class RecetarioLocal
         return true;
     }
 
-    public void IrARecetarioLocal(){
-        Intent i = new Intent(this, RecetarioLocal.class);
-        startActivity(i);
-    }
-
-    public void IrARecetarioGlobal(){
-        Intent i = new Intent(this, RecetarioGlobal.class);
-        startActivity(i);
-    }
-
-    public void IrARecetarioConfiguracion(){
-        Intent i = new Intent(this, Configuracion.class);
-        startActivity(i);
-    }
-
-    /*public void IrARecetarioAcercaDe(){
-        Intent i = new Intent(this, AcercaDe.class);
-        startActivity(i);
-    }*/
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
