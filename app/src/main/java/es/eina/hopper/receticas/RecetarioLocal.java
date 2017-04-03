@@ -1,5 +1,6 @@
 package es.eina.hopper.receticas;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,13 +15,31 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import es.eina.hopper.adapter.RecipesAdapter;
+import es.eina.hopper.models.Recipe;
 import es.eina.hopper.models.User;
+import es.eina.hopper.util.UtilRecipes;
+import es.eina.hopper.util.UtilService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecetarioLocal
         extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     User user;
+    private ListView mList;
+    public ArrayList<Recipe> lista_recetas;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +71,25 @@ public class RecetarioLocal
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mList = (ListView)findViewById(R.id.list);
+
+        fillData();
+
+    }
+
+    /**
+     * Rellena el adaptador con la información necesaria
+     */
+    private void fillData() {
+
+        lista_recetas = new ArrayList(UtilRecipes.getAll(user.getName(), this));
+
+        RecipesAdapter adapter = new RecipesAdapter(this, lista_recetas);
+
+
+        mList.setAdapter(adapter);
+
     }
 
     @Override

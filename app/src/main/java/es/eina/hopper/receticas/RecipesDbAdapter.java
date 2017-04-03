@@ -56,33 +56,32 @@ public class RecipesDbAdapter {
      */
     private static final String DATABASE_CREATE_USERS =
             "create table users (" +
-                    "id BIGINT (6) auto_increment ," +
-                    "name VARCHAR (32) unique not null," +
-                    "PRIMARY KEY (id)" +
+                    "id INTEGER primary key autoincrement ," +
+                    "name VARCHAR (32) not null unique " +
                     ");";
 
     private static final String DATABASE_CREATE_RECIPES =
             "create table recipes (" +
-                    "id BIGINT (6) auto_increment ," +
+                    "id INTEGER primary key autoincrement ," +
                     "name VARCHAR (32) not null," +
                     "total_time BIGINT (6) not null," +
                     "person BIGINT (6) not null," +
                     "image BLOB," +
                     "user BIGINT (6)," +
-                    "PRIMARY KEY (id)," +
                     "FOREIGN KEY (user) references users(id)" +
                     ");";
 
+
     private static final String DATABASE_CREATE_UTENSILS =
             "create table utensils (" +
-                    "id BIGINT (6) auto_increment," +
+                    "id BIGINT (6) primary key autoincrement," +
                     "name VARCHAR (32) not null," +
                     "PRIMARY KEY (id)" +
                     ");";
 
     private static final String DATABASE_CREATE_INGREDIENTS =
             "create table ingredients (" +
-                    "id BIGINT (6) auto_increment," +
+                    "id BIGINT (6) primary key autoincrement," +
                     "name VARCHAR (32) not null," +
                     "PRIMARY KEY (id)" +
                     ");";
@@ -170,22 +169,21 @@ public class RecipesDbAdapter {
 
             db.execSQL(DATABASE_CREATE_USERS);
             db.execSQL(DATABASE_CREATE_RECIPES);
-            db.execSQL(DATABASE_CREATE_UTENSILS);
+            /*db.execSQL(DATABASE_CREATE_UTENSILS);
             db.execSQL(DATABASE_CREATE_INGREDIENTS);
             db.execSQL(DATABASE_CREATE_STEPS);
             db.execSQL(DATABASE_CREATE_USE1);
             db.execSQL(DATABASE_CREATE_USE2);
             db.execSQL(DATABASE_CREATE_USE3);
-            db.execSQL(DATABASE_CREATE_USE4);
+            db.execSQL(DATABASE_CREATE_USE4); */
 
-            db.execSQL("INSERT INTO `users` (`id`, `name`, `password`) VALUES " +
-                    "(1, 'test', 'test'), " +
-                    "(2, 'admin', 'admin');");
+            db.execSQL("INSERT INTO `users` (`id`, `name`) VALUES " +
+                    "(1, 'angel'), " +
+                    "(2, 'fernando');");
 
             db.execSQL("INSERT INTO `recipes` (`id`, `name`, `total_time`, `person`, `user`) VALUES " +
-                    " (1, 'Macarroncicos a la maña', 15, 1, 1), " +
-                    "(1,'Pasta al pesto', 20, 1, 1);" );
-
+                    " (1, 'Macarroncicos a la maña', 15, 2, 1), " +
+                    "(2,'Pasta al pesto', 20, 2, 2), (3,'Hamburguesa vegana', 20, 2, 2);" );
         }
 
 
@@ -217,7 +215,7 @@ public class RecipesDbAdapter {
     }
 
     /**
-     * Open the notes database. If it cannot be opened, try to create a new
+     * Open the recipes database. If it cannot be opened, try to create a new
      * instance of the database. If it cannot be created, throw an exception to
      * signal the failure
      *
@@ -247,11 +245,11 @@ public class RecipesDbAdapter {
     }
 
     /**
-     * Return a Cursor positioned at the note that matches the given rowId
+     * Return a Cursor positioned at the user that matches the given rowId
      *
-     * @param rowId id of note to retrieve
-     * @return Cursor positioned to matching note, if found
-     * @throws SQLException if note could not be found/retrieved
+     * @param rowId id of user to retrieve
+     * @return Cursor positioned to matching user, if found
+     * @throws SQLException if user could not be found/retrieved
      */
     public Cursor fetchUser(long rowId) throws SQLException {
 
@@ -277,14 +275,13 @@ public class RecipesDbAdapter {
 
         return mDb.query(DATABASE_TABLE_RECIPES, new String[] {RECIPES_KEY_ROWID, RECIPES_KEY_NAME,
                 RECIPES_KEY_USER, RECIPES_KEY_PERSON, RECIPES_KEY_TOTAL_TIME, RECIPES_KEY_IMAGE}, null, null, null, null, null);
-
     }
 
     /**
-     * Return a Cursor positioned at the note that matches the given rowId
+     * Return a Cursor positioned at the recipe that matches the given rowId
      *
      * @param rowId id of note to retrieve
-     * @return Cursor positioned to matching note, if found
+     * @return Cursor positioned to matching recipe, if found
      * @throws SQLException if note could not be found/retrieved
      */
     public Cursor fetchRecipe(long rowId) throws SQLException {

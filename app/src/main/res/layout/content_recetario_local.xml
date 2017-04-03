@@ -8,4 +8,11 @@
     tools:context="es.eina.hopper.receticas.RecetarioLocal"
     tools:showIn="@layout/app_bar_recetario_local">
 
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
+
 </android.support.constraint.ConstraintLayout>

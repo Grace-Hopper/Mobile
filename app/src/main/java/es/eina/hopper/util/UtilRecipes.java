@@ -30,10 +30,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UtilRecipes {
     public static Recipe getRecipe(String user, long rowId, Context ctx) {
-        Recipe r = new Recipe();
         //en local
-        RecipesDbAdapter rdbp = new RecipesDbAdapter(ctx);
-        Cursor aux = rdbp.fetchRecipe(rowId);
+        RecipesDbAdapter mDb = new RecipesDbAdapter(ctx);
+        mDb.open();
+        Cursor aux = mDb.fetchRecipe(rowId);
         Recipe resul = new Recipe();
         resul.setId(aux.getInt(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_ROWID)));
         resul.setName(aux.getString(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_NAME)));
@@ -41,23 +41,29 @@ public class UtilRecipes {
         resul.setPicture(aux.getBlob(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_IMAGE)));
         resul.setTotal_time(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_TOTAL_TIME)));
 
-
-        Cursor aux2 = rdbp.fetchUser(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_ROWID));
+        Cursor aux2 = mDb.fetchUser(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_ROWID));
 
         resul.setUser(new User(aux2.getString(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER)),""));
-
 
         return resul;
     }
 
-    public static List<Recipe> getAll(String user, boolean local, Context ctx){
+    public static List<Recipe> getAll(String user, Context ctx){
         List<Recipe> listaFinal = new ArrayList<Recipe>();
         //en local
-        RecipesDbAdapter rdbp = new RecipesDbAdapter(ctx);
-        Cursor aux = rdbp.fetchAllRecipes();
-        while(aux.isAfterLast()){
+        RecipesDbAdapter mDb = new RecipesDbAdapter(ctx);
+        mDb.open();
+
+
+        Cursor aux = mDb.fetchAllRecipes();
+
+        aux.moveToFirst();
+
+        System.out.println("Numero de filas " + aux.getCount());
+        while(!aux.isAfterLast()){
+
             Recipe resul = new Recipe();
-            resul.setId(aux.getInt(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_ROWID)));
+            resul.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.RECIPES_KEY_ROWID)));
             resul.setName(aux.getString(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_NAME)));
             resul.setPerson(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_PERSON)));
             resul.setPicture(aux.getBlob(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_IMAGE)));
