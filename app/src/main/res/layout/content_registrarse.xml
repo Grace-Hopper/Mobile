@@ -7,8 +7,8 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="es.eina.hopper.receticas.Registrarse"
-    tools:showIn="@layout/activity_registrarse">
+    tools:context="es.eina.hopper.receticas.Configuracion"
+    tools:showIn="@layout/activity_configuracion">
 
     <ProgressBar
         android:id="@+id/login_progress"
