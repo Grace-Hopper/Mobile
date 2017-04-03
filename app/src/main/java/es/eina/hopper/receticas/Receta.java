@@ -56,6 +56,7 @@ public class Receta extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
+        
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final ImageView imagen = (ImageView) findViewById(R.id.imagen);

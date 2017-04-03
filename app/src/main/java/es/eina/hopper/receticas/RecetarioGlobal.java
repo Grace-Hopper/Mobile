@@ -38,14 +38,14 @@ public class RecetarioGlobal extends AppCompatActivity
         if(b != null)
             user = (User)b.getSerializable("user");
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -110,15 +110,4 @@ public class RecetarioGlobal extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-<<<<<<< Updated upstream
-=======
-    /*public ArrayList<Receta> lista_recetas=new ArrayList<Receta>();
-    ArrayAdapter<Receta> adaptador =(new ArrayAdapter<Receta>(this, R.layout.lista_layout,
-                                R.id.nombre_receta, lista_recetas));*/
-
-
-
->>>>>>> Stashed changes
-
 }
