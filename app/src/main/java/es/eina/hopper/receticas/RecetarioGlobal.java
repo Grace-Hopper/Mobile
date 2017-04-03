@@ -13,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
 
 import es.eina.hopper.models.User;
 
@@ -107,4 +110,12 @@ public class RecetarioGlobal extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public ArrayList<Receta> lista_recetas=new ArrayList<Receta>();
+    ArrayAdapter<Receta> adaptador =(new ArrayAdapter<Receta>(this, R.layout.lista_layout,
+                                R.id.nombre_receta, lista_recetas));
+
+
+
+
 }
