@@ -228,6 +228,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     if(statusCode == 200){
                         //aceptado el login
                         Intent i = new Intent(yo, RecetarioLocal.class);
+                        Bundle b = new Bundle();
+                        b.putSerializable("user", user); //Your id
+                        i.putExtras(b); //Put your id to your next Intent
                         startActivity(i);
                     }
                     else if(statusCode == 422){
@@ -235,7 +238,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         mPasswordView.setError(getString(R.string.error_incorrect_password));
                         mPasswordView.requestFocus();
                     }
-                    else if(statusCode == 500){
+                    else if(statusCode == 404){
+                        //error de validacion
+                        mEmailView.setError("El usuario no existe");
+                        mEmailView.requestFocus();
+                    }
+                    else if(statusCode == 429){
+                        //error de validacion
+                        mEmailView.setError("La conexión ha espirado");
+                        mEmailView.requestFocus();
+                    }
+                    else{
                         //error de validacion
                         mEmailView.setError("Error en el servidor");
                         mEmailView.requestFocus();

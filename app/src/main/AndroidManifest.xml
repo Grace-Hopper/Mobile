@@ -19,6 +19,7 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -50,7 +51,16 @@
         <activity
             android:name=".AcercaDe"
             android:label="@string/title_activity_acerca_de"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Receta"
+            android:label="@string/title_activity_receta"
+            android:parentActivityName=".RecetarioLocal"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="es.eina.hopper.receticas.RecetarioLocal" />
+        </activity>
     </application>
 
 </manifest>

@@ -15,14 +15,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import es.eina.hopper.models.User;
+
 public class RecetarioLocal
         extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recetario_local);
+
+        Bundle b = getIntent().getExtras();
+        user = new User("","");
+        if(b != null)
+            user = (User)b.getSerializable("user");
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -70,15 +79,27 @@ public class RecetarioLocal
 
         if (id == R.id.mis_recetas) {
             Intent i = new Intent(this, RecetarioLocal.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
         } else if (id == R.id.recetas) {
             Intent i = new Intent(this, RecetarioGlobal.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
         } else if (id == R.id.configuracion) {
             Intent i = new Intent(this, Configuracion.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
         } else if (id == R.id.acerca_de) {
             Intent i = new Intent(this, AcercaDe.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
         }
 

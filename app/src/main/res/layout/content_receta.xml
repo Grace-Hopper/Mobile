@@ -8,4 +8,20 @@
     tools:context="es.eina.hopper.receticas.Receta"
     tools:showIn="@layout/activity_receta">
 
+    <ImageView
+        android:id="@+id/imagen"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:srcCompat="@drawable/logo1"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/titulo"
+        android:layout_width="183dp"
+        android:layout_height="150dp"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="186dp"
+        tools:layout_editor_absoluteY="16dp" />
+
 </android.support.constraint.ConstraintLayout>

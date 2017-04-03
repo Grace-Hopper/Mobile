@@ -251,7 +251,7 @@ public class RecipesDbAdapter {
      *
      * @return Cursor over all notes
      */
-    public Cursor fetchAllRecipes (boolean orderType) {
+    public Cursor fetchAllRecipes () {
 
         return mDb.query(DATABASE_TABLE_RECIPES, new String[] {RECIPES_KEY_ROWID, RECIPES_KEY_NAME,
                 RECIPES_KEY_USER, RECIPES_KEY_PERSON, RECIPES_KEY_TOTAL_TIME, RECIPES_KEY_IMAGE}, null, null, null, null, null);
@@ -265,7 +265,7 @@ public class RecipesDbAdapter {
      * @return Cursor positioned to matching note, if found
      * @throws SQLException if note could not be found/retrieved
      */
-    public Cursor fetchNote(long rowId) throws SQLException {
+    public Cursor fetchRecipe(long rowId) throws SQLException {
 
         Cursor mCursor =
 

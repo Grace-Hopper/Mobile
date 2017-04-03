@@ -14,8 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import es.eina.hopper.models.User;
+
+import static es.eina.hopper.receticas.R.string.user;
+
 public class RecetarioGlobal extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +29,11 @@ public class RecetarioGlobal extends AppCompatActivity
         setContentView(R.layout.activity_recetario_global);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Bundle b = getIntent().getExtras();
+        user = new User("","");
+        if(b != null)
+            user = (User)b.getSerializable("user");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -68,15 +79,27 @@ public class RecetarioGlobal extends AppCompatActivity
 
         if (id == R.id.mis_recetas) {
             Intent i = new Intent(this, RecetarioLocal.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
         } else if (id == R.id.recetas) {
             Intent i = new Intent(this, RecetarioGlobal.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
         } else if (id == R.id.configuracion) {
             Intent i = new Intent(this, Configuracion.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
         } else if (id == R.id.acerca_de) {
             Intent i = new Intent(this, AcercaDe.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
         }
 

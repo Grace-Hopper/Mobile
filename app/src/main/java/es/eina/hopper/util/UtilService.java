@@ -23,7 +23,7 @@ public interface UtilService {
     Call<User> sigin(@Body User user);
 
     @GET("recipes")
-    Call<Recipe> getAllRecipes(@Header("Authorization") String name);
+    Call<List<Recipe>> getAllRecipes(@Header("Authorization") String name);
 
     @GET("recipe")
     Call<Recipe> getRecipe(@Header("Authorization") String name, @Body long id);

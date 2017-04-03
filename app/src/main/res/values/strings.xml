@@ -30,6 +30,10 @@
     <string name="title_activity_recetario_global">Recetas</string>
     <string name="title_activity_configuracion">Configuracion</string>
     <string name="title_activity_acerca_de">Acerca de</string>
+<<<<<<< Updated upstream
 
     <string name="no_recipes">No hay recetas</string>
+=======
+    <string name="title_activity_receta">Receta</string>
+>>>>>>> Stashed changes
 </resources>

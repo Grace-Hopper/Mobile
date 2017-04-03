@@ -140,17 +140,17 @@ public class Registrarse extends AppCompatActivity {
                     int statusCode = response.code();
                     User user = response.body();
                     System.out.println(statusCode);
-                    if(statusCode == 200){
+                    if(statusCode == 200 || statusCode == 201){
                         //aceptado el login
-                        Intent i = new Intent(yo, RecetarioLocal.class);
+                        Intent i = new Intent(yo, LoginActivity.class);
                         startActivity(i);
                     }
-                    else if(statusCode == 422){
+                    else if(statusCode == 422 || statusCode == 401){
                         //error de validacion
-                        mPasswordView.setError("Las contras no coinciden loco");
-                        mPasswordView.requestFocus();
+                        mEmailView.setError("El usuario ya existe");
+                        mEmailView.requestFocus();
                     }
-                    else if(statusCode == 500){
+                    else {
                         //error de validacion
                         mEmailView.setError("Error en el servidor");
                         mEmailView.requestFocus();

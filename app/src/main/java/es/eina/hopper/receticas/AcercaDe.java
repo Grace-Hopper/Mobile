@@ -14,15 +14,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import es.eina.hopper.models.User;
+
 public class AcercaDe extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_acerca_de);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Bundle b = getIntent().getExtras();
+        user = new User("","");
+        if(b != null)
+            user = (User)b.getSerializable("user");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -60,15 +67,27 @@ public class AcercaDe extends AppCompatActivity
 
         if (id == R.id.mis_recetas) {
             Intent i = new Intent(this, RecetarioLocal.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
         } else if (id == R.id.recetas) {
             Intent i = new Intent(this, RecetarioGlobal.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
         } else if (id == R.id.configuracion) {
             Intent i = new Intent(this, Configuracion.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
         } else if (id == R.id.acerca_de) {
             Intent i = new Intent(this, AcercaDe.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
         }
 
