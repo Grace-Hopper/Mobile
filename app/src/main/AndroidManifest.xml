@@ -33,10 +33,6 @@
                 android:value="es.eina.hopper.receticas.LoginActivity" />
         </activity>
         <activity
-            android:name=".Home"
-            android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".RecetarioLocal"
             android:label="@string/title_activity_recetario_local"
             android:theme="@style/AppTheme.NoActionBar" />

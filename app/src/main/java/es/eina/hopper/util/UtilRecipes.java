@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class UtilRecipes {
-    public static Recipe getRecipe(String user, long rowId, boolean local, Context ctx) {
+    public static Recipe getRecipe(String user, long rowId, Context ctx) {
         Recipe r = new Recipe();
         //en local
         RecipesDbAdapter rdbp = new RecipesDbAdapter(ctx);
@@ -44,7 +44,7 @@ public class UtilRecipes {
         return resul;
     }
 
-    List<Recipe> getAll(String user, boolean local, Context ctx){
+    public static List<Recipe> getAll(String user, boolean local, Context ctx){
         List<Recipe> listaFinal = new ArrayList<Recipe>();
         //en local
         RecipesDbAdapter rdbp = new RecipesDbAdapter(ctx);

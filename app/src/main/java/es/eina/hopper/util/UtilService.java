@@ -27,6 +27,6 @@ public interface UtilService {
     @GET("recipes")
     Call<List<Recipe>> getAllRecipes(@Header("Authorization") String name);
 
-    @GET("recipie")
+    @GET("recipe")
     Call<Recipe> getRecipe(@Header("Authorization") String name, @Query("id") long id);
    }
