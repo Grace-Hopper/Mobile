@@ -30,4 +30,6 @@
     <string name="title_activity_recetario_global">Recetas</string>
     <string name="title_activity_configuracion">Configuracion</string>
     <string name="title_activity_acerca_de">Acerca de</string>
+
+    <string name="no_recipes">No hay recetas</string>
 </resources>
