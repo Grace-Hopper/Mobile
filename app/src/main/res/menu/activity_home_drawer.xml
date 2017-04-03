@@ -14,10 +14,10 @@
             android:id="@+id/destacadas"
             android:icon="@drawable/ic_stars_black_24dp"
             android:title="Destacadas" /> -->
-        <item
+       <!-- <item
             android:id="@+id/configuracion"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="Configuración"/>
+            android:title="Configuración"/> -->
         <item
             android:id="@+id/acerca_de"
             android:icon="@drawable/ic_info_black_24dp"
