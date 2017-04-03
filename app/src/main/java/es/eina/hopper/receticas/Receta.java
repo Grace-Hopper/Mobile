@@ -58,17 +58,45 @@ public class Receta extends AppCompatActivity {
         });*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ImageView imagen = (ImageView) findViewById(R.id.imagen);
-        TextView titulo = (TextView)  findViewById(R.id.titulo);
+        final ImageView imagen = (ImageView) findViewById(R.id.imagen);
+        final TextView titulo = (TextView)  findViewById(R.id.titulo);
+        System.out.println("HASTA AQUI GOOD");
+        UtilRecipes u = new UtilRecipes();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://receticas.herokuapp.com/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        Recipe r = UtilRecipes.getRecipe(user.getName(),rowId,local,this);
+        UtilService service = retrofit.create(UtilService.class);
+        Recipe re = new Recipe();
+        System.out.println(user.getName());
+        System.out.println(rowId);
+        Call<Recipe> call =  service.getRecipe(user.getName(), rowId);
+        call.enqueue(new Callback<Recipe>() {
 
-        ByteArrayInputStream imageStream = new ByteArrayInputStream(r.getPicture());
-        Bitmap theImage = BitmapFactory.decodeStream(imageStream);
-        imagen.setImageBitmap(theImage);
-        titulo.setText(r.getName() + "\n" +
-                "Duracion: " + r.getTotal_time() + "\n" +
-                "Creado: " + r.getUser().getName() + "\n" +
-                "Nº de comensales: " + r.getPerson() + "\n");
+            @Override
+            public void onResponse(Call<Recipe> call, Response<Recipe> response) {
+                int statusCode = response.code();
+                System.out.println(statusCode);
+                if(statusCode == 200){
+                    //Encontrada
+                    Recipe resp = response.body();
+                    if(resp.getPicture()!=null) {
+                        ByteArrayInputStream imageStream = new ByteArrayInputStream(resp.getPicture());
+                        Bitmap theImage = BitmapFactory.decodeStream(imageStream);
+                        imagen.setImageBitmap(theImage);
+                    }
+                    titulo.setText(resp.getName() + "\n" +
+                            "Duracion: " + resp.getTotal_time() + "\n" +
+                            "Creado: " + resp.getUser().getName() + "\n" +
+                            "Nº de comensales: " + resp.getPerson() + "\n");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Recipe> call, Throwable t) {
+            }
+        });
     }
 }
