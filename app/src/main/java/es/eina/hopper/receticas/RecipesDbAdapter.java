@@ -247,6 +247,28 @@ public class RecipesDbAdapter {
     }
 
     /**
+     * Return a Cursor positioned at the note that matches the given rowId
+     *
+     * @param rowId id of note to retrieve
+     * @return Cursor positioned to matching note, if found
+     * @throws SQLException if note could not be found/retrieved
+     */
+    public Cursor fetchUser(long rowId) throws SQLException {
+
+        Cursor mCursor =
+
+                mDb.query(true, DATABASE_TABLE_USERS, new String[] {USERS_KEY_NAME,
+                                }, USERS_KEY_ROWID + "=" + rowId, null,
+                        null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
+
+    /**
      * Return a Cursor over the list of all recipes
      *
      * @return Cursor over all notes

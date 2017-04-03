@@ -40,7 +40,13 @@ public class UtilRecipes {
         resul.setPerson(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_PERSON)));
         resul.setPicture(aux.getBlob(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_IMAGE)));
         resul.setTotal_time(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_TOTAL_TIME)));
-        resul.setUser(new User(aux.getString(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER)),""));
+
+
+        Cursor aux2 = rdbp.fetchUser(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_ROWID));
+
+        resul.setUser(new User(aux2.getString(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER)),""));
+
+
         return resul;
     }
 
