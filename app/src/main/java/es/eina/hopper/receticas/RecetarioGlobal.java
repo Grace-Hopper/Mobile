@@ -111,5 +111,14 @@ public class RecetarioGlobal extends AppCompatActivity
         return true;
     }
 
+<<<<<<< Updated upstream
+=======
+    /*public ArrayList<Receta> lista_recetas=new ArrayList<Receta>();
+    ArrayAdapter<Receta> adaptador =(new ArrayAdapter<Receta>(this, R.layout.lista_layout,
+                                R.id.nombre_receta, lista_recetas));*/
+
+
+
+>>>>>>> Stashed changes
 
 }
