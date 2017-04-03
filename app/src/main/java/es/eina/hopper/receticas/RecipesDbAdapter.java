@@ -254,16 +254,12 @@ public class RecipesDbAdapter {
     public Cursor fetchUser(long rowId) throws SQLException {
 
         Cursor mCursor =
+                mDb.query(true, DATABASE_TABLE_USERS, new String[] {USERS_KEY_NAME}, USERS_KEY_ROWID + "=" + rowId, null, null, null, null, null);
 
-                mDb.query(true, DATABASE_TABLE_USERS, new String[]{USERS_KEY_NAME
-                        }, USERS_KEY_ROWID + "=" + rowId, null,
-                        null, null, null, null);
         if (mCursor != null) {
-            System.out.println("MATAR A POLLO");
             mCursor.moveToFirst();
         }
         return mCursor;
-
     }
 
 
