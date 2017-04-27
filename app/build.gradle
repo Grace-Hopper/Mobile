@@ -2,12 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        ferdelmo {
-            keyAlias 'ferdelmo'
-            keyPassword 'troleito'
-            storeFile file('F:/PrSoft/Mobile/lasKeys.jks')
-            storePassword 'psoft2017'
-        }
     }
     compileSdkVersion 24
     buildToolsVersion "25.0.2"
@@ -18,16 +12,15 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        signingConfig signingConfigs.ferdelmo
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.ferdelmo
         }
         debug {
-            signingConfig signingConfigs.ferdelmo
+            debuggable false
+            jniDebuggable false
         }
     }
     productFlavors {
