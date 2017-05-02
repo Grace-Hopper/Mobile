@@ -34,10 +34,15 @@ public class RecipesAdapter extends ArrayAdapter<Recipe> {
         }
         // Lookup view for data population
         TextView nombre_receta = (TextView) convertView.findViewById(R.id.nombre_receta);
+        // 22 caracteres maximo
         TextView descripcion_receta = (TextView) convertView.findViewById(R.id.descripcion_receta);
         ImageView imagen_receta = (ImageView) convertView.findViewById(R.id.imagen_receta);
         // Populate the data into the template view using the data object
-        nombre_receta.setText(myRecipe.getName());
+        String aux = myRecipe.getName();
+        if (aux.length() > 25){
+            aux = aux.substring(0, 22) + "...";
+        }
+        nombre_receta.setText(aux);
         descripcion_receta.setText(Long.toString(myRecipe.getPerson()));
         imagen_receta.setImageResource(R.drawable.logo1);
         // Return the completed view to render on screen

@@ -148,7 +148,13 @@ public class RecetarioLocal
             b.putSerializable("user", user); //Your id
             i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
-        } else if (id == R.id.configuracion) {
+        } else if (id == R.id.destacadas) {
+            Intent i = new Intent(this, RecetarioLocal.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
+            startActivity(i);
+        }else if (id == R.id.configuracion) {
             Intent i = new Intent(this, Configuracion.class);
             Bundle b = new Bundle();
             b.putSerializable("user", user); //Your id
