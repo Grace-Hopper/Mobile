@@ -1,6 +1,7 @@
 package es.eina.hopper.receticas;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -68,11 +69,7 @@ public class Configuracion extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.mis_recetas) {
-            Intent i = new Intent(this, RecetarioLocal.class);
-            Bundle b = new Bundle();
-            b.putSerializable("user", user); //Your id
-            i.putExtras(b); //Put your id to your next Intent
-            startActivity(i);
+            finish();
         } else if (id == R.id.recetas) {
             Intent i = new Intent(this, RecetarioGlobal.class);
             Bundle b = new Bundle();
@@ -85,24 +82,33 @@ public class Configuracion extends AppCompatActivity
             b.putSerializable("user", user); //Your id
             i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
-        }else if (id == R.id.configuracion) {
-            Intent i = new Intent(this, Configuracion.class);
-            Bundle b = new Bundle();
-            b.putSerializable("user", user); //Your id
-            i.putExtras(b); //Put your id to your next Intent
-            startActivity(i);
+            finish();
+        } else if (id == R.id.configuracion) {
+
         }else if (id == R.id.cambiar_usuario) {
             Intent i = new Intent(this, LoginActivity.class);
             Bundle b = new Bundle();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                finishAffinity();
+            }
             b.putSerializable("user", user); //Your id
             i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
+            finish();
         } else if (id == R.id.acerca_de) {
             Intent i = new Intent(this, AcercaDe.class);
             Bundle b = new Bundle();
             b.putSerializable("user", user); //Your id
             i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
+            finish();
+        } else if(id == R.id.destacadas){
+            Intent i = new Intent(this, Destacados.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
+            startActivity(i);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(false) {
+        if(true) {
             setContentView(R.layout.activity_login);
 
             // Set up the login form.
@@ -158,6 +158,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     b.putBoolean("local",true);
                     i.putExtras(b); //Put your id to your next Intent
                     startActivity(i);
+                    finish();
                     //or do your stuff
                 }
 
@@ -297,6 +298,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         b.putSerializable("user", user); //Your id
                         i.putExtras(b); //Put your id to your next Intent
                         startActivity(i);
+                        finish();
                     }
                     else if(statusCode == 422){
                         //error de validacion
