@@ -16,5 +16,6 @@
         android:layout_weight="0.99"
         android:text="TextView"
         android:textAlignment="center"
-        android:textSize="25sp" />
+        style="@android:style/TextAppearance.DeviceDefault.Large"
+         />
 </LinearLayout>
