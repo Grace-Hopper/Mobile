@@ -83,7 +83,8 @@ public class Pasos extends AppCompatActivity {
         // primary sections of the activity.
         //mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         for(int i=0;i<15;i++){
-            lp.add(new PasosDetalle("CONTENIDO DEL PASO " + i, i*10));
+            //lp.add(new PasosDetalle("CONTENIDO DEL PASO " + i, i*10));
+            lp.add(new PasosDetalle("WOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\n ", i*10));
         }
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);

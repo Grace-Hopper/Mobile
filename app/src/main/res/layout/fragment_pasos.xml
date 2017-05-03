@@ -13,55 +13,70 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/section_label"
+        <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
-            android:layout_height="328dp" />
+            android:layout_height="0dp"
+            android:layout_weight="5">
 
-        <TextView
-            android:id="@+id/tempo"
-            style="@android:style/TextAppearance.DeviceDefault.Large"
-            android:layout_width="match_parent"
-            android:layout_height="77dp"
-            android:gravity="center"
-            android:text="00:00"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="50sp"
-            android:visibility="visible" />
+            <TextView
+                android:id="@+id/section_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </ScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/iniciar"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_weight="1"
-                android:text="INICIAR"
+            <TextView
+                android:id="@+id/tempo"
+                style="@android:style/TextAppearance.DeviceDefault.Large"
+                android:layout_width="match_parent"
+                android:layout_height="77dp"
+                android:gravity="center"
+                android:text="00:00"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="50sp"
                 android:visibility="visible" />
 
-            <Button
-                android:id="@+id/restablecer"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="RESTABLECER" />
-            <Button
-                android:id="@+id/pararAlarma"
-                style="@style/Widget.AppCompat.Button.Colored"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="gone"
-                android:text="PARAR ALARMA" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/iniciar"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_weight="1"
+                    android:text="INICIAR"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/restablecer"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="RESTABLECER" />
+                <Button
+                    android:id="@+id/pararAlarma"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    android:text="PARAR ALARMA" />
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
