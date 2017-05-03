@@ -36,4 +36,5 @@
     Facilita tu vida culinaria con Receticas®, la aplicación que te ayuda a decidir, preparar y guardar cualquier receta.\n\n\n\n\n\nAplicación desarrollada por Grace Hopper.</string>
     <string name="password">Cambiar la contraseña del usuario.</string>
     <string name="title_activity_destacados">Destacados</string>
+    <string name="title_activity_pasos">Pasos</string>
 </resources>

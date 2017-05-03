@@ -7,48 +7,53 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="es.eina.hopper.receticas.Receta"
     tools:showIn="@layout/activity_receta"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
 
     <TextView
         android:id="@+id/titulo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="62dp"
         android:layout_marginBottom="2dp"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
         android:layout_marginTop="20dp"
-        android:layout_weight="0.04"
         android:gravity="center"
         android:text="Loading..."
         android:textColor="@android:color/background_dark"
         style="@android:style/TextAppearance.DeviceDefault.Large"/>
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/imagen"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/logo1"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="16dp" />
 
-        <ImageView
-            android:id="@+id/imagen"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            app:srcCompat="@drawable/logo1"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="16dp" />
+    <TextView
+        android:id="@+id/Info"
+        style="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="1dp"
+        android:layout_weight="0.76" />
 
-        <TextView
-            android:id="@+id/Info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginTop="1dp"
-            style="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:layout_weight="0.09"/>
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/comenzar"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/colorPrimary"
+        android:elevation="0dp"
+        android:text="COMENZAR" />
 
 </LinearLayout>
 

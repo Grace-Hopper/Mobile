@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ public class Receta extends AppCompatActivity {
     User user;
     Activity yo;
     boolean local;
+    Recipe rec;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //"rowId" "local" 1 true 0 false
@@ -61,6 +63,19 @@ public class Receta extends AppCompatActivity {
             }
         });*/
 
+        Button comen = (Button) findViewById(R.id.comenzar);
+        comen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(yo, Pasos.class);
+                Bundle b = new Bundle();
+                b.putSerializable("user", user); //Your id
+                b.putSerializable("receta",rec);
+                i.putExtras(b); //Put your id to your next Intent
+                startActivity(i);
+            }
+        });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final ImageView imagen = (ImageView) findViewById(R.id.imagen);
@@ -84,14 +99,15 @@ public class Receta extends AppCompatActivity {
                     if (statusCode == 200) {
                         //Encontrada
                         Recipe resp = response.body();
+                        rec=resp;
                         if (resp.getPicture() != null) {
                             ByteArrayInputStream imageStream = new ByteArrayInputStream(resp.getPicture());
                             Bitmap theImage = BitmapFactory.decodeStream(imageStream);
                             imagen.setImageBitmap(theImage);
                         }
                         titulo.setText(resp.getName() + "\n");
-                        info.setText("Duracion: " + resp.getTotal_time() + "\n" +
-                                "Nº de comensales: " + resp.getPerson() + "\n" +
+                        info.setText("Duracion: " + resp.getTotal_time() + " min" + "\n" +
+                                "Nº de comensales: " + resp.getPerson() + " personas\n" +
                                 "Creado: " + resp.getUser().getName() + "\n");
 
                     }
@@ -105,14 +121,15 @@ public class Receta extends AppCompatActivity {
         }
         else {
             Recipe resp = UtilRecipes.getRecipe(user.getName(),rowId,this);
+            rec=resp;
             if (resp.getPicture() != null) {
                 ByteArrayInputStream imageStream = new ByteArrayInputStream(resp.getPicture());
                 Bitmap theImage = BitmapFactory.decodeStream(imageStream);
                 imagen.setImageBitmap(theImage);
             }
             titulo.setText(resp.getName() + "\n");
-            info.setText("Duracion: " + resp.getTotal_time() + "\n" +
-                    "Nº de comensales: " + resp.getPerson() + "\n" +
+            info.setText("Duracion: " + resp.getTotal_time() + " min" + "\n" +
+                    "Nº de comensales: " + resp.getPerson() + " personas\n" +
                     "Creado: " + resp.getUser().getName() + "\n");
         }
     }
