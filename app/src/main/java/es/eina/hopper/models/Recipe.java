@@ -15,6 +15,16 @@ public class Recipe implements Serializable {
     private byte[] picture;
     private User user;
 
+    public Recipe(){}
+
+    public Recipe(long id, String name, long time, long person, byte[] picture, User user){
+        this.id = id;
+        this.name = name;
+        total_time = time;
+        this.person = person;
+        this.picture = picture;
+        this.user = user;
+    }
     public long getId() {
         return id;
     }

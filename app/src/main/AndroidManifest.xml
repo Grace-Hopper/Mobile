@@ -77,6 +77,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.eina.hopper.receticas.Receta" />
         </activity>
+        <activity
+            android:name=".AddReceta"
+            android:label="@string/title_activity_add_receta"
+            android:parentActivityName=".RecetarioLocal"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="es.eina.hopper.receticas.RecetarioLocal" />
+        </activity>
     </application>
 
 </manifest>

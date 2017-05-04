@@ -37,4 +37,6 @@
     <string name="password">Cambiar la contraseña del usuario.</string>
     <string name="title_activity_destacados">Destacados</string>
     <string name="title_activity_pasos">Pasos</string>
+    <string name="title_activity_add_receta">AddReceta</string>
+    <string name="nombre_de_la_receta">Nombre de la receta</string>
 </resources>
