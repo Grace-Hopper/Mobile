@@ -374,9 +374,9 @@ public class Pasos extends AppCompatActivity {
                 });
             }
             else{
-                comen.setVisibility(View.INVISIBLE);
-                reini.setVisibility(View.INVISIBLE);
-                chrono.setVisibility(View.INVISIBLE);
+                comen.setVisibility(View.GONE);
+                reini.setVisibility(View.GONE);
+                chrono.setVisibility(View.GONE);
             }
             textView.setText(contenido);
             return rootView;
