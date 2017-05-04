@@ -53,7 +53,7 @@ public class Pasos extends AppCompatActivity {
     public Activity yo;
     private ViewPager mViewPager;
     private  TabLayout tabLayout;
-    public class PasosDetalle{
+    public static class PasosDetalle{
         public String contenido;
         public int tiempo;
         public PasosDetalle(String c,int t){

@@ -56,12 +56,21 @@ public class AddReceta extends AppCompatActivity {
     /**
      * The {@link ViewPager} that will host the section contents.
      */
+    public static class PasosDetalle{
+        public String contenido;
+        public int tiempo;
+        public PasosDetalle(String c, int t){
+            tiempo=t;
+            contenido=c;
+        }
+    }
+
     public Activity yo;
     private ViewPager mViewPager;
     private  TabLayout tabLayout;
     User user;
     Recipe rec;
-    ArrayList<Pasos.PasosDetalle> lp;
+    ArrayList<PasosDetalle> lp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         yo=this;
@@ -76,13 +85,14 @@ public class AddReceta extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_receta);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(rec.getName());
+        toolbar.setTitle("Añadir receta");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         //mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
+
         mViewPager = (ViewPager) findViewById(R.id.container);
         setupViewPager(mViewPager,lp,rec);
 
@@ -90,14 +100,18 @@ public class AddReceta extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                ViewPagerAdapter m = (ViewPagerAdapter)mViewPager.getAdapter();
+                PlaceholderFragment b = new PlaceholderFragment();
+                b.setArguments(new PasosDetalle("TU PUTA MADRE", 0));
+                m.addFrag(b, "PASO " + (0));
+                mViewPager.setAdapter(m);
+                tabLayout.setupWithViewPager(mViewPager);
             }
-        });*/
+        });
 
     }
 
@@ -112,16 +126,16 @@ public class AddReceta extends AppCompatActivity {
 
         return(super.onOptionsItemSelected(item));
     }
-    private void setupViewPager(ViewPager viewPager, ArrayList<Pasos.PasosDetalle> lp, Recipe rec) {
+    private void setupViewPager(ViewPager viewPager, ArrayList<PasosDetalle> lp, Recipe rec) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         DescripcionReceta a = new DescripcionReceta();
         a.setArguments(rec);
         adapter.addFrag(a, "INFORMACION");
-        /*for(int i=0;i<lp.size();i++) {
-            PlaceholderFragment a = new PlaceholderFragment();
-            a.setArguments(lp.get(i));
-            adapter.addFrag(a, "PASO " + (i+1));
-        }*/
+        for(int i=0;i<lp.size();i++) {
+            PlaceholderFragment b = new PlaceholderFragment();
+            b.setArguments(lp.get(i));
+            adapter.addFrag(b, "PASO " + (i+1));
+        }
         viewPager.setAdapter(adapter);
     }
 
@@ -164,7 +178,7 @@ public class AddReceta extends AppCompatActivity {
         private static final String ARG_SECTION_NUMBER = "section_number";
         public PlaceholderFragment() {
         }
-        public void setArguments(Pasos.PasosDetalle pd) {
+        public void setArguments(PasosDetalle pd) {
         }
 
         /**
