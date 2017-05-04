@@ -208,7 +208,7 @@ public class Pasos extends AppCompatActivity {
                     chrono.setText(seg / 60 + ":" + seg % 60);
                 else
                     chrono.setText(seg / 60 + ":0" + resto);
-                contador = new CountDownTimer(tiempo * 1000, 1000) {
+                    contador = new CountDownTimer(tiempo * 1000, 1000) {
                     public void onTick(long millisUntilFinished) {
                         seg = millisUntilFinished / 1000;
                         long resto = seg % 60;
@@ -221,6 +221,7 @@ public class Pasos extends AppCompatActivity {
                     public void onFinish() {
                         //mTextField.setText("done!");
                         chrono.setText("00:00");
+                        seg=0;
                         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                         final Ringtone r = RingtoneManager.getRingtone(getContext().getApplicationContext(), notification);
                         r.play();
@@ -258,11 +259,11 @@ public class Pasos extends AppCompatActivity {
                 comen.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (!crono) {
+                        if (!crono && seg>0) {
                             contador.start();
-                            crono = !crono;
+                            crono = true;
                             comen.setText("PAUSA");
-                        } else {
+                        } else if(seg>0) {
                             contador.cancel();
                             contador = new CountDownTimer(seg * 1000, 1000) {
                                 public void onTick(long millisUntilFinished) {
@@ -277,6 +278,7 @@ public class Pasos extends AppCompatActivity {
                                 public void onFinish() {
                                     //mTextField.setText("done!");
                                     chrono.setText("00:00");
+                                    seg=0;
                                     Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                                     final Ringtone r = RingtoneManager.getRingtone(getContext().getApplicationContext(), notification);
                                     r.play();
@@ -308,9 +310,9 @@ public class Pasos extends AppCompatActivity {
                                         }
                                     };
                                 }
-                            }.start();
+                            };
 
-                            crono = !crono;
+                            crono = false;
                             comen.setText("INICIAR");
                         }
                     }
@@ -319,6 +321,7 @@ public class Pasos extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         chrono.setText(tiempo / 60 + ":" + tiempo % 60);
+                        seg=tiempo;
                         contador.cancel();
                         contador = new CountDownTimer(tiempo * 1000, 1000) {
                             public void onTick(long millisUntilFinished) {
