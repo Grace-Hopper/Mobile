@@ -11,16 +11,16 @@
     tools:context="es.eina.hopper.receticas.AddReceta$PlaceholderFragment">
 
     <MultiAutoCompleteTextView
-        android:id="@+id/descripcion"
+        android:id="@+id/descripcionPasos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="bottom"
-        android:hint="Descripción de la receta"
+        android:hint="Descripción del paso"
         android:inputType="textMultiLine"
         android:scrollbars="vertical" />
 
     <EditText
-        android:id="@+id/comensales"
+        android:id="@+id/tiempoReceta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"

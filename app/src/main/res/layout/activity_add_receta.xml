@@ -37,6 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_add_white_48dp" />
 
     <ImageView
@@ -51,8 +52,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:src="@drawable/ic_info_black_24dp"
+        android:src="@drawable/ic_delete_white_24dp"
         app:layout_anchor="@id/divider"
+        android:layout_margin="@dimen/fab_margin"
         app:layout_anchorGravity="right|end" />
 
 
