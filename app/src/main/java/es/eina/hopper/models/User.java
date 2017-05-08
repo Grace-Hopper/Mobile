@@ -1,22 +1,26 @@
 package es.eina.hopper.models;
 
-/**
- * Created by Fernando on 31/03/2017.
- */
 
 import java.io.Serializable;
 
-public class User implements Serializable  {
+/**
+ * =====================================================================================
+ * Filename: User.java
+ * Version: 1.0
+ * Created: 3/24/17
+ * Author: JORGE CHATO (651348)
+ * =====================================================================================
+ */
 
+public class User implements Serializable{
     private long id;
-
     private String name;
-
     private String password;
 
-    public User(String n, String pass){
-        this.name = n;
-        this.password = pass;
+    public User (String nombre, String pass){
+        name=nombre;
+        password=pass;
+        id=-1;
     }
 
     public long getId() {

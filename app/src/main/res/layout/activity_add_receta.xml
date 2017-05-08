@@ -37,8 +37,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_add_white_48dp" />
+        android:src="@drawable/ic_add_white_48dp" />
+
+    <ImageView
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="20dp"
+        app:layout_anchor="@id/fab"
+        app:layout_anchorGravity="end" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/borrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:src="@drawable/ic_info_black_24dp"
+        app:layout_anchor="@id/divider"
+        app:layout_anchorGravity="right|end" />
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/container"

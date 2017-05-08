@@ -12,6 +12,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -42,6 +43,8 @@ import java.util.Objects;
 import es.eina.hopper.models.Recipe;
 import es.eina.hopper.models.User;
 
+import static android.support.v4.view.PagerAdapter.POSITION_NONE;
+
 public class AddReceta extends AppCompatActivity {
 
     /**
@@ -71,6 +74,7 @@ public class AddReceta extends AppCompatActivity {
     User user;
     Recipe rec;
     ArrayList<PasosDetalle> lp;
+    int numPasos = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         yo=this;
@@ -104,12 +108,21 @@ public class AddReceta extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ViewPagerAdapter m = (ViewPagerAdapter)mViewPager.getAdapter();
-                PlaceholderFragment b = new PlaceholderFragment();
-                b.setArguments(new PasosDetalle("TU PUTA MADRE", 0));
-                m.addFrag(b, "PASO " + (0));
-                mViewPager.setAdapter(m);
-                tabLayout.setupWithViewPager(mViewPager);
+                int current = mViewPager.getCurrentItem();
+                lp.add(current, new PasosDetalle("EL TROLEITO ES REAL", numPasos));
+                numPasos++;
+                setupViewPager(mViewPager,lp,rec);
+                mViewPager.setCurrentItem(current+1);
+            }
+        });
+
+        FloatingActionButton borrar = (FloatingActionButton) findViewById(R.id.borrar);
+        borrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int current = mViewPager.getCurrentItem();
+                mViewPager.removeViewAt(current+1);
+                mViewPager.setCurrentItem(current-1);
             }
         });
 
@@ -133,7 +146,7 @@ public class AddReceta extends AppCompatActivity {
         adapter.addFrag(a, "INFORMACION");
         for(int i=0;i<lp.size();i++) {
             PlaceholderFragment b = new PlaceholderFragment();
-            b.setArguments(lp.get(i));
+            b.setArguments(lp.get(i),i);
             adapter.addFrag(b, "PASO " + (i+1));
         }
         viewPager.setAdapter(adapter);
@@ -176,9 +189,14 @@ public class AddReceta extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+        PasosDetalle pd;
+        int yo;
         public PlaceholderFragment() {
         }
-        public void setArguments(PasosDetalle pd) {
+        public void setArguments(PasosDetalle pd, int i) {
+            this.pd = pd;
+            yo=i;
+            System.out.println("SOY EL i=" + i + " y deberia mostrar" + pd.tiempo);
         }
 
         /**
@@ -198,6 +216,10 @@ public class AddReceta extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_add_receta, container, false);
+            //TextView aux = (TextView) rootView.findViewById(R.id.section_label);
+
+            //System.out.println("VOY A MOSTRAR " + pd.tiempo);
+            //aux.setText(pd.contenido + "\n TIEMPO = " + pd.tiempo + " - YO:" + yo);
             return rootView;
         }
     }
@@ -247,5 +269,4 @@ public class AddReceta extends AppCompatActivity {
             return rootView;
         }
     }
-
 }
