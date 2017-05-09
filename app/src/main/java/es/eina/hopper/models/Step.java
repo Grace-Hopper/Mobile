@@ -4,18 +4,40 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Step implements Serializable {
-    private PkStep id;
+
+    private long step;
+    private Recipe recipe;
     private long timer;
     private String information;
     private List<Utensil> utensils = new ArrayList();
-    private List<IngreStep> steps = new ArrayList();
+    private List<Ingredient> ingredients = new ArrayList();
 
-    public PkStep getStep() {
-        return id;
+    public Step(){}
+
+    public Step(long step, Recipe recipe, long timer, String information, List<Utensil> utensils,
+                List<Ingredient> ingredients){
+        this.step = step;
+        this.recipe = recipe;
+        this.timer = timer;
+        this.information = information;
+        this.utensils = utensils;
+        this.ingredients = ingredients;
     }
 
-    public void setStep(PkStep id) {
-        this.id = id;
+    public long getStep() {
+        return step;
+    }
+
+    public void setStep(long step) {
+        this.step = step;
+    }
+
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
     }
 
     public long getTime() {
@@ -38,8 +60,30 @@ public class Step implements Serializable {
         return utensils;
     }
 
-    public List<IngreStep> getIngreSteps() {
-        return steps;
+    public void setUtensils(List<Utensil> utensils){
+        this.utensils = utensils;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients){
+        this.ingredients = ingredients;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Step)) return false;
+        Step that = (Step) o;
+        return Objects.equals(getStep(), that.getStep()) &&
+                Objects.equals(getRecipe(), that.getRecipe());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getStep(), getRecipe());
     }
 
 }

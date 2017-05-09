@@ -130,7 +130,7 @@ public class Registrarse extends AppCompatActivity {
                     .build();
 
             UtilService service = retrofit.create(UtilService.class);
-            User u = new User(email,password);
+            User u = new User(-1,email,password);
             Call<User> call = service.sigin(u);
             call.enqueue(new Callback<User>() {
 

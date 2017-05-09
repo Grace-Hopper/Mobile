@@ -29,7 +29,7 @@ public class Configuracion extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         Bundle b = getIntent().getExtras();
-        user = new User("","");
+        user = new User(-1,"","");
         if(b != null)
             user = (User)b.getSerializable("user");
 

@@ -51,7 +51,7 @@ public class RecetarioLocal
         setContentView(R.layout.activity_recetario_local);
 
         Bundle b = getIntent().getExtras();
-        user = new User("","");
+        user = new User(-1,"","");
         if(b != null)
             user = (User)b.getSerializable("user");
 
@@ -66,7 +66,7 @@ public class RecetarioLocal
                 Intent i = new Intent(yo, AddReceta.class);
                 Bundle b = new Bundle();
                 b.putSerializable("user", user); //Your id
-                b.putSerializable("receta", new Recipe(-1,"",0,0,new byte[]{},user));
+                b.putSerializable("receta", new Recipe(-1,"",0,0,0,new byte[]{},user,null,null,null));
                 i.putExtras(b); //Put your id to your next Intent
                 startActivity(i);
             }

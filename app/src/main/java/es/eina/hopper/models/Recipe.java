@@ -13,6 +13,7 @@ import java.util.*;
  */
 
 public class Recipe implements Serializable {
+
     private long id;
     private String name;
     private long total_time;
@@ -20,21 +21,24 @@ public class Recipe implements Serializable {
     private int outstanding;
     private byte[] picture;
     private User user;
-	private List<Utensil> utensils = new ArrayList();
-    private List<IngreRecipe> ingredients = new ArrayList();
+    private List<Utensil> utensils = new ArrayList();
+    private List<Ingredient> ingredients = new ArrayList();
     private List<Step> steps = new ArrayList();
 
-    public Recipe(){
+    public Recipe(){}
 
-    }
-    public Recipe(int id,String name, long tot, long per, byte[] pic, User user){
+    public Recipe(long id, String name, long total_time, long person, int outstanding, byte[] picture,
+                 User user, List<Utensil> utensils, List<Ingredient> ingredients,List<Step> steps){
         this.id = id;
-        this.name=name;
-        total_time=tot;
-        person=per;
-        picture=pic;
-        this.user=user;
-
+        this.name = name;
+        this.total_time = total_time;
+        this.person = person;
+        this.outstanding = outstanding;
+        this.picture = picture;
+        this.user = user;
+        this.utensils = utensils;
+        this.ingredients = ingredients;
+        this.steps = steps;
     }
 
     public long getId() {
@@ -94,15 +98,26 @@ public class Recipe implements Serializable {
     }
 
     public List<Utensil> getUtensils() {
-    	return utensils;
+        return utensils;
     }
 
-    public List<IngreRecipe> getIngredients() {
+    public void setUtensils(List<Utensil> utensils){
+        this.utensils = utensils;
+    }
+
+    public List<Ingredient> getIngredients() {
         return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients){
+        this.ingredients = ingredients;
     }
 
     public List<Step> getSteps() {
         return steps;
     }
 
+    public void setSteps(List<Step> steps){
+        this.steps = steps;
+    }
 }

@@ -112,16 +112,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(isInternetAvailable()) {
-            cambiarVista(true);
-        }
-        else{
-            cambiarVista(false);
-        }
+            cambiarVista();
+
     }
 
-    void cambiarVista(boolean conexion){
-        if(conexion) {
+    void cambiarVista(){
+        if(isInternetAvailable()) {
             setContentView(R.layout.activity_login);
 
             // Set up the login form.
@@ -303,7 +299,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     .build();
 
             UtilService service = retrofit.create(UtilService.class);
-            User u = new User(email,password);
+            User u = new User(-1,email,password);
             Call<User> call = service.login(u);
             call.enqueue(new Callback<User>() {
 

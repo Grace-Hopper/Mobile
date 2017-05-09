@@ -4,8 +4,16 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Utensil implements Serializable {
+
     private long id;
     private String name;
+
+    public Utensil(){}
+
+    public Utensil(long id, String name){
+        this.id = id;
+        this.name = name;
+    }
 
     public long getId() {
         return id;

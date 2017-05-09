@@ -1,13 +1,23 @@
 package es.eina.hopper.models;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 
 public class Ingredient implements Serializable {
-
     private long id;
     private String name;
-    private List<IngreRecipe> recipes = new ArrayList();
+    private long quantity;
+    private List<Recipe> recipes = new ArrayList();
+
+    public Ingredient() {
+    }
+
+    public Ingredient(long id, String name, long quantity, List<Recipe> recipes) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.recipes = recipes;
+    }
 
     public long getId() {
         return id;
@@ -25,8 +35,21 @@ public class Ingredient implements Serializable {
         this.name = name;
     }
 
-    public List<IngreRecipe> getRecipes() {
+    public long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(long quantity) {
+        this.quantity = quantity;
+    }
+
+    public List<Recipe> getRecipes() {
         return recipes;
     }
 
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
+    }
 }
+
+

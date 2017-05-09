@@ -34,7 +34,7 @@ public class UtilUser {
         System.out.println("Numero de filas " + aux.getCount());
         while(!aux.isAfterLast()){
 
-            User resul = new User("","");
+            User resul = new User(-1,"","");
             resul.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.USERS_KEY_ROWID)));
             resul.setName(aux.getString(aux.getColumnIndex(RecipesDbAdapter.USERS_KEY_NAME)));
             resul.setPassword("");

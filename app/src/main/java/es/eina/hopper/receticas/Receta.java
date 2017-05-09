@@ -47,7 +47,7 @@ public class Receta extends AppCompatActivity {
         yo = this;
         Bundle b = getIntent().getExtras();
         long rowId = 1; // or other values
-        user = new User("","");
+        user = new User(-1,"","");
         if(b != null)
             rowId = b.getLong("rowId");
             local = b.getBoolean("local");

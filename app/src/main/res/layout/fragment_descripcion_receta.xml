@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,6 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="es.eina.hopper.receticas.AddReceta$DescripcionReceta">
+
     <ScrollView
         android:id="@+id/receta_form"
         android:layout_width="match_parent"
@@ -28,25 +30,34 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/nombre_de_la_receta"
                     android:inputType="textAutoComplete"
+                    style="@android:style/TextAppearance.DeviceDefault.Medium"
                     android:maxLines="1"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
-            <EditText
-                android:id="@+id/comensales"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Nº de comensales"
-                android:inputType="number" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/tiempo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Tiempo estimado (min)"
-                android:inputType="number" />
+                    <EditText
+                        android:id="@+id/comensales"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        style="@android:style/TextAppearance.DeviceDefault.Medium"
+                        android:hint="Nº comensales"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/tiempo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        style="@android:style/TextAppearance.DeviceDefault.Medium"
+                        android:hint="Tiempo (m)"
+                        android:inputType="number" />
+                </LinearLayout>
 
 
                 <MultiAutoCompleteTextView
@@ -55,8 +66,59 @@
                     android:layout_height="wrap_content"
                     android:hint="Descripción de la receta"
                     android:inputType="textMultiLine"
+                    style="@android:style/TextAppearance.DeviceDefault.Medium"
                     android:gravity="bottom"
                     android:scrollbars="vertical"/>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/anyadirIngrediente">
+            <EditText
+                android:id="@+id/ingredienteText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingrediente"
+                style="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/ingredienteButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@android:style/TextAppearance.DeviceDefault.Large"
+                android:layout_weight="6"
+                android:text="+"/>
+        </LinearLayout>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/anyadirUtensilio">
+                <EditText
+                    android:id="@+id/utensilioText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Utensilio"
+                    style="@android:style/TextAppearance.DeviceDefault.Medium"
+                    android:layout_weight="1"/>
+                <Button
+                    android:id="@+id/utensilioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.DeviceDefault.Large"
+                    android:layout_weight="6"
+                    android:text="+"/>
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width = "200dp"
+                android:layout_height= "0dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/patito" />
 
         </LinearLayout>
     </ScrollView>

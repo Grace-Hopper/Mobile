@@ -43,7 +43,7 @@ public class UtilRecipes {
 
         Cursor aux2 = mDb.fetchUser(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER)));
 
-        resul.setUser(new User(aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.USERS_KEY_NAME)),""));
+        resul.setUser(new User(-1,aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.USERS_KEY_NAME)),""));
 
         return resul;
     }
@@ -70,7 +70,7 @@ public class UtilRecipes {
             resul.setTotal_time(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_TOTAL_TIME)));
             Cursor aux2 = mDb.fetchUser(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER));
 
-            resul.setUser(new User(aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.USERS_KEY_NAME)),""));
+            resul.setUser(new User(-1,aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.USERS_KEY_NAME)),""));
             listaFinal.add(resul);
             aux.moveToNext();
         }

@@ -83,11 +83,11 @@ public class AddReceta extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         yo=this;
         Bundle b = getIntent().getExtras();
-        user = new User("","");
-        rec = new Recipe(-1,"",0,0,new byte[]{},user);
+        user = new User(-1, "","");
+        rec = new Recipe(-1,"",0,0,0,new byte[]{},user,null,null,null);
         if(b != null)
             user = (User)b.getSerializable("user");
-            rec = (Recipe)b.getSerializable("receta");
+        rec = (Recipe)b.getSerializable("receta");
         System.out.println(rec.getName());
         lp=new ArrayList<>();
         super.onCreate(savedInstanceState);
@@ -308,7 +308,7 @@ public class AddReceta extends AppCompatActivity {
             //System.out.println("VOY A MOSTRAR " + pd.tiempo);
             //aux.setText(pd.contenido + "\n TIEMPO = " + pd.tiempo + " - YO:" + yo);
             //EditText tiempo = (EditText) rootView.findViewById(R.id.tiempo);
-           // tiempo.setText(pd.tiempo);
+            // tiempo.setText(pd.tiempo);
             EditText tiempo = (EditText) rootView.findViewById(R.id.tiempoReceta);
             EditText desc = (EditText) rootView.findViewById(R.id.descripcionPasos);
             //desc.setText("COJON DE PUTAS " + pd.tiempo);

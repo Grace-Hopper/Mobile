@@ -35,6 +35,25 @@
     <string name="description">¿No sabes que preparar para esa cena especial? ¿O no recuerdas como cocinar ese plato que tanto te gustaba?
     Facilita tu vida culinaria con Receticas®, la aplicación que te ayuda a decidir, preparar y guardar cualquier receta.\n\n\n\n\n\nAplicación desarrollada por Grace Hopper.</string>
     <string name="password">Cambiar la contraseña del usuario.</string>
+    <string-array name="spinner">
+        <item>Array Item One</item>
+        <item>Array Item Two</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+        <item>Array Item Three</item>
+    </string-array>
     <string name="title_activity_destacados">Destacados</string>
     <string name="title_activity_pasos">Pasos</string>
     <string name="title_activity_add_receta">AddReceta</string>

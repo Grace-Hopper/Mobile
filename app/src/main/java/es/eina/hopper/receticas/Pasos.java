@@ -68,7 +68,7 @@ public class Pasos extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         yo=this;
         Bundle b = getIntent().getExtras();
-        user = new User("","");
+        user = new User(-1,"","");
         if(b != null)
             user = (User)b.getSerializable("user");
             rec = (Recipe)b.getSerializable("receta");
