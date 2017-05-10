@@ -101,12 +101,29 @@ public class Recipe implements Serializable {
         return utensils;
     }
 
+    public ArrayList<String> getListUtensils(){
+        ArrayList<String> lista = new ArrayList<String>();
+        for(int i = 0; i < utensils.size(); i++) {
+            lista.add(utensils.get(i).getName());
+        }
+        return lista;
+    }
+
     public void setUtensils(List<Utensil> utensils){
         this.utensils = utensils;
     }
 
     public List<Ingredient> getIngredients() {
         return ingredients;
+    }
+
+
+    public ArrayList<String> getListIngredients(){
+        ArrayList<String> lista = new ArrayList<String>();
+        for(int i = 0; i < ingredients.size(); i++) {
+            lista.add(ingredients.get(i).getName());
+        }
+        return lista;
     }
 
     public void setIngredients(List<Ingredient> ingredients){

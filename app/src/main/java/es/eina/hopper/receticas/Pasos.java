@@ -2,6 +2,7 @@ package es.eina.hopper.receticas;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -20,21 +21,28 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import es.eina.hopper.models.Ingredient;
 import es.eina.hopper.models.Recipe;
+import es.eina.hopper.models.Step;
 import es.eina.hopper.models.User;
+import es.eina.hopper.models.Utensil;
 
 public class Pasos extends AppCompatActivity {
 
@@ -53,15 +61,8 @@ public class Pasos extends AppCompatActivity {
     public Activity yo;
     private ViewPager mViewPager;
     private  TabLayout tabLayout;
-    public static class PasosDetalle{
-        public String contenido;
-        public int tiempo;
-        public PasosDetalle(String c,int t){
-            tiempo=t;
-            contenido=c;
-        }
-    }
-    ArrayList<PasosDetalle> lp;
+    private Step paso;
+    ArrayList<Step> lp;
     User user;
     Recipe rec;
     @Override
@@ -71,10 +72,26 @@ public class Pasos extends AppCompatActivity {
         user = new User(-1,"","");
         if(b != null)
             user = (User)b.getSerializable("user");
-            rec = (Recipe)b.getSerializable("receta");
+            //rec = (Recipe)b.getSerializable("receta");
+        Utensil a = new Utensil(-1, "cuchillo");
+        List<Utensil> utensilitos = new ArrayList<Utensil>();
+        utensilitos.add(a);
+        a = new Utensil(-1, "tenedor");
+        utensilitos.add(a);
+        List<Ingredient> ingredientitos = new ArrayList<Ingredient>();
+        Ingredient i1 = new Ingredient(-1, "pollas", "un par", null);
+        ingredientitos.add(i1);
+        i1 = new Ingredient(-1, "cojones", "otro par", null);
+        ingredientitos.add(i1);
+        List<Step> pasitos = new ArrayList<Step>();
+        Step c = new Step(-1, null, 50, "freir o algo de eso", utensilitos, ingredientitos);
+        pasitos.add(c);
+        c = new Step(-1, null, 80, "comerme la polla", utensilitos, ingredientitos);
+        pasitos.add(c);
+        rec= new Recipe(-1, "Pollas en vinagre", 200, 6, 0, null, null, utensilitos, ingredientitos, pasitos);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pasos);
-        lp=new ArrayList<>();
+        lp=new ArrayList<Step>();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(rec.getName());
         setSupportActionBar(toolbar);
@@ -84,11 +101,13 @@ public class Pasos extends AppCompatActivity {
         //mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         for(int i=0;i<15;i++){
             //lp.add(new PasosDetalle("CONTENIDO DEL PASO " + i, i*10));
-            lp.add(new PasosDetalle("WOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\n ", i*10));
+            /*lp.add(new Step(-1, rec, 60, "WOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\n ",
+                    rec.getUtensils(), rec.getIngredients()));*/
+            lp.add(c);
         }
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
-        setupViewPager(mViewPager,lp);
+        setupViewPager(mViewPager,rec.getSteps());
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -116,7 +135,7 @@ public class Pasos extends AppCompatActivity {
 
         return(super.onOptionsItemSelected(item));
     }
-    private void setupViewPager(ViewPager viewPager, ArrayList<PasosDetalle> lp) {
+    private void setupViewPager(ViewPager viewPager, List<Step> lp) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         for(int i=0;i<lp.size();i++) {
             PlaceholderFragment a = new PlaceholderFragment();
@@ -164,6 +183,7 @@ public class Pasos extends AppCompatActivity {
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
         String contenido;
+        Step paso;
         int tiempo;
         boolean crono=false;
         CountDownTimer contador;
@@ -173,9 +193,8 @@ public class Pasos extends AppCompatActivity {
             contenido="VACIO ESTE PASO LOCO";
             tiempo=10;
         }
-        public void setArguments(PasosDetalle pd) {
-            contenido=pd.contenido;
-            tiempo=pd.tiempo;
+        public void setArguments(Step pd) {
+            paso = pd;
         }
 
         /**
@@ -195,7 +214,22 @@ public class Pasos extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_pasos, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            TextView textView = (TextView) rootView.findViewById(R.id.descripcion);
+            Spinner spinnerIngredientes = (Spinner) rootView.findViewById(R.id.spinnerIngredientes);
+            Spinner spinnerUtensilios = (Spinner) rootView.findViewById(R.id.spinnerUtensilios);
+            Utensil a = new Utensil(-1, "cuchillo");
+            List<Utensil> utensilitos = new ArrayList<Utensil>();
+            utensilitos.add(a);
+            a = new Utensil(-1, "tenedor");
+            utensilitos.add(a);
+            List<Ingredient> ingredientitos = new ArrayList<Ingredient>();
+            Ingredient i1 = new Ingredient(-1, "pollas", "un par", null);
+            ingredientitos.add(i1);
+            i1 = new Ingredient(-1, "cojones", "otro par", null);
+            ingredientitos.add(i1);
+            paso = new Step(-1, null, 50, "freir o algo de eso", utensilitos, ingredientitos);
+            spinnerIngredientes.setAdapter(new ArrayAdapter<String>(getContext(), -1, paso.getListIngredients()));
+
             chrono = (TextView) rootView.findViewById(R.id.tempo);
             final Button comen = (Button) rootView.findViewById(R.id.iniciar);
             final Button reini = (Button) rootView.findViewById(R.id.restablecer);
@@ -378,7 +412,7 @@ public class Pasos extends AppCompatActivity {
                 reini.setVisibility(View.GONE);
                 chrono.setVisibility(View.GONE);
             }
-            textView.setText(contenido);
+            textView.setText("holi");
             return rootView;
         }
     }

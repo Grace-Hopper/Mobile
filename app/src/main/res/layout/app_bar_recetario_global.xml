@@ -30,8 +30,18 @@
                         android:layout_weight="8"
                         app:srcCompat="@android:drawable/ic_menu_search" />
 
+<<<<<<< Updated upstream
             </android.support.v7.widget.Toolbar>
         </RelativeLayout>
+=======
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+        </android.support.v7.widget.Toolbar>
+>>>>>>> Stashed changes
 
     </android.support.design.widget.AppBarLayout>
 
