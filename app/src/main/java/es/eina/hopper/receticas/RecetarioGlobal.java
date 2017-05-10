@@ -99,6 +99,7 @@ public class RecetarioGlobal extends AppCompatActivity
             }
 
         });
+        
 
         fillData();
     }

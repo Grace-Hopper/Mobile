@@ -71,6 +71,7 @@ import es.eina.hopper.models.*;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static es.eina.hopper.receticas.R.id.parent;
 
 
 /**
@@ -112,12 +113,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            cambiarVista();
+            cambiarVista(false);
 
     }
 
-    void cambiarVista(){
-        if(true) {
+    void cambiarVista(boolean modoDesconectado){
+        if(true && !modoDesconectado) {
             setContentView(R.layout.activity_login);
 
             // Set up the login form.
@@ -154,7 +155,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     registrarse();
                 }
             });
-
+            Button LoginButtonNoConection = (Button) findViewById(R.id.login_without_conection);
+            LoginButtonNoConection.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cambiarVista(true);
+                }
+            });
             mLoginFormView = findViewById(R.id.login_form);
             mProgressView = findViewById(R.id.login_progress);
         }
