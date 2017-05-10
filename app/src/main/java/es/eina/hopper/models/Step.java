@@ -62,8 +62,8 @@ public class Step implements Serializable {
 
     public ArrayList<String> getListUtensils(){
         ArrayList<String> lista = new ArrayList<String>();
-        for(int i = 0; i < ingredients.size(); i++) {
-            lista.add(ingredients.get(i).getName());
+        for(int i = 0; i < utensils.size(); i++) {
+            lista.add(utensils.get(i).getName());
         }
         return lista;
     }

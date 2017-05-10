@@ -61,8 +61,6 @@ public class Pasos extends AppCompatActivity {
     public Activity yo;
     private ViewPager mViewPager;
     private  TabLayout tabLayout;
-    private Step paso;
-    ArrayList<Step> lp;
     User user;
     Recipe rec;
     @Override
@@ -91,7 +89,6 @@ public class Pasos extends AppCompatActivity {
         rec= new Recipe(-1, "Pollas en vinagre", 200, 6, 0, null, null, utensilitos, ingredientitos, pasitos);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pasos);
-        lp=new ArrayList<Step>();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(rec.getName());
         setSupportActionBar(toolbar);
@@ -103,7 +100,6 @@ public class Pasos extends AppCompatActivity {
             //lp.add(new PasosDetalle("CONTENIDO DEL PASO " + i, i*10));
             /*lp.add(new Step(-1, rec, 60, "WOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\n ",
                     rec.getUtensils(), rec.getIngredients()));*/
-            lp.add(c);
         }
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -216,20 +212,18 @@ public class Pasos extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_pasos, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.descripcion);
             Spinner spinnerIngredientes = (Spinner) rootView.findViewById(R.id.spinnerIngredientes);
-            Spinner spinnerUtensilios = (Spinner) rootView.findViewById(R.id.spinnerUtensilios);
-            Utensil a = new Utensil(-1, "cuchillo");
-            List<Utensil> utensilitos = new ArrayList<Utensil>();
-            utensilitos.add(a);
-            a = new Utensil(-1, "tenedor");
-            utensilitos.add(a);
-            List<Ingredient> ingredientitos = new ArrayList<Ingredient>();
-            Ingredient i1 = new Ingredient(-1, "pollas", "un par", null);
-            ingredientitos.add(i1);
-            i1 = new Ingredient(-1, "cojones", "otro par", null);
-            ingredientitos.add(i1);
-            paso = new Step(-1, null, 50, "freir o algo de eso", utensilitos, ingredientitos);
-            spinnerIngredientes.setAdapter(new ArrayAdapter<String>(getContext(), -1, paso.getListIngredients()));
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
+                    (getContext(), android.R.layout.simple_spinner_item,paso.getListIngredients());
+            dataAdapter.setDropDownViewResource
+                    (android.R.layout.simple_spinner_dropdown_item);
+            spinnerIngredientes.setAdapter(dataAdapter);
 
+            Spinner spinnerUtensilios = (Spinner) rootView.findViewById(R.id.spinnerUtensilios);
+            ArrayAdapter<String> dataAdapter2 = new ArrayAdapter<String>
+                    (getContext(), android.R.layout.simple_spinner_item,paso.getListUtensils());
+            dataAdapter2.setDropDownViewResource
+                    (android.R.layout.simple_spinner_dropdown_item);
+            spinnerUtensilios.setAdapter(dataAdapter2);
             chrono = (TextView) rootView.findViewById(R.id.tempo);
             final Button comen = (Button) rootView.findViewById(R.id.iniciar);
             final Button reini = (Button) rootView.findViewById(R.id.restablecer);
@@ -257,8 +251,19 @@ public class Pasos extends AppCompatActivity {
                         chrono.setText("00:00");
                         seg=0;
                         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                        if(notification==null){
+                            notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                            if(notification==null){
+                                notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                            }
+                        }
                         final Ringtone r = RingtoneManager.getRingtone(getContext().getApplicationContext(), notification);
-                        r.play();
+                        try {
+                            r.play();
+                        }
+                        catch (NullPointerException a ){
+
+                        }
                         pararAlarma.setVisibility(View.VISIBLE);
                         reini.setVisibility(View.GONE);
                         comen.setVisibility(View.GONE);
@@ -268,7 +273,12 @@ public class Pasos extends AppCompatActivity {
                                 pararAlarma.setVisibility(View.GONE);
                                 reini.setVisibility(View.VISIBLE);
                                 comen.setVisibility(View.VISIBLE);
-                                r.stop();
+                                try {
+                                    r.stop();
+                                }
+                                catch (NullPointerException a ){
+
+                                }
                             }
                         });
                         new CountDownTimer(5 * 1000, 500) {
@@ -315,7 +325,12 @@ public class Pasos extends AppCompatActivity {
                                     seg=0;
                                     Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                                     final Ringtone r = RingtoneManager.getRingtone(getContext().getApplicationContext(), notification);
-                                    r.play();
+                                    try {
+                                        r.play();
+                                    }
+                                    catch (NullPointerException a ){
+
+                                    }
                                     pararAlarma.setVisibility(View.VISIBLE);
                                     reini.setVisibility(View.GONE);
                                     comen.setVisibility(View.GONE);
@@ -325,7 +340,12 @@ public class Pasos extends AppCompatActivity {
                                             pararAlarma.setVisibility(View.GONE);
                                             reini.setVisibility(View.VISIBLE);
                                             comen.setVisibility(View.VISIBLE);
-                                            r.stop();
+                                            try {
+                                                r.stop();
+                                            }
+                                            catch (NullPointerException a ){
+
+                                            }
                                         }
                                     });
                                     new CountDownTimer(5 * 1000, 500) {
@@ -372,7 +392,12 @@ public class Pasos extends AppCompatActivity {
                                 chrono.setText("00:00");
                                 Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
                                 final Ringtone r = RingtoneManager.getRingtone(getContext().getApplicationContext(), notification);
-                                r.play();
+                                try {
+                                    r.play();
+                                }
+                                catch (NullPointerException a ){
+
+                                }
                                 pararAlarma.setVisibility(View.VISIBLE);
                                 reini.setVisibility(View.GONE);
                                 comen.setVisibility(View.GONE);
@@ -382,7 +407,12 @@ public class Pasos extends AppCompatActivity {
                                         pararAlarma.setVisibility(View.GONE);
                                         reini.setVisibility(View.VISIBLE);
                                         comen.setVisibility(View.VISIBLE);
-                                        r.stop();
+                                        try {
+                                            r.stop();
+                                        }
+                                        catch (NullPointerException a ){
+
+                                        }
                                     }
                                 });
                                 new CountDownTimer(5 * 1000, 500) {

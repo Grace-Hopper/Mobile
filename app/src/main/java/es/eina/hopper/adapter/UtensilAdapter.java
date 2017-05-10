@@ -2,6 +2,8 @@ package es.eina.hopper.adapter;
 
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,13 +51,19 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
 
         final EditText utensilio = (EditText) convertView.findViewById(R.id.utensilio);
         utensilio.setText(mUten.getName());
-        utensilio.setOnFocusChangeListener(new View.OnFocusChangeListener(){
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+        TextWatcher watcher= new TextWatcher() {
+            public void afterTextChanged(Editable s) {
                 mUten.setName(utensilio.getText().toString());
             }
-        });
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //Do something or nothing.
+            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //Do something or nothing
+            }
+        };
+
+        utensilio.addTextChangedListener(watcher);
         Button add = (Button) convertView.findViewById(R.id.button);
         if(position==list.size()-1){
             add.setText("+");

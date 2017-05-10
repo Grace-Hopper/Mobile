@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.ContextMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,8 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.eina.hopper.adapter.RecipesAdapter;
+import es.eina.hopper.models.Ingredient;
 import es.eina.hopper.models.Recipe;
+import es.eina.hopper.models.Step;
 import es.eina.hopper.models.User;
+import es.eina.hopper.models.Utensil;
 import es.eina.hopper.util.UtilRecipes;
 import es.eina.hopper.util.UtilService;
 import retrofit2.Call;
@@ -66,7 +70,7 @@ public class RecetarioLocal
                 Intent i = new Intent(yo, AddReceta.class);
                 Bundle b = new Bundle();
                 b.putSerializable("user", user); //Your id
-                //b.putSerializable("receta", new Recipe(-1,"",0,0,0,new byte[]{},user,null,null,null));
+                b.putSerializable("receta", new Recipe(-1,"",0,0,0,new byte[]{},user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>()));
                 i.putExtras(b); //Put your id to your next Intent
                 startActivity(i);
             }
@@ -101,8 +105,47 @@ public class RecetarioLocal
             }
 
         });
+
+        mList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                return false;
+            }
+        });
+        registerForContextMenu(mList);
         fillData();
 
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId()==R.id.list) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            menu.setHeaderTitle(((Recipe)mList.getItemAtPosition(info.position)).getName());
+            String[] menuItems = {"EDITAR","BORRAR"};
+            for (int i = 0; i<menuItems.length; i++) {
+                menu.add(Menu.NONE, i, i, menuItems[i]);
+            }
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int menuItemIndex = item.getItemId();
+        String[] menuItems = {"EDITAR","BORRAR"};
+
+        if(menuItemIndex==0){
+            Recipe a = (Recipe)mList.getItemAtPosition(info.position);
+            Intent i = new Intent(yo, AddReceta.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            b.putSerializable("receta", a);
+            i.putExtras(b); //Put your id to your next Intent
+            startActivity(i);
+        }
+        return true;
     }
 
     /**

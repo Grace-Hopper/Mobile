@@ -83,19 +83,17 @@ public class AddReceta extends AppCompatActivity {
     private ViewPager mViewPager;
     private  TabLayout tabLayout;
     User user;
-   public static Recipe rec;
+    public static Recipe rec;
     int numPasos = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         yo=this;
         Bundle b = getIntent().getExtras();
         user = new User(-1, "","");
-        ArrayList<Utensil> uten = new ArrayList<Utensil>();
-        uten.add(new Utensil(0,"cuchara"));
-        rec = new Recipe(-1,"LA RECETA",0,0,0,new byte[]{},user,uten,new ArrayList<Ingredient>(),new ArrayList<Step>());
+        rec = new Recipe(-1,"",0,0,0,new byte[]{},user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>());
         if(b != null)
             user = (User)b.getSerializable("user");
-            //rec = (Recipe)b.getSerializable("receta");
+            rec = (Recipe)b.getSerializable("receta");
         System.out.println(rec.getName());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_receta);
@@ -105,6 +103,8 @@ public class AddReceta extends AppCompatActivity {
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                v.requestFocus();
                 DescripcionReceta a = (DescripcionReceta)((ViewPagerAdapter)mViewPager.getAdapter()).getItem(0);
                 ArrayList<Step> pasitos = new ArrayList<Step>();
                 ViewPagerAdapter adap = (ViewPagerAdapter)mViewPager.getAdapter();
@@ -114,6 +114,9 @@ public class AddReceta extends AppCompatActivity {
                 rec.setSteps(pasitos);
                 rec.setPerson(a.getPerson());
                 rec.setTotal_time(a.getTime());
+                rec.setName(a.getNombre());
+                rec.setUtensils(a.getUtensilios());
+                rec.setIngredients(a.getIngredientes());
                 System.out.println("RECETA: " + rec.getName());
                 System.out.println("COMENSALES: " + rec.getPerson());
                 System.out.println("TIEMPO: " + rec.getTotal_time());
@@ -481,6 +484,9 @@ public class AddReceta extends AppCompatActivity {
         private Recipe receta;
         EditText nComensales;
         EditText tiempo;
+        AutoCompleteTextView nombreReceta;
+        ListView mListUten;
+        ListView mListIngr;
         public DescripcionReceta() {
 
         }
@@ -494,24 +500,24 @@ public class AddReceta extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_descripcion_receta, container, false);
-            AutoCompleteTextView NombreReceta = (AutoCompleteTextView) rootView.findViewById(R.id.titulo_receta);
+            nombreReceta = (AutoCompleteTextView) rootView.findViewById(R.id.titulo_receta);
             MultiAutoCompleteTextView Descripcion = (MultiAutoCompleteTextView) rootView.findViewById(R.id.descripcion);
             nComensales = (EditText) rootView.findViewById(R.id.comensales);
             tiempo = (EditText) rootView.findViewById(R.id.tiempo);
-            NombreReceta.setText(receta.getName());
+            nombreReceta.setText(receta.getName());
             Descripcion.setText("");
 
-            ListView mList = (ListView)rootView.findViewById(R.id.listUtensilios);
+            mListUten = (ListView)rootView.findViewById(R.id.listUtensilios);
             final UtensilAdapter adapter = new UtensilAdapter(getContext(), (ArrayList)receta.getUtensils());
-            mList.setAdapter(adapter);
-            mList.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            mListUten.setAdapter(adapter);
+            mListUten.setOnFocusChangeListener(new View.OnFocusChangeListener(){
 
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     receta.setUtensils(adapter.getUtensilios());
                 }
             });
-            ListView mListIngr = (ListView)rootView.findViewById(R.id.listIngredientes);
+            mListIngr = (ListView)rootView.findViewById(R.id.listIngredientes);
             final IngredientsAdapter adapterIngr = new IngredientsAdapter(getContext(), (ArrayList)receta.getIngredients());
             mListIngr.setAdapter(adapterIngr);
             mListIngr.setOnFocusChangeListener(new View.OnFocusChangeListener(){
@@ -546,6 +552,16 @@ public class AddReceta extends AppCompatActivity {
             else{
                 return 0;
             }
+        }
+        public String getNombre(){
+            return nombreReceta.getText().toString();
+        }
+
+        public List<Utensil> getUtensilios(){
+            return ((UtensilAdapter)mListUten.getAdapter()).getUtensilios();
+        }
+        public List<Ingredient> getIngredientes(){
+            return ((IngredientsAdapter)mListIngr.getAdapter()).getIngredients();
         }
     }
 }

@@ -2,6 +2,10 @@ package es.eina.hopper.adapter;
 
 
 import android.content.Context;
+import android.graphics.Path;
+import android.text.Editable;
+import android.text.Layout;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,22 +54,34 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
         // Lookup view for data population
         final EditText nombre_ingrediente = (EditText) convertView.findViewById(R.id.ingredienteText);
         nombre_ingrediente.setText(mIngredient.getName());
-        nombre_ingrediente.setOnFocusChangeListener(new View.OnFocusChangeListener(){
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+        TextWatcher watcher= new TextWatcher() {
+            public void afterTextChanged(Editable s) {
                 mIngredient.setName(nombre_ingrediente.getText().toString());
             }
-        });
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //Do something or nothing.
+            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //Do something or nothing
+            }
+        };
+
+        nombre_ingrediente.addTextChangedListener(watcher);
         final EditText cantidad_ingrediente = (EditText) convertView.findViewById(R.id.ingredienteQuantity);
         cantidad_ingrediente.setText(mIngredient.getQuantity());
-        cantidad_ingrediente.setOnFocusChangeListener(new View.OnFocusChangeListener(){
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+        TextWatcher watcher1= new TextWatcher() {
+            public void afterTextChanged(Editable s) {
                 mIngredient.setQuantity(cantidad_ingrediente.getText().toString());
             }
-        });
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //Do something or nothing.
+            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //Do something or nothing
+            }
+        };
+
+        cantidad_ingrediente.addTextChangedListener(watcher1);
 
         Button add = (Button) convertView.findViewById(R.id.ingredienteButton);
         if(position==list.size()-1){
@@ -75,6 +91,7 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
                 public void onClick(View view) {
                     list.add(new Ingredient(-1, "", "", null));
                     a.notifyDataSetChanged();
+                    view.focusSearch(View.FOCUS_DOWN);
                 }
             });
         }
@@ -85,6 +102,7 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
                 public void onClick(View view) {
                     if(list.size()>1) {
                         list.remove(position);
+                        view.focusSearch(View.FOCUS_UP);
                     }
                     else{
                         list.get(position).setName("");
