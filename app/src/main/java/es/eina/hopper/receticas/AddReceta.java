@@ -1,6 +1,7 @@
 package es.eina.hopper.receticas;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
@@ -20,6 +21,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -139,6 +141,99 @@ public class AddReceta extends AppCompatActivity {
                     System.out.println(rec.getSteps().get(i).getInformation());
                     System.out.println(rec.getSteps().get(i).getTime());
                 }
+
+                //COMPROBAR SI HAY CAMPOS VACIOS
+                int numeroErrores = 0;
+                String error = new String();
+                if("".equals(rec.getName())){
+                    if(numeroErrores >= 6){
+                        error = error + "Existen mas campos por rellenar.\n";
+                    }else{
+                        numeroErrores++;
+                        error = error + "La receta debe tener un nombre.\n";
+                    }
+
+                }
+                if(rec.getTotal_time() <= 0){
+                    if(numeroErrores >= 6){
+                        error = error + "Existen mas campos por rellenar.\n";
+                    }else {
+                        numeroErrores++;
+                        error = error + "El tiempo de la receta debe ser mayor que cero.\n";
+                    }
+
+                }
+                if(rec.getPerson() <= 0){
+                    if(numeroErrores >= 6){
+                        error = error + "Existen mas campos por rellenar.\n";
+                    }else {
+                        numeroErrores++;
+                        error = error + "El numero de comensales ha de ser mayor que cero.\n";
+                    }
+                }
+                if(rec.getIngredients().size() <= 0){
+                    if(numeroErrores >= 6){
+                        error = error + "Existen mas campos por rellenar.\n";
+                    }else {
+                        numeroErrores++;
+                        error = error + "La receta debe tener al menos un ingrediente.\n";
+                    }
+                }
+                if(rec.getUtensils().size() <= 0){
+                    if(numeroErrores >= 6){
+                        error = error + "Existen mas campos por rellenar.\n";
+                    }else {
+                        numeroErrores++;
+                        error = error + "La receta debe tener al menos un utensilio.\n";
+                    }
+                }
+                if(rec.getSteps().size() <= 0){
+                    if(numeroErrores >= 6){
+                        error = error + "Existen mas campos por rellenar.\n";
+                    }else {
+                        numeroErrores++;
+                        error = error + "La receta debe tener al menos un paso.\n";
+                    }
+                }
+                List<Ingredient> listaIngredientes = rec.getIngredients();
+                for(int i = 0; i < listaIngredientes.size(); i++) {
+                    if("".equals(listaIngredientes.get(i).getQuantity()) && numeroErrores < 6){
+                        numeroErrores++;
+                        error = error + "La cantidad de " + listaIngredientes.get(i).getName() +" debe ser mayor que cero.\n";
+                    }
+                    if("".equals(listaIngredientes.get(i).getName()) && !"".equals(listaIngredientes.get(i).getQuantity()) && numeroErrores < 6){
+                        numeroErrores++;
+                        error = error + "Se ha introducido una cantidad sin su correspondiente ingrediente.\n";
+                    }
+                }
+                List<Step> listaPasos = rec.getSteps();
+                for(int i = 0; i < listaPasos.size(); i++) {
+                    if("".equals(listaPasos.get(i).getInformation()) && numeroErrores < 6){
+                        numeroErrores++;
+                        error = error + "El paso " + (i+1) + " debe tener informacion.\n";
+                    }
+                    if(listaPasos.get(i).getTime() <= 0 && numeroErrores < 6){
+                        numeroErrores++;
+                        error = error + "El tiempo del paso " + (i+1) + " debe ser mayor que cero.\n";
+
+                    }
+                }
+                
+                if(numeroErrores > 0){
+                    new AlertDialog.Builder(yo).setTitle("Error").setMessage(error)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
             }
         });
         setSupportActionBar(toolbar);
@@ -230,6 +325,7 @@ public class AddReceta extends AppCompatActivity {
         });
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -587,9 +683,11 @@ public class AddReceta extends AppCompatActivity {
         }
 
         public List<Utensil> getUtensilios(){
+            ((UtensilAdapter)mListUten.getAdapter()).notifyDataSetChanged();
             return ((UtensilAdapter)mListUten.getAdapter()).getUtensilios();
         }
         public List<Ingredient> getIngredientes(){
+            ((IngredientsAdapter)mListIngr.getAdapter()).notifyDataSetChanged();
             return ((IngredientsAdapter)mListIngr.getAdapter()).getIngredients();
         }
         public void setImagen(String path){

@@ -119,7 +119,7 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
     public ArrayList<Ingredient> getIngredients() {
         ArrayList<Ingredient> aux = new ArrayList<Ingredient>();
         for(int i=0;i<list.size();i++){
-            if(!list.get(i).getName().equals("")) {
+            if(!list.get(i).getName().equals("") || !list.get(i).getQuantity().equals("")) {
                 aux.add(list.get(i));
             }
         }
