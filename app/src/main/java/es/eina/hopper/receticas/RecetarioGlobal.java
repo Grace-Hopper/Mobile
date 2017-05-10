@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -58,14 +59,18 @@ public class RecetarioGlobal extends AppCompatActivity
 
         System.out.println(user.getName());
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        ImageButton fab = (ImageButton) findViewById(R.id.buscador);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(yo, Buscador.class);
+                Bundle b = new Bundle();
+                b.putSerializable("user", user); //Your id
+                //b.putSerializable("receta", new Recipe(-1,"",0,0,0,new byte[]{},user,null,null,null));
+                i.putExtras(b); //Put your id to your next Intent
+                startActivity(i);
             }
-        });*/
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

@@ -58,4 +58,5 @@
     <string name="title_activity_pasos">Pasos</string>
     <string name="title_activity_add_receta">AddReceta</string>
     <string name="nombre_de_la_receta">Nombre de la receta</string>
+    <string name="title_activity_buscador">Buscador</string>
 </resources>
