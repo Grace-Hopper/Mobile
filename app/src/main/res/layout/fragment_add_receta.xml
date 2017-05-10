@@ -32,12 +32,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <Spinner
-            android:id="@+id/spinnerIngredientes"
+        <es.eina.hopper.receticas.MultiSelectionSpinner android:id="@+id/spinnerIngredientes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:entries="@array/spinner"/>
+            android:layout_weight="1"/>
 
         <es.eina.hopper.receticas.MultiSelectionSpinner android:id="@+id/spinnerUtensilios"
             android:layout_width="match_parent"

@@ -26,6 +26,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +38,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Scroller;
@@ -44,10 +46,12 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import es.eina.hopper.adapter.IngredientsAdapter;
 import es.eina.hopper.adapter.RecipesAdapter;
 import es.eina.hopper.adapter.UtensilAdapter;
 import es.eina.hopper.models.Ingredient;
@@ -97,6 +101,37 @@ public class AddReceta extends AppCompatActivity {
         setContentView(R.layout.activity_add_receta);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Añadir receta");
+        ImageButton guardar = (ImageButton)toolbar.findViewById(R.id.guardar);
+        guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DescripcionReceta a = (DescripcionReceta)((ViewPagerAdapter)mViewPager.getAdapter()).getItem(0);
+                ArrayList<Step> pasitos = new ArrayList<Step>();
+                ViewPagerAdapter adap = (ViewPagerAdapter)mViewPager.getAdapter();
+                for(int i=1;i<adap.getCount();i++){
+                    pasitos.add(((PlaceholderFragment)adap.getItem(i)).getPasos());
+                }
+                rec.setSteps(pasitos);
+                rec.setPerson(a.getPerson());
+                rec.setTotal_time(a.getTime());
+                System.out.println("RECETA: " + rec.getName());
+                System.out.println("COMENSALES: " + rec.getPerson());
+                System.out.println("TIEMPO: " + rec.getTotal_time());
+                System.out.println("INGREDIENTES:");
+                for(int i=0;i<rec.getIngredients().size();i++){
+                    System.out.println(rec.getIngredients().get(i).getName() + ": " + rec.getIngredients().get(i).getQuantity());
+                }
+                System.out.println("UTENSILIOS:");
+                for(int i=0;i<rec.getUtensils().size();i++){
+                    System.out.println(rec.getUtensils().get(i).getName());
+                }
+                System.out.println("PASOS:");
+                for(int i=0;i<rec.getSteps().size();i++){
+                    System.out.println(rec.getSteps().get(i).getInformation());
+                    System.out.println(rec.getSteps().get(i).getTime());
+                }
+            }
+        });
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the adapter that will return a fragment for each of the three
@@ -112,7 +147,7 @@ public class AddReceta extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 int current = mViewPager.getCurrentItem();
-                Step a = new Step(0,rec,numPasos,"Troleito Pa tu culo", new ArrayList<Utensil>(),new ArrayList<Ingredient>());
+                Step a = new Step(0,rec,0,"", new ArrayList<Utensil>(),new ArrayList<Ingredient>());
                 rec.getSteps().add(current,a);
                 PlaceholderFragment b = new PlaceholderFragment();
                 b.setArguments(a,numPasos);
@@ -132,9 +167,7 @@ public class AddReceta extends AppCompatActivity {
                 rec.getSteps().remove(current-1);
                 ViewPagerAdapter adapter = (ViewPagerAdapter)mViewPager.getAdapter();
                 numPasos--;
-                System.out.println("FRAGMENTS: " + numPasos + " ____ REALES: " + getSupportFragmentManager().getFragments().size());
                 getSupportFragmentManager().beginTransaction().remove(adapter.getItem(current)).commitNow();
-                System.out.println("FRAGMENTS: " + numPasos + " ____ REALES: " + getSupportFragmentManager().getFragments().size());
                 adapter.remove(current);
                 adapter.actualizarNom();
                 mViewPager.setAdapter(adapter);
@@ -145,11 +178,22 @@ public class AddReceta extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
                 int numTab = tab.getPosition();
                 mViewPager.setCurrentItem(numTab);
+                ViewPagerAdapter adapter = (ViewPagerAdapter)mViewPager.getAdapter();
+                for(int i=0;i<adapter.getCount();i++){
+                    try{
+                        PlaceholderFragment aux = (PlaceholderFragment)adapter.getItem(numTab);
+                        aux.update();
+                    }
+                    catch (ClassCastException a){
+
+                    }
+                }
                 if(numTab==numPasos && numTab>=1){
                     borrar.setVisibility(View.VISIBLE);
                 }
@@ -200,7 +244,6 @@ public class AddReceta extends AppCompatActivity {
             adapter.addFrag(b, "PASO " + (i+1));
         }
         viewPager.removeAllViews();
-        adapter.compro();
         viewPager.setAdapter(adapter);
     }
 
@@ -221,14 +264,12 @@ public class AddReceta extends AppCompatActivity {
 
         @Override
         public int getItemPosition(Object object) {
-            System.out.println("BORRRAAAAR");
             for(int i=0;i<mFragmentTitleList.size();i++){
                 System.out.println(mFragmentTitleList.get(i));
             }
             if (mFragmentList.contains((Fragment) object)) {
                 return mFragmentList.indexOf((Fragment) object);
             } else {
-                System.out.println("JODER DEBERIA DE IR OSTIA PUTA");
                 return POSITION_NONE;
             }
         }
@@ -263,11 +304,6 @@ public class AddReceta extends AppCompatActivity {
                 notifyDataSetChanged();
             }
         }
-        public void compro(){
-            for(int i=0;i<mFragmentList.size();i++){
-                System.out.println("ESTA MIERDA FUNCA " + mFragmentList.get(i));
-            }
-        }
 
         @Override
         public CharSequence getPageTitle(int position) {
@@ -282,7 +318,10 @@ public class AddReceta extends AppCompatActivity {
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+        EditText tiempo;
+        EditText desc;
+        MultiSelectionSpinner utensilios;
+        MultiSelectionSpinner ingredientes;
         Step pd;
         int yo;
         public PlaceholderFragment() {
@@ -298,9 +337,6 @@ public class AddReceta extends AppCompatActivity {
          */
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
             return fragment;
         }
 
@@ -315,19 +351,125 @@ public class AddReceta extends AppCompatActivity {
             //aux.setText(pd.contenido + "\n TIEMPO = " + pd.tiempo + " - YO:" + yo);
             //EditText tiempo = (EditText) rootView.findViewById(R.id.tiempo);
             // tiempo.setText(pd.tiempo);
-            EditText tiempo = (EditText) rootView.findViewById(R.id.tiempoReceta);
-            EditText desc = (EditText) rootView.findViewById(R.id.descripcionPasos);
+            tiempo = (EditText) rootView.findViewById(R.id.tiempoReceta);
+            desc = (EditText) rootView.findViewById(R.id.descripcionPasos);
             desc.setText(pd.getInformation());
             tiempo.setText(Objects.toString(pd.getTime(),null));
-            MultiSelectionSpinner msp = (MultiSelectionSpinner) rootView.findViewById(R.id.spinnerUtensilios);
+            utensilios = (MultiSelectionSpinner) rootView.findViewById(R.id.spinnerUtensilios);
             final List<Utensil> ute = pd.getRecipe().getUtensils();
+            utensilios.setListener(new MultiSelectionSpinner.OnMultipleItemsSelectedListener() {
+                @Override
+                public void selectedIndices(List<Integer> indices) {
+                    pd.setIngredients(new ArrayList<Ingredient>());
+                    System.out.println("INGREDIENTES: " + indices.size());
+                    for(int i=0;i<indices.size();i++){
+                        pd.getIngredients().add(pd.getRecipe().getIngredients().get(indices.get(i)));
+                    }
+                }
+
+                @Override
+                public void selectedStrings(List<String> strings) {
+
+                }
+            });
             List<String> luten = new ArrayList<>();
             for(int i=0;i< ute.size();i++){
                 luten.add(ute.get(i).getName());
             }
-            msp.setItems(luten);
+            if(luten.size()>0) {
+                utensilios.setItems(luten);
+            }
+            ingredientes = (MultiSelectionSpinner) rootView.findViewById(R.id.spinnerIngredientes);
+            final List<Ingredient> ingr = pd.getRecipe().getIngredients();
+            ingredientes.setListener(new MultiSelectionSpinner.OnMultipleItemsSelectedListener() {
+                @Override
+                public void selectedIndices(List<Integer> indices) {
+                    pd.setUtensils(new ArrayList<Utensil>());
+                    for(int i=0;i<indices.size();i++){
+                        pd.getUtensils().add(pd.getRecipe().getUtensils().get(indices.get(i)));
+                    }
+                }
+
+                @Override
+                public void selectedStrings(List<String> strings) {
+
+                }
+            });
+            List<String> gr = new ArrayList<>();
+            for(int i=0;i< ingr.size();i++){
+                gr.add(ingr.get(i).getName());
+            }
+            if(gr.size()>0) {
+                ingredientes.setItems(gr);
+            }
             //desc.setText("COJON DE PUTAS " + pd.tiempo);
             return rootView;
+        }
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        public void update(){
+            pd = getPasos();
+            desc.setText(pd.getInformation());
+            tiempo.setText(Objects.toString(pd.getTime(),null));
+            final List<Utensil> ute = pd.getRecipe().getUtensils();
+            utensilios.setListener(new MultiSelectionSpinner.OnMultipleItemsSelectedListener() {
+                @Override
+                public void selectedIndices(List<Integer> indices) {
+                    pd.setUtensils(new ArrayList<Utensil>());
+                    for(int i=0;i<indices.size();i++){
+                        pd.getUtensils().add(pd.getRecipe().getUtensils().get(indices.get(i)));
+                    }
+                }
+
+                @Override
+                public void selectedStrings(List<String> strings) {
+
+                }
+            });
+            List<String> luten = new ArrayList<>();
+            for(int i=0;i< ute.size();i++){
+                luten.add(ute.get(i).getName());
+            }
+            if(luten.size()>0) {
+                utensilios.setItems(luten);
+            }
+            final List<Ingredient> ingr = pd.getRecipe().getIngredients();
+            ingredientes.setListener(new MultiSelectionSpinner.OnMultipleItemsSelectedListener() {
+                @Override
+                public void selectedIndices(List<Integer> indices) {
+                    pd.setIngredients(new ArrayList<Ingredient>());
+                    System.out.println("INGREDIENTES: " + indices.size());
+                    for(int i=0;i<indices.size();i++){
+                        pd.getIngredients().add(pd.getRecipe().getIngredients().get(indices.get(i)));
+                    }
+                }
+
+                @Override
+                public void selectedStrings(List<String> strings) {
+
+                }
+            });
+            List<String> gr = new ArrayList<>();
+            for(int i=0;i< ingr.size();i++){
+                gr.add(ingr.get(i).getName());
+            }
+            if(gr.size()>0) {
+                ingredientes.setItems(gr);
+            }
+        }
+        public Step getPasos(){
+            if(!tiempo.getText().toString().equals("")){
+                pd.setTime(Integer.parseInt(tiempo.getText().toString()));
+            }
+            else{
+                pd.setTime(0);
+            }
+            if(!desc.getText().toString().equals("")){
+                pd.setInformation(desc.getText().toString());
+            }
+            else{
+                pd.setInformation("");
+            }
+            return pd;
         }
     }
     public static class DescripcionReceta extends Fragment {
@@ -337,6 +479,8 @@ public class AddReceta extends AppCompatActivity {
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
         private Recipe receta;
+        EditText nComensales;
+        EditText tiempo;
         public DescripcionReceta() {
 
         }
@@ -352,11 +496,12 @@ public class AddReceta extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_descripcion_receta, container, false);
             AutoCompleteTextView NombreReceta = (AutoCompleteTextView) rootView.findViewById(R.id.titulo_receta);
             MultiAutoCompleteTextView Descripcion = (MultiAutoCompleteTextView) rootView.findViewById(R.id.descripcion);
-            EditText nComensales = (EditText) rootView.findViewById(R.id.comensales);
-            EditText tiempo = (EditText) rootView.findViewById(R.id.tiempo);
+            nComensales = (EditText) rootView.findViewById(R.id.comensales);
+            tiempo = (EditText) rootView.findViewById(R.id.tiempo);
             NombreReceta.setText(receta.getName());
             Descripcion.setText("");
-            ListView mList = (ListView)rootView.findViewById(R.id.list);
+
+            ListView mList = (ListView)rootView.findViewById(R.id.listUtensilios);
             final UtensilAdapter adapter = new UtensilAdapter(getContext(), (ArrayList)receta.getUtensils());
             mList.setAdapter(adapter);
             mList.setOnFocusChangeListener(new View.OnFocusChangeListener(){
@@ -364,11 +509,19 @@ public class AddReceta extends AppCompatActivity {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     receta.setUtensils(adapter.getUtensilios());
-                    /*for(int i=0;i<receta.getUtensils().size();i++){
-                        System.out.println("INGREDIENTE: " + i + " -- " + receta.getUtensils().get(i).getName());
-                    }*/
                 }
             });
+            ListView mListIngr = (ListView)rootView.findViewById(R.id.listIngredientes);
+            final IngredientsAdapter adapterIngr = new IngredientsAdapter(getContext(), (ArrayList)receta.getIngredients());
+            mListIngr.setAdapter(adapterIngr);
+            mListIngr.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    receta.setIngredients(adapterIngr.getIngredients());
+                }
+            });
+
             if(receta.getPerson()!=0) {
                 nComensales.setText(Objects.toString(receta.getPerson()));
             }
@@ -376,6 +529,23 @@ public class AddReceta extends AppCompatActivity {
                 tiempo.setText(Objects.toString(receta.getTotal_time()));
             }
             return rootView;
+        }
+
+        public long getTime(){
+            if(!tiempo.getText().toString().equals("")){
+                return Integer.parseInt(tiempo.getText().toString());
+            }
+            else{
+                return 0;
+            }
+        }
+        public long getPerson(){
+            if(!nComensales.getText().toString().equals("")){
+                return Integer.parseInt(nComensales.getText().toString());
+            }
+            else{
+                return 0;
+            }
         }
     }
 }

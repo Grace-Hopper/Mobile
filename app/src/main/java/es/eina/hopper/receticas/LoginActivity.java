@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     void cambiarVista(){
-        if(isInternetAvailable()) {
+        if(true) {
             setContentView(R.layout.activity_login);
 
             // Set up the login form.

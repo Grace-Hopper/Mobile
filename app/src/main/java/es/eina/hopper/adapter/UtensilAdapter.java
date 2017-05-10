@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.eina.hopper.models.Ingredient;
 import es.eina.hopper.models.Utensil;
 import es.eina.hopper.receticas.R;
 
@@ -32,7 +33,8 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
         list=utensils;
         a=this;
         vistas=new ArrayList<>();
-        for(int i = 0;i<list.size();i++) {
+        if(utensils.size()<1){
+            utensils.add(new Utensil(0,""));
         }
     }
 

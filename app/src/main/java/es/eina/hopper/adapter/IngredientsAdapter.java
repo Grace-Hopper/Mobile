@@ -30,13 +30,13 @@ import java.util.List;
 public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
     List<Ingredient> list;
     final ArrayAdapter<Ingredient> a;
-    final ArrayList<View> vistas;
     public IngredientsAdapter(Context context, ArrayList<Ingredient> ingredientes) {
         super(context, 0, ingredientes);
         list = ingredientes;
         a = this;
-        vistas = new ArrayList<>();
-        for(int i = 0;i < list.size(); i++){}
+        if(ingredientes.size()<1){
+            ingredientes.add(new Ingredient(0,"","",null));
+        }
     }
 
     @Override
@@ -58,12 +58,12 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
             }
         });
         final EditText cantidad_ingrediente = (EditText) convertView.findViewById(R.id.ingredienteQuantity);
-        cantidad_ingrediente.setText(mIngredient.getName());
+        cantidad_ingrediente.setText(mIngredient.getQuantity());
         cantidad_ingrediente.setOnFocusChangeListener(new View.OnFocusChangeListener(){
 
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                mIngredient.setName(cantidad_ingrediente.getText().toString());
+                mIngredient.setQuantity(cantidad_ingrediente.getText().toString());
             }
         });
 
@@ -88,6 +88,7 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
                     }
                     else{
                         list.get(position).setName("");
+                        list.get(position).setQuantity("");
                     }
                     a.notifyDataSetChanged();
                 }
