@@ -2,6 +2,7 @@ package es.eina.hopper.receticas;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -31,20 +32,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Scroller;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import es.eina.hopper.adapter.RecipesAdapter;
+import es.eina.hopper.adapter.UtensilAdapter;
+import es.eina.hopper.models.Ingredient;
 import es.eina.hopper.models.Recipe;
+import es.eina.hopper.models.Step;
 import es.eina.hopper.models.User;
+import es.eina.hopper.models.Utensil;
+import es.eina.hopper.util.UtilRecipes;
 
 import static android.R.attr.fragment;
 import static android.support.v4.view.PagerAdapter.POSITION_NONE;
@@ -63,33 +74,25 @@ public class AddReceta extends AppCompatActivity {
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    public static class PasosDetalle{
-        public String contenido;
-        public int tiempo;
-        public PasosDetalle(String c, int t){
-            tiempo=t;
-            contenido=c;
-        }
-    }
 
     public Activity yo;
     private ViewPager mViewPager;
     private  TabLayout tabLayout;
     User user;
-    Recipe rec;
-    ArrayList<PasosDetalle> lp;
+   public static Recipe rec;
     int numPasos = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         yo=this;
         Bundle b = getIntent().getExtras();
         user = new User(-1, "","");
-        rec = new Recipe(-1,"",0,0,0,new byte[]{},user,null,null,null);
+        ArrayList<Utensil> uten = new ArrayList<Utensil>();
+        uten.add(new Utensil(0,"cuchara"));
+        rec = new Recipe(-1,"LA RECETA",0,0,0,new byte[]{},user,uten,new ArrayList<Ingredient>(),new ArrayList<Step>());
         if(b != null)
             user = (User)b.getSerializable("user");
-        rec = (Recipe)b.getSerializable("receta");
+            //rec = (Recipe)b.getSerializable("receta");
         System.out.println(rec.getName());
-        lp=new ArrayList<>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_receta);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -102,15 +105,15 @@ public class AddReceta extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
 
         mViewPager = (ViewPager) findViewById(R.id.container);
-        setupViewPager(mViewPager,lp,rec);
+        setupViewPager(mViewPager, rec.getSteps(),rec);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int current = mViewPager.getCurrentItem();
-                PasosDetalle a = new PasosDetalle("EL TROLEITO ES REAL", numPasos);
-                lp.add(current, a);
+                Step a = new Step(0,rec,numPasos,"Troleito Pa tu culo", new ArrayList<Utensil>(),new ArrayList<Ingredient>());
+                rec.getSteps().add(current,a);
                 PlaceholderFragment b = new PlaceholderFragment();
                 b.setArguments(a,numPasos);
                 ViewPagerAdapter adapter = (ViewPagerAdapter)mViewPager.getAdapter();
@@ -120,14 +123,13 @@ public class AddReceta extends AppCompatActivity {
                 mViewPager.setCurrentItem(current+1,true);
             }
         });
-
         final FloatingActionButton borrar = (FloatingActionButton) findViewById(R.id.borrar);
         borrar.setVisibility(View.GONE);
         borrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int current = mViewPager.getCurrentItem();
-                lp.remove(current-1);
+                rec.getSteps().remove(current-1);
                 ViewPagerAdapter adapter = (ViewPagerAdapter)mViewPager.getAdapter();
                 numPasos--;
                 System.out.println("FRAGMENTS: " + numPasos + " ____ REALES: " + getSupportFragmentManager().getFragments().size());
@@ -153,6 +155,12 @@ public class AddReceta extends AppCompatActivity {
                 }
                 else{
                     borrar.setVisibility(View.GONE);
+                }
+                if(numTab==numPasos){
+                    fab.setVisibility(View.VISIBLE);
+                }
+                else{
+                    fab.setVisibility(View.GONE);
                 }
 
             }
@@ -181,7 +189,7 @@ public class AddReceta extends AppCompatActivity {
 
         return(super.onOptionsItemSelected(item));
     }
-    private void setupViewPager(ViewPager viewPager, ArrayList<PasosDetalle> lp, Recipe rec) {
+    private void setupViewPager(ViewPager viewPager, List<Step> lp, Recipe rec) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         DescripcionReceta a = new DescripcionReceta();
         a.setArguments(rec);
@@ -200,7 +208,6 @@ public class AddReceta extends AppCompatActivity {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
         private final List<View> mListView = new ArrayList<>();
-        int baseId=0;
 
 
         public ViewPagerAdapter(FragmentManager manager) {
@@ -276,14 +283,13 @@ public class AddReceta extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        PasosDetalle pd;
+        Step pd;
         int yo;
         public PlaceholderFragment() {
         }
-        public void setArguments(PasosDetalle pd, int i) {
+        public void setArguments(Step pd, int i) {
             this.pd = pd;
             yo=i;
-            System.out.println("SOY EL i=" + i + " y deberia mostrar" + pd.tiempo);
         }
 
         /**
@@ -311,6 +317,15 @@ public class AddReceta extends AppCompatActivity {
             // tiempo.setText(pd.tiempo);
             EditText tiempo = (EditText) rootView.findViewById(R.id.tiempoReceta);
             EditText desc = (EditText) rootView.findViewById(R.id.descripcionPasos);
+            desc.setText(pd.getInformation());
+            tiempo.setText(Objects.toString(pd.getTime(),null));
+            MultiSelectionSpinner msp = (MultiSelectionSpinner) rootView.findViewById(R.id.spinnerUtensilios);
+            final List<Utensil> ute = pd.getRecipe().getUtensils();
+            List<String> luten = new ArrayList<>();
+            for(int i=0;i< ute.size();i++){
+                luten.add(ute.get(i).getName());
+            }
+            msp.setItems(luten);
             //desc.setText("COJON DE PUTAS " + pd.tiempo);
             return rootView;
         }
@@ -329,17 +344,6 @@ public class AddReceta extends AppCompatActivity {
             receta=a;
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static DescripcionReceta newInstance(int sectionNumber) {
-            DescripcionReceta fragment = new DescripcionReceta();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
@@ -352,6 +356,19 @@ public class AddReceta extends AppCompatActivity {
             EditText tiempo = (EditText) rootView.findViewById(R.id.tiempo);
             NombreReceta.setText(receta.getName());
             Descripcion.setText("");
+            ListView mList = (ListView)rootView.findViewById(R.id.list);
+            final UtensilAdapter adapter = new UtensilAdapter(getContext(), (ArrayList)receta.getUtensils());
+            mList.setAdapter(adapter);
+            mList.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    receta.setUtensils(adapter.getUtensilios());
+                    /*for(int i=0;i<receta.getUtensils().size();i++){
+                        System.out.println("INGREDIENTE: " + i + " -- " + receta.getUtensils().get(i).getName());
+                    }*/
+                }
+            });
             if(receta.getPerson()!=0) {
                 nComensales.setText(Objects.toString(receta.getPerson()));
             }

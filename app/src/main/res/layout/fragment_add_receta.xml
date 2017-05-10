@@ -39,12 +39,10 @@
             android:layout_weight="1"
             android:entries="@array/spinner"/>
 
-        <Spinner
-            android:id="@+id/spinnerUtensilios"
+        <es.eina.hopper.receticas.MultiSelectionSpinner android:id="@+id/spinnerUtensilios"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:entries="@array/spinner"/>
+            android:layout_weight="1"/>
 
     </LinearLayout>
     <MultiAutoCompleteTextView

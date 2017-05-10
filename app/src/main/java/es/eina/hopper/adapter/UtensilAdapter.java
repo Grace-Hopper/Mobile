@@ -5,13 +5,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import es.eina.hopper.models.Recipe;
+import es.eina.hopper.models.Utensil;
 import es.eina.hopper.receticas.R;
 
 /**
@@ -19,33 +23,74 @@ import es.eina.hopper.receticas.R;
  */
 
 
-public class RecipesAdapter extends ArrayAdapter<Recipe> {
-    public RecipesAdapter(Context context, ArrayList<Recipe> recipes) {
-        super(context, 0, recipes);
+public class UtensilAdapter extends ArrayAdapter<Utensil> {
+    List<Utensil> list;
+    final ArrayAdapter<Utensil> a;
+    final ArrayList<View> vistas;
+    public UtensilAdapter(Context context, ArrayList<Utensil> utensils) {
+        super(context, 0, utensils);
+        list=utensils;
+        a=this;
+        vistas=new ArrayList<>();
+        for(int i = 0;i<list.size();i++) {
+        }
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        Recipe myRecipe = getItem(position);
+        final Utensil mUten = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.lista_layout, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.lista_utensilios, parent, false);
         }
-        // Lookup view for data population
-        TextView nombre_receta = (TextView) convertView.findViewById(R.id.nombre_receta);
-        // 22 caracteres maximo
-        TextView descripcion_receta = (TextView) convertView.findViewById(R.id.descripcion_receta);
-        ImageView imagen_receta = (ImageView) convertView.findViewById(R.id.imagen_receta);
-        // Populate the data into the template view using the data object
-        String aux = myRecipe.getName();
-        if (aux.length() > 25){
-            aux = aux.substring(0, 22) + "...";
+
+        final EditText utensilio = (EditText) convertView.findViewById(R.id.utensilio);
+        utensilio.setText(mUten.getName());
+        utensilio.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                mUten.setName(utensilio.getText().toString());
+            }
+        });
+        Button add = (Button) convertView.findViewById(R.id.button);
+        if(position==list.size()-1){
+            add.setText("+");
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    list.add(new Utensil(0, ""));
+                    a.notifyDataSetChanged();
+                }
+            });
         }
-        nombre_receta.setText(aux);
-        descripcion_receta.setText(Long.toString(myRecipe.getPerson()));
-        imagen_receta.setImageResource(R.drawable.logo1);
+        else{
+            add.setText("-");
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(list.size()>1) {
+                        list.remove(position);
+                    }
+                    else{
+                        list.get(position).setName("");
+                    }
+                    a.notifyDataSetChanged();
+                }
+            });
+        }
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    public ArrayList<Utensil> getUtensilios() {
+        ArrayList<Utensil> aux = new ArrayList<Utensil>();
+        for(int i=0;i<list.size();i++){
+            if(!list.get(i).getName().equals("")) {
+                aux.add(list.get(i));
+            }
+        }
+        return aux;
     }
 }
