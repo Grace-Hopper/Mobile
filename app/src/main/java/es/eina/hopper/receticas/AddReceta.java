@@ -2,13 +2,16 @@ package es.eina.hopper.receticas;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -39,6 +42,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Scroller;
@@ -85,6 +89,8 @@ public class AddReceta extends AppCompatActivity {
     User user;
     public static Recipe rec;
     int numPasos = 0;
+
+    private static int RESULT_LOAD_IMAGE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         yo=this;
@@ -248,6 +254,21 @@ public class AddReceta extends AppCompatActivity {
         }
         viewPager.removeAllViews();
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            ((DescripcionReceta)((ViewPagerAdapter)mViewPager.getAdapter()).getItem(0)).setImagen(picturePath);
+        }
     }
 
     public class ViewPagerAdapter extends FragmentStatePagerAdapter {
@@ -487,6 +508,7 @@ public class AddReceta extends AppCompatActivity {
         AutoCompleteTextView nombreReceta;
         ListView mListUten;
         ListView mListIngr;
+        ImageButton imagen;
         public DescripcionReceta() {
 
         }
@@ -494,12 +516,19 @@ public class AddReceta extends AppCompatActivity {
             receta=a;
         }
 
-
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_descripcion_receta, container, false);
+            imagen = (ImageButton)rootView.findViewById(R.id.imagen_rec);
+            imagen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(i, RESULT_LOAD_IMAGE);
+                }
+            });
             nombreReceta = (AutoCompleteTextView) rootView.findViewById(R.id.titulo_receta);
             MultiAutoCompleteTextView Descripcion = (MultiAutoCompleteTextView) rootView.findViewById(R.id.descripcion);
             nComensales = (EditText) rootView.findViewById(R.id.comensales);
@@ -562,6 +591,9 @@ public class AddReceta extends AppCompatActivity {
         }
         public List<Ingredient> getIngredientes(){
             return ((IngredientsAdapter)mListIngr.getAdapter()).getIngredients();
+        }
+        public void setImagen(String path){
+            imagen.setImageBitmap(BitmapFactory.decodeFile(path));
         }
     }
 }
