@@ -6,13 +6,13 @@ import java.util.*;
 public class Ingredient implements Serializable {
     private long id;
     private String name;
-    private long quantity;
+    private String quantity;
     private List<Recipe> recipes = new ArrayList();
 
     public Ingredient() {
     }
 
-    public Ingredient(long id, String name, long quantity, List<Recipe> recipes) {
+    public Ingredient(long id, String name, String quantity, List<Recipe> recipes) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
@@ -35,11 +35,11 @@ public class Ingredient implements Serializable {
         this.name = name;
     }
 
-    public long getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 

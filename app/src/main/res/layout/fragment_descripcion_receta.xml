@@ -70,29 +70,15 @@
                     android:gravity="bottom"
                     android:scrollbars="vertical"/>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/anyadirIngrediente">
-            <EditText
-                android:id="@+id/ingredienteText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ingrediente"
-                style="@android:style/TextAppearance.DeviceDefault.Medium"
-                android:layout_weight="1"/>
-            <Button
-                android:id="@+id/ingredienteButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@android:style/TextAppearance.DeviceDefault.Large"
-                android:layout_weight="6"
-                android:text="+"/>
-        </LinearLayout>
+            <ListView
+                android:id="@+id/listIngredientes"
+                style="@android:style/Widget.DeviceDefault.Light.ListView"
+                android:layout_width="fill_parent"
+                android:layout_height="120dp"
+                android:layout_weight="0.08" />
 
             <ListView
-                android:id="@+id/list"
+                android:id="@+id/listUtensilios"
                 style="@android:style/Widget.DeviceDefault.Light.ListView"
                 android:layout_width="fill_parent"
                 android:layout_height="120dp"
