@@ -28,7 +28,7 @@
                         android:background="@color/colorPrimary"
                         android:layout_marginLeft="180dp"
                         android:layout_weight="8"
-                        app:srcCompat="@android:drawable/ic_menu_search" />
+                        app:srcCompat="@mipmap/ic_search_white_36dp" />
             </android.support.v7.widget.Toolbar>
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>

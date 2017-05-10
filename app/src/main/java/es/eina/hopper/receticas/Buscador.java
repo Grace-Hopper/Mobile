@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -36,6 +37,9 @@ public class Buscador extends AppCompatActivity
         user = new User(-1,"","");
         if(b != null)
             user = (User)b.getSerializable("user");
+
+        /* SearchView searchView = (SearchView) findViewById(R.id.buscadorNombre);
+        searchView.showContextMenu();*/
 
         /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +102,7 @@ public class Buscador extends AppCompatActivity
         if (id == R.id.mis_recetas) {
             finish();
         } else if (id == R.id.recetas) {
-
+            finish();
         } else if (id == R.id.configuracion) {
             Intent i = new Intent(this, Configuracion.class);
             Bundle b = new Bundle();
