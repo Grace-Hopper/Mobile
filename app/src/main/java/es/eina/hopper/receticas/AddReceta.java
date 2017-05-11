@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -45,6 +46,7 @@ import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Scroller;
@@ -69,6 +71,7 @@ import es.eina.hopper.util.UtilRecipes;
 
 import static android.R.attr.fragment;
 import static android.support.v4.view.PagerAdapter.POSITION_NONE;
+import static es.eina.hopper.receticas.R.id.imageView;
 
 public class AddReceta extends AppCompatActivity {
 
@@ -251,11 +254,13 @@ public class AddReceta extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 int current = mViewPager.getCurrentItem();
+                ViewPagerAdapter adapter = (ViewPagerAdapter)mViewPager.getAdapter();
+                rec.setIngredients(((DescripcionReceta)adapter.getItem(0)).getIngredientes());
+                rec.setUtensils(((DescripcionReceta)adapter.getItem(0)).getUtensilios());
                 Step a = new Step(0,rec,0,"", new ArrayList<Utensil>(),new ArrayList<Ingredient>());
                 rec.getSteps().add(current,a);
                 PlaceholderFragment b = new PlaceholderFragment();
                 b.setArguments(a,numPasos);
-                ViewPagerAdapter adapter = (ViewPagerAdapter)mViewPager.getAdapter();
                 numPasos++;
                 adapter.addFrag(b, "PASO " + (numPasos));
                 mViewPager.setAdapter(adapter);
@@ -355,7 +360,10 @@ public class AddReceta extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+        System.out.println("JODER ENTRA AQUI OSTIASSSSSs");
+        System.out.println(requestCode + " -- " + resultCode + " -- " + data==null);
+        if (null != data) {
+            System.out.println("JDEBERIA FUNCIONAR");
             Uri selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
@@ -633,7 +641,7 @@ public class AddReceta extends AppCompatActivity {
             Descripcion.setText("");
 
             mListUten = (ListView)rootView.findViewById(R.id.listUtensilios);
-            final UtensilAdapter adapter = new UtensilAdapter(getContext(), (ArrayList)receta.getUtensils());
+            final UtensilAdapter adapter = new UtensilAdapter(getContext(), (ArrayList)receta.getUtensils(),mListUten);
             mListUten.setAdapter(adapter);
             mListUten.setOnFocusChangeListener(new View.OnFocusChangeListener(){
 
@@ -643,7 +651,7 @@ public class AddReceta extends AppCompatActivity {
                 }
             });
             mListIngr = (ListView)rootView.findViewById(R.id.listIngredientes);
-            final IngredientsAdapter adapterIngr = new IngredientsAdapter(getContext(), (ArrayList)receta.getIngredients());
+            final IngredientsAdapter adapterIngr = new IngredientsAdapter(getContext(), (ArrayList)receta.getIngredients(),mListIngr);
             mListIngr.setAdapter(adapterIngr);
             mListIngr.setOnFocusChangeListener(new View.OnFocusChangeListener(){
 
@@ -652,7 +660,8 @@ public class AddReceta extends AppCompatActivity {
                     receta.setIngredients(adapterIngr.getIngredients());
                 }
             });
-
+            setListViewHeightBasedOnChildren(mListIngr);
+            setListViewHeightBasedOnChildren(mListUten);
             if(receta.getPerson()!=0) {
                 nComensales.setText(Objects.toString(receta.getPerson()));
             }
@@ -691,7 +700,63 @@ public class AddReceta extends AppCompatActivity {
             return ((IngredientsAdapter)mListIngr.getAdapter()).getIngredients();
         }
         public void setImagen(String path){
-            imagen.setImageBitmap(BitmapFactory.decodeFile(path));
+            System.out.println("VAYA IMAGEN GUAPA");
+            imagen.setImageBitmap(getScaledBitmap(path, 800, 800));
+        }
+        private Bitmap getScaledBitmap(String picturePath, int width, int height) {
+            BitmapFactory.Options sizeOptions = new BitmapFactory.Options();
+            sizeOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(picturePath, sizeOptions);
+
+            int inSampleSize = calculateInSampleSize(sizeOptions, width, height);
+
+            sizeOptions.inJustDecodeBounds = false;
+            sizeOptions.inSampleSize = inSampleSize;
+
+            return BitmapFactory.decodeFile(picturePath, sizeOptions);
+        }
+
+        private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+            // Raw height and width of image
+            final int height = options.outHeight;
+            final int width = options.outWidth;
+            int inSampleSize = 1;
+
+            if (height > reqHeight || width > reqWidth) {
+
+                // Calculate ratios of height and width to requested height and
+                // width
+                final int heightRatio = Math.round((float) height / (float) reqHeight);
+                final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+                // Choose the smallest ratio as inSampleSize value, this will
+                // guarantee
+                // a final image with both dimensions larger than or equal to the
+                // requested height and width.
+                inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+            }
+
+            return inSampleSize;
+        }
+        public static void setListViewHeightBasedOnChildren(ListView listView) {
+            ListAdapter listAdapter = listView.getAdapter();
+            if (listAdapter == null)
+                return;
+
+            int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+            int totalHeight = 0;
+            View view = null;
+            for (int i = 0; i < listAdapter.getCount(); i++) {
+                view = listAdapter.getView(i, view, listView);
+                if (i == 0)
+                    view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                totalHeight += view.getMeasuredHeight();
+            }
+            ViewGroup.LayoutParams params = listView.getLayoutParams();
+            params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+            listView.setLayoutParams(params);
         }
     }
 }

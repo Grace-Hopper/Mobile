@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import es.eina.hopper.models.Ingredient;
 import es.eina.hopper.models.Utensil;
+import es.eina.hopper.receticas.AddReceta;
 import es.eina.hopper.receticas.R;
 
 /**
@@ -30,11 +32,13 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
     List<Utensil> list;
     final ArrayAdapter<Utensil> a;
     final ArrayList<View> vistas;
-    public UtensilAdapter(Context context, ArrayList<Utensil> utensils) {
+    ListView parent;
+    public UtensilAdapter(Context context, ArrayList<Utensil> utensils, ListView parent) {
         super(context, 0, utensils);
         list=utensils;
         a=this;
         vistas=new ArrayList<>();
+        this.parent = parent;
         if(utensils.size()<1){
             utensils.add(new Utensil(0,""));
         }
@@ -67,16 +71,19 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
         Button add = (Button) convertView.findViewById(R.id.button);
         if(position==list.size()-1){
             add.setText("+");
+            final ListView lp = this.parent;
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     list.add(new Utensil(0, ""));
                     a.notifyDataSetChanged();
+                    AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
                 }
             });
         }
         else{
             add.setText("-");
+            final ListView lp = this.parent;
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -87,6 +94,7 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
                         list.get(position).setName("");
                     }
                     a.notifyDataSetChanged();
+                    AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
                 }
             });
         }

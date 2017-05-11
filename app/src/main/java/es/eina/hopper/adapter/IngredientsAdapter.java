@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import es.eina.hopper.models.Ingredient;
 import es.eina.hopper.models.Recipe;
+import es.eina.hopper.receticas.AddReceta;
 import es.eina.hopper.receticas.R;
 
 import java.util.ArrayList;
@@ -34,9 +36,11 @@ import java.util.List;
 public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
     List<Ingredient> list;
     final ArrayAdapter<Ingredient> a;
-    public IngredientsAdapter(Context context, ArrayList<Ingredient> ingredientes) {
+    ListView parent;
+    public IngredientsAdapter(Context context, ArrayList<Ingredient> ingredientes, ListView parent) {
         super(context, 0, ingredientes);
         list = ingredientes;
+        this.parent = parent;
         a = this;
         if(ingredientes.size()<1){
             ingredientes.add(new Ingredient(0,"","",null));
@@ -86,29 +90,31 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
         Button add = (Button) convertView.findViewById(R.id.ingredienteButton);
         if(position==list.size()-1){
             add.setText("+");
+            final ListView lp = this.parent;
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     list.add(new Ingredient(-1, "", "", null));
                     a.notifyDataSetChanged();
-                    view.focusSearch(View.FOCUS_DOWN);
+                    AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
                 }
             });
         }
         else{
             add.setText("-");
+            final ListView lp = this.parent;
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(list.size()>1) {
                         list.remove(position);
-                        view.focusSearch(View.FOCUS_UP);
                     }
                     else{
                         list.get(position).setName("");
                         list.get(position).setQuantity("");
                     }
                     a.notifyDataSetChanged();
+                    AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
                 }
             });
         }

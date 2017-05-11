@@ -99,7 +99,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:layout_gravity="center_horizontal|bottom"
-                />
+                app:srcCompat="@drawable/patito" />
 
         </LinearLayout>
     </LinearLayout>
