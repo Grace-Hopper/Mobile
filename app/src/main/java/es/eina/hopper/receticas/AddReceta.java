@@ -482,7 +482,9 @@ public class AddReceta extends AppCompatActivity {
             tiempo = (EditText) rootView.findViewById(R.id.tiempoReceta);
             desc = (EditText) rootView.findViewById(R.id.descripcionPasos);
             desc.setText(pd.getInformation());
-            tiempo.setText(Objects.toString(pd.getTime(),null));
+            if(pd.getTime()!=0) {
+                tiempo.setText(Objects.toString(pd.getTime(), null));
+            }
             utensilios = (MultiSelectionSpinner) rootView.findViewById(R.id.spinnerUtensilios);
             final List<Utensil> ute = pd.getRecipe().getUtensils();
             utensilios.setListener(new MultiSelectionSpinner.OnMultipleItemsSelectedListener() {
@@ -537,7 +539,9 @@ public class AddReceta extends AppCompatActivity {
         public void update(){
             pd = getPasos();
             desc.setText(pd.getInformation());
-            tiempo.setText(Objects.toString(pd.getTime(),null));
+            if(pd.getTime()!=0) {
+                tiempo.setText(Objects.toString(pd.getTime(), null));
+            }
             final List<Utensil> ute = pd.getRecipe().getUtensils();
             utensilios.setListener(new MultiSelectionSpinner.OnMultipleItemsSelectedListener() {
                 @Override
@@ -641,7 +645,7 @@ public class AddReceta extends AppCompatActivity {
             Descripcion.setText("");
 
             mListUten = (ListView)rootView.findViewById(R.id.listUtensilios);
-            final UtensilAdapter adapter = new UtensilAdapter(getContext(), (ArrayList)receta.getUtensils(),mListUten);
+            final UtensilAdapter adapter = new UtensilAdapter(getContext(), (ArrayList)receta.getUtensils(),mListUten,getActivity());
             mListUten.setAdapter(adapter);
             mListUten.setOnFocusChangeListener(new View.OnFocusChangeListener(){
 
@@ -651,7 +655,7 @@ public class AddReceta extends AppCompatActivity {
                 }
             });
             mListIngr = (ListView)rootView.findViewById(R.id.listIngredientes);
-            final IngredientsAdapter adapterIngr = new IngredientsAdapter(getContext(), (ArrayList)receta.getIngredients(),mListIngr);
+            final IngredientsAdapter adapterIngr = new IngredientsAdapter(getContext(), (ArrayList)receta.getIngredients(),mListIngr,getActivity());
             mListIngr.setAdapter(adapterIngr);
             mListIngr.setOnFocusChangeListener(new View.OnFocusChangeListener(){
 

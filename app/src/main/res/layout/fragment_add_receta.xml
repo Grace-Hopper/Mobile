@@ -57,8 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@android:style/TextAppearance.DeviceDefault.Medium"
-        android:hint="Tiempo "
+        android:hint="Temporizador(0 si no lo desea)"
         android:inputType="number" />
-
 
 </LinearLayout>

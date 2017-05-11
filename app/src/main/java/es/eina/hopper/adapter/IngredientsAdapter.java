@@ -1,6 +1,7 @@
 package es.eina.hopper.adapter;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Path;
 import android.text.Editable;
@@ -38,7 +39,8 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
     final ArrayAdapter<Ingredient> a;
     ListView parent;
     boolean cogerDatos=true;
-    public IngredientsAdapter(Context context, ArrayList<Ingredient> ingredientes, ListView parent) {
+    Activity mContext;
+    public IngredientsAdapter(Context context, ArrayList<Ingredient> ingredientes, ListView parent, Activity mContext) {
         super(context, 0, ingredientes);
         list = ingredientes;
         this.parent = parent;
@@ -46,57 +48,70 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
         if(ingredientes.size()<1){
             ingredientes.add(new Ingredient(0,"","",null));
         }
+        this.mContext = mContext;
     }
-
+    private class Holder
+    {
+        EditText mNombre;
+        EditText mCantidad;
+        Button add;
+    }
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        final Ingredient mIngredient = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
+        final Holder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.lista_ingredientes, parent, false);
+            holder = new Holder();
+            LayoutInflater inflater =mContext.getLayoutInflater();
+            convertView = inflater.inflate(R.layout.lista_ingredientes, null);
+            holder.mNombre = (EditText) convertView.findViewById(R.id.ingredienteText);
+            holder.mCantidad = (EditText) convertView.findViewById(R.id.ingredienteQuantity);
+            holder.add = (Button) convertView.findViewById(R.id.ingredienteButton);
+            convertView.setTag(holder);
+        } else {
+            holder = (Holder) convertView.getTag();
         }
         // Lookup view for data population
-        final EditText nombre_ingrediente = (EditText) convertView.findViewById(R.id.ingredienteText);
-        nombre_ingrediente.setText(mIngredient.getName());
+        holder.mNombre.setText(list.get(position).getName());
         TextWatcher watcher= new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                if(cogerDatos) {
-                    mIngredient.setName(nombre_ingrediente.getText().toString());
-                }
+
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 //Do something or nothing.
             }
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //Do something or nothing
+                if(cogerDatos) {
+                    list.get(position).setName(holder.mNombre.getText().toString());
+                }
             }
         };
 
-        nombre_ingrediente.addTextChangedListener(watcher);
-        final EditText cantidad_ingrediente = (EditText) convertView.findViewById(R.id.ingredienteQuantity);
-        cantidad_ingrediente.setText(mIngredient.getQuantity());
+        holder.mNombre.addTextChangedListener(watcher);
+        holder.mCantidad.setText(list.get(position).getQuantity());
         TextWatcher watcher1= new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                if(cogerDatos) {
-                    mIngredient.setQuantity(cantidad_ingrediente.getText().toString());
-                }
+
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 //Do something or nothing.
             }
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //Do something or nothing
+                if(cogerDatos) {
+                    list.get(position).setQuantity(holder.mCantidad.getText().toString());
+                }
             }
         };
 
-        cantidad_ingrediente.addTextChangedListener(watcher1);
+        holder.mCantidad.addTextChangedListener(watcher1);
 
-        Button add = (Button) convertView.findViewById(R.id.ingredienteButton);
         if(position==list.size()-1){
-            add.setText("+");
+            holder.add.setText("+");
             final ListView lp = this.parent;
-            add.setOnClickListener(new View.OnClickListener() {
+            holder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -116,9 +131,9 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
             });
         }
         else{
-            add.setText("-");
+            holder.add.setText("-");
             final ListView lp = this.parent;
-            add.setOnClickListener(new View.OnClickListener() {
+            holder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 

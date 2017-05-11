@@ -1,7 +1,9 @@
 package es.eina.hopper.adapter;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -31,67 +33,80 @@ import es.eina.hopper.receticas.R;
 public class UtensilAdapter extends ArrayAdapter<Utensil> {
     List<Utensil> list;
     final ArrayAdapter<Utensil> a;
-    final ArrayList<View> vistas;
     ListView parent;
     boolean cogerDatos=true;
-    public UtensilAdapter(Context context, ArrayList<Utensil> utensils, ListView parent) {
+    private Activity mContext;
+    public UtensilAdapter(Context context, ArrayList<Utensil> utensils, ListView parent, Activity mContext) {
         super(context, 0, utensils);
         list=utensils;
         a=this;
-        vistas=new ArrayList<>();
         this.parent = parent;
         if(utensils.size()<1){
             utensils.add(new Utensil(0,""));
         }
+        this.mContext = mContext;
     }
-
+    private class Holder
+    {
+        EditText mUten;
+        Button add;
+    }
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        final Utensil mUten = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
+        final Holder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.lista_utensilios, parent, false);
-        }
+            holder = new Holder();
+            LayoutInflater inflater =mContext.getLayoutInflater();
+            convertView = inflater.inflate(R.layout.lista_utensilios, null);
+            holder.mUten = (EditText) convertView
+                    .findViewById(R.id.utensilio);
 
-        final EditText utensilio = (EditText) convertView.findViewById(R.id.utensilio);
-        utensilio.setText(mUten.getName());
+            holder.add = (Button) convertView.findViewById(R.id.button);
+            convertView.setTag(holder);
+        } else {
+            holder = (Holder) convertView.getTag();
+        }
+        holder.mUten.setText(list.get(position).getName());
         TextWatcher watcher= new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                if(cogerDatos) {
-                    mUten.setName(utensilio.getText().toString());
-                }
+
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 //Do something or nothing.
             }
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //Do something or nothing
+                if(cogerDatos) {
+                    list.get(position).setName(holder.mUten.getText().toString());
+                }
             }
         };
 
-        utensilio.addTextChangedListener(watcher);
-        Button add = (Button) convertView.findViewById(R.id.button);
+        holder.mUten.addTextChangedListener(watcher);
         if(position==list.size()-1){
-            add.setText("+");
+            holder.add.setText("+");
             final ListView lp = this.parent;
-            add.setOnClickListener(new View.OnClickListener() {
+            holder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    cogerDatos=false;
                     list.add(new Utensil(0, ""));
                     a.notifyDataSetChanged();
-                    cogerDatos=false;
                     AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
                     cogerDatos=true;
                 }
             });
         }
         else{
-            add.setText("-");
+            holder.add.setText("-");
             final ListView lp = this.parent;
-            add.setOnClickListener(new View.OnClickListener() {
+            holder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    cogerDatos=false;
                     if(list.size()>1) {
                         list.remove(position);
                     }
@@ -99,7 +114,6 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
                         list.get(position).setName("");
                     }
                     a.notifyDataSetChanged();
-                    cogerDatos=false;
                     AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
                     cogerDatos=true;
                 }
