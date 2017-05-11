@@ -229,12 +229,7 @@ public class AddReceta extends AppCompatActivity {
                                     // continue with delete
                                 }
                             })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // do nothing
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setIcon(R.drawable.ic_report_problem_black_24dp)
                             .show();
                 }
             }
