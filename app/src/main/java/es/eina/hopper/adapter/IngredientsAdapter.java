@@ -34,9 +34,10 @@ import java.util.List;
 
 
 public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
-    List<Ingredient> list;
+    ArrayList<Ingredient> list;
     final ArrayAdapter<Ingredient> a;
     ListView parent;
+    boolean cogerDatos=true;
     public IngredientsAdapter(Context context, ArrayList<Ingredient> ingredientes, ListView parent) {
         super(context, 0, ingredientes);
         list = ingredientes;
@@ -60,7 +61,9 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
         nombre_ingrediente.setText(mIngredient.getName());
         TextWatcher watcher= new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                mIngredient.setName(nombre_ingrediente.getText().toString());
+                if(cogerDatos) {
+                    mIngredient.setName(nombre_ingrediente.getText().toString());
+                }
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 //Do something or nothing.
@@ -75,7 +78,9 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
         cantidad_ingrediente.setText(mIngredient.getQuantity());
         TextWatcher watcher1= new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                mIngredient.setQuantity(cantidad_ingrediente.getText().toString());
+                if(cogerDatos) {
+                    mIngredient.setQuantity(cantidad_ingrediente.getText().toString());
+                }
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 //Do something or nothing.
@@ -94,9 +99,19 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    cogerDatos=false;
                     list.add(new Ingredient(-1, "", "", null));
                     a.notifyDataSetChanged();
+                    ArrayList<Ingredient> li = (ArrayList)list.clone();
+                    for(int i=0;i<li.size();i++){
+                        System.out.println("INGREDIENTES: " + li.get(i).getName());
+                    }
                     AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
+                    cogerDatos=true;
+                    for(int i=0;i<li.size();i++){
+                        System.out.println("INGREDIENTES: " + li.get(i).getName());
+                    }
                 }
             });
         }
@@ -106,15 +121,21 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    cogerDatos=false;
                     if(list.size()>1) {
                         list.remove(position);
                     }
-                    else{
+                    else {
                         list.get(position).setName("");
                         list.get(position).setQuantity("");
                     }
                     a.notifyDataSetChanged();
                     AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
+                    cogerDatos=true;
+                    for(int i=0;i<list.size();i++){
+                        System.out.println("INGREDIENTES: " + list.get(i).getName());
+                    }
                 }
             });
         }
@@ -130,6 +151,9 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
             }
         }
         return aux;
+    }
+    public void setCogerDatos(boolean a){
+        cogerDatos=a;
     }
 }
 

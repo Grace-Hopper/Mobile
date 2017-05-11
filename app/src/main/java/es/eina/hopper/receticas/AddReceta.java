@@ -660,8 +660,12 @@ public class AddReceta extends AppCompatActivity {
                     receta.setIngredients(adapterIngr.getIngredients());
                 }
             });
+            adapterIngr.setCogerDatos(false);
             setListViewHeightBasedOnChildren(mListIngr);
+            adapterIngr.setCogerDatos(true);
+            adapter.setCogerDatos(false);
             setListViewHeightBasedOnChildren(mListUten);
+            adapter.setCogerDatos(true);
             if(receta.getPerson()!=0) {
                 nComensales.setText(Objects.toString(receta.getPerson()));
             }

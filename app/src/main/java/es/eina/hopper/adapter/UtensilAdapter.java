@@ -33,6 +33,7 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
     final ArrayAdapter<Utensil> a;
     final ArrayList<View> vistas;
     ListView parent;
+    boolean cogerDatos=true;
     public UtensilAdapter(Context context, ArrayList<Utensil> utensils, ListView parent) {
         super(context, 0, utensils);
         list=utensils;
@@ -57,7 +58,9 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
         utensilio.setText(mUten.getName());
         TextWatcher watcher= new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                mUten.setName(utensilio.getText().toString());
+                if(cogerDatos) {
+                    mUten.setName(utensilio.getText().toString());
+                }
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 //Do something or nothing.
@@ -77,7 +80,9 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
                 public void onClick(View view) {
                     list.add(new Utensil(0, ""));
                     a.notifyDataSetChanged();
+                    cogerDatos=false;
                     AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
+                    cogerDatos=true;
                 }
             });
         }
@@ -94,7 +99,9 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
                         list.get(position).setName("");
                     }
                     a.notifyDataSetChanged();
+                    cogerDatos=false;
                     AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
+                    cogerDatos=true;
                 }
             });
         }
@@ -110,5 +117,8 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
             }
         }
         return aux;
+    }
+    public void setCogerDatos(boolean a){
+        cogerDatos=a;
     }
 }
