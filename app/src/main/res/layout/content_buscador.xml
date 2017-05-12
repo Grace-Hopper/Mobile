@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/contenido"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -18,10 +20,13 @@
             style="@android:style/TextAppearance.DeviceDefault.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ingrediente"
+            android:hint="Ingrediente..."
             android:layout_weight="1"
             android:drawableLeft="@drawable/ic_search_black_24dp"
             android:layout_gravity="start"
+            android:paddingTop="15dp"
+            android:paddingBottom="17dp"
+            android:layout_marginLeft="8dp"
             android:textAlignment="textStart" />
 
         <Button
@@ -29,11 +34,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="7"
+            android:layout_marginRight="0dp"
             style="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:background="@color/buscador"
+            android:background="@null"
             android:text="+" />
     </LinearLayout>
 
+    <!-- CONTROL DE ERRORES CUANDO NO HAY LISTA
+    <TextView
+        android:id="@+id/emptyListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:text="@string/emptyList" >
+    </TextView>
+    -->
     <!-- ********* BUSCADOR NORMAL ************ -->
     <ListView
         android:id="@+id/listBusqueda"

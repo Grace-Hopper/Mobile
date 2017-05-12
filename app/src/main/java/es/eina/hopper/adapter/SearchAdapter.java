@@ -105,4 +105,6 @@ public class SearchAdapter extends ArrayAdapter<Ingredient> {
         }
         return aux;
     }
+
+
 }

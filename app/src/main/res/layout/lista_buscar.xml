@@ -10,7 +10,7 @@
         style="@android:style/TextAppearance.DeviceDefault.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="25dp"
         android:layout_weight="1"
         android:layout_gravity="center_vertical|right"
         android:textAlignment="textStart" />

@@ -30,7 +30,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_weight="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="6dp"
                     android:background="@android:color/transparent"
                     app:srcCompat="@mipmap/ic_search_white_36dp" />
             </android.support.v7.widget.Toolbar>
