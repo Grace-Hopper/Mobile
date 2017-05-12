@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * Created by davy on 3/04/17.
- */
+ **/
 
 
 public class IngredientsAdapter extends ArrayAdapter<Ingredient> {

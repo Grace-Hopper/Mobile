@@ -1,6 +1,7 @@
 package es.eina.hopper.adapter;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Editable;
@@ -34,66 +35,96 @@ import static android.graphics.Color.*;
 public class SearchAdapter extends ArrayAdapter<Ingredient> {
     List<Ingredient> list;
     final ArrayAdapter<Ingredient> a;
-    final ArrayList<View> vistas;
     ListView parent;
     boolean cargarDatos = true;
-    public SearchAdapter(Context context, ArrayList<Ingredient> ingredients, ListView parent) {
+    Activity mContext;
+    public SearchAdapter(Context context, ArrayList<Ingredient> ingredients, ListView parent, Activity mContext) {
         super(context, 0, ingredients);
         list=ingredients;
-        a=this;
-        vistas=new ArrayList<>();
         this.parent = parent;
+        a=this;
+        //vistas=new ArrayList<>();
+        this.mContext = mContext;
     }
 
+    private class Holder
+    {
+        TextView mTextView;
+        Button mButton;
+    }
+    
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        final Ingredient mIngredient = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.lista_buscar, parent, false);
-        }
+        if (position < list.size()){
+            final Holder holder;
+            if (convertView == null) {
+                holder = new Holder();
+                LayoutInflater inflater = mContext.getLayoutInflater();
+                convertView = inflater.inflate(R.layout.lista_buscar, null);
+                holder.mTextView = (TextView) convertView.findViewById(R.id.textobuscador);
+                holder.mButton = (Button) convertView.findViewById(R.id.imagebutton);
+                convertView.setTag(holder);
+            } else {
+                holder = (Holder) convertView.getTag();
 
-        final TextView buscador = (TextView) convertView.findViewById(R.id.buscador);
-        buscador.setText(mIngredient.getName());
-        TextWatcher watcher= new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                if(cargarDatos){
-                    mIngredient.setName(buscador.getText().toString());
+            }
+            holder.mTextView.setText(list.get(position).getName());
+        /*final TextView buscador = (TextView) convertView.findViewById(R.id.buscador);
+        buscador.setText(mIngredient.getName());*/
+            TextWatcher watcher= new TextWatcher() {
+                public void afterTextChanged(Editable s) {
+
                 }
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //Do something or nothing.
-            }
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //Do something or nothing
-            }
-        };
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    //Do something or nothing.
+                }
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    //Do something or nothing
+                    if(cargarDatos){
+                        list.get(position).setName(holder.mTextView.getText().toString());
+                    }
+                }
+            };
 
-        buscador.addTextChangedListener(watcher);
-        final ImageButton remove = (ImageButton) convertView.findViewById(R.id.button);
-        remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                list.remove(position);
-                cargarDatos = false;
-                a.notifyDataSetChanged();
-                cargarDatos = true;
+            holder.mTextView.addTextChangedListener(watcher);
+            //final ImageButton remove = (ImageButton) convertView.findViewById(R.id.button);
+            holder.mButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    list.remove(position);
+                    cargarDatos = false;
+                    a.notifyDataSetChanged();
+                    cargarDatos = true;
+                    //mostrar();
                 /*for(int i=0;i<list.size();i++){
                     System.out.println(list.get(i).getName());
                 }*/
-            }
-        });
-        // Return the completed view to render on screen
+                }
+            });
+            // Return the completed view to render on screen
+        }
         return convertView;
-
     }
 
-    void addItem(Ingredient ingredient){
+    public void addItem(Ingredient ingredient){
         list.add(ingredient);
         cargarDatos = false;
         a.notifyDataSetChanged();
         cargarDatos = true;
+        mostrar();
+    }
+
+    public boolean contains(Ingredient ingredient){
+        boolean encontrado = false;
+        for(int i=0;i<list.size() && !encontrado;i++){
+            if(list.get(i).getName().equals(ingredient.getName())){
+                System.out.println(i + ": " + list.get(i).getName());
+                encontrado = true;
+            }
+        }
+        return encontrado;
     }
 
     public ArrayList<Ingredient> getIngredientes() {
@@ -104,6 +135,12 @@ public class SearchAdapter extends ArrayAdapter<Ingredient> {
             }
         }
         return aux;
+    }
+
+    public void mostrar(){
+        for(int i=0;i<list.size();i++){
+            System.out.println(i + ": " + list.get(i).getName());
+        }
     }
 
 

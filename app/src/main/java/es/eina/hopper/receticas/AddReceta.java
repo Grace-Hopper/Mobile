@@ -39,6 +39,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -100,6 +101,7 @@ public class AddReceta extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         yo=this;
         Bundle b = getIntent().getExtras();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         user = new User(-1, "","");
         rec = new Recipe(-1,"",0,0,0,new byte[]{},user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>());
         if(b != null)

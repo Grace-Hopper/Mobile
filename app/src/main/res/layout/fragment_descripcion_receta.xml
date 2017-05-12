@@ -28,6 +28,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/nombre_de_la_receta"
                     android:inputType="textAutoComplete"
+                    android:imeOptions="actionNext"
                     style="@android:style/TextAppearance.DeviceDefault.Medium"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -45,6 +46,9 @@
                     android:layout_weight="1"
                     style="@android:style/TextAppearance.DeviceDefault.Medium"
                     android:hint="Nº comensales"
+                    android:nextFocusDown="@+id/tiempo"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:inputType="number" />
 
                 <EditText
@@ -52,6 +56,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxLines="1"
+                    android:nextFocusDown="@+id/listIngredientes"
+                    android:singleLine="true"
                     style="@android:style/TextAppearance.DeviceDefault.Medium"
                     android:hint="Tiempo (m)"
                     android:inputType="number" />
@@ -66,12 +73,22 @@
                     android:id="@+id/listIngredientes"
                     style="@android:style/Widget.DeviceDefault.Light.ListView"
                     android:layout_width="match_parent"
+                    android:descendantFocusability="beforeDescendants"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:headerDividersEnabled="true"
+                    android:nextFocusDown="@+id/listUtensilios"
                     android:layout_height="100dp"/>
 
                 <ListView
                     android:id="@+id/listUtensilios"
                     style="@android:style/Widget.DeviceDefault.Light.ListView"
                     android:layout_width="match_parent"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:headerDividersEnabled="true"
+                    android:descendantFocusability="beforeDescendants"
+                    android:nextFocusDown="@+id/descripcion"
                     android:layout_height="100dp"/>
             </LinearLayout>
 
@@ -79,6 +96,7 @@
                 android:id="@+id/descripcion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:hint="Descripción de la receta"
                 android:inputType="textMultiLine"
                 style="@android:style/TextAppearance.DeviceDefault.Medium"
