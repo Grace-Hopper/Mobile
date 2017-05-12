@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,7 +54,55 @@ public class Receta extends AppCompatActivity {
             local = b.getBoolean("local");
             user = (User)b.getSerializable("user");
 
+        ImageButton ib = (ImageButton)toolbar.findViewById(R.id.editar);
+        final long finalRowId = rowId;
+        final long finalRowId1 = rowId;
+        ib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(local){
+                    Intent i = new Intent(yo, AddReceta.class);
+                    Bundle b = new Bundle();
+                    Recipe a = UtilRecipes.getRecipe(user.getName(), finalRowId,yo);
+                    b.putSerializable("user", user); //Your id
+                    b.putSerializable("receta",a);
+                    i.putExtras(b); //Put your id to your next Intent
+                    startActivity(i);
+                }
+                else{
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl("https://receticas.herokuapp.com/api/")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
 
+                    UtilService service = retrofit.create(UtilService.class);
+                    Call<Recipe> call = service.getRecipe(user.getName(), finalRowId1);
+                    call.enqueue(new Callback<Recipe>() {
+
+                        @Override
+                        public void onResponse(Call<Recipe> call, Response<Recipe> response) {
+                            int statusCode = response.code();
+                            System.out.println(statusCode);
+                            if (statusCode == 200) {
+                                //Encontrada
+                                Intent i = new Intent(yo, AddReceta.class);
+                                Bundle b = new Bundle();
+                                Recipe a = response.body();
+                                b.putSerializable("user", user); //Your id
+                                b.putSerializable("receta",a);
+                                i.putExtras(b); //Put your id to your next Intent
+                                startActivity(i);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Recipe> call, Throwable t) {
+                            System.out.println("Fallo to bestia");
+                        }
+                    });
+                }
+            }
+        });
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

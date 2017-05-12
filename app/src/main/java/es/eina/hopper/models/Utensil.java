@@ -7,6 +7,8 @@ public class Utensil implements Serializable {
 
     private long id;
     private String name;
+    private long recipe;
+    private long step;
 
     public Utensil(){}
 
@@ -29,6 +31,22 @@ public class Utensil implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(long recipe) {
+        this.recipe = recipe;
+    }
+
+    public long getStep() {
+        return step;
+    }
+
+    public void setStep(long step) {
+        this.step = step;
     }
 
 }

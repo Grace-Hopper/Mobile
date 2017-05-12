@@ -144,7 +144,7 @@ public class AddReceta extends AppCompatActivity {
                 System.out.println("PASOS:");
                 for(int i=0;i<rec.getSteps().size();i++){
                     System.out.println(rec.getSteps().get(i).getInformation());
-                    System.out.println(rec.getSteps().get(i).getTime());
+                    System.out.println(rec.getSteps().get(i).getTimer());
                 }
 
                 //COMPROBAR SI HAY CAMPOS VACIOS
@@ -217,7 +217,7 @@ public class AddReceta extends AppCompatActivity {
                         numeroErrores++;
                         error = error + "El paso " + (i+1) + " debe tener informacion.\n";
                     }
-                    if(listaPasos.get(i).getTime() <= 0 && numeroErrores < 6){
+                    if(listaPasos.get(i).getTimer() <= 0 && numeroErrores < 6){
                         numeroErrores++;
                         error = error + "El tiempo del paso " + (i+1) + " debe ser mayor que cero.\n";
 
@@ -254,7 +254,7 @@ public class AddReceta extends AppCompatActivity {
                 ViewPagerAdapter adapter = (ViewPagerAdapter)mViewPager.getAdapter();
                 rec.setIngredients(((DescripcionReceta)adapter.getItem(0)).getIngredientes());
                 rec.setUtensils(((DescripcionReceta)adapter.getItem(0)).getUtensilios());
-                Step a = new Step(0,rec,0,"", new ArrayList<Utensil>(),new ArrayList<Ingredient>());
+                Step a = new Step(0,0,"", new ArrayList<Utensil>(),new ArrayList<Ingredient>());
                 rec.getSteps().add(current,a);
                 PlaceholderFragment b = new PlaceholderFragment();
                 b.setArguments(a,numPasos);
@@ -479,18 +479,18 @@ public class AddReceta extends AppCompatActivity {
             tiempo = (EditText) rootView.findViewById(R.id.tiempoReceta);
             desc = (EditText) rootView.findViewById(R.id.descripcionPasos);
             desc.setText(pd.getInformation());
-            if(pd.getTime()!=0) {
-                tiempo.setText(Objects.toString(pd.getTime(), null));
+            if(pd.getTimer()!=0) {
+                tiempo.setText(Objects.toString(pd.getTimer(), null));
             }
             utensilios = (MultiSelectionSpinner) rootView.findViewById(R.id.spinnerUtensilios);
-            final List<Utensil> ute = pd.getRecipe().getUtensils();
+            final List<Utensil> ute = rec.getUtensils();
             utensilios.setListener(new MultiSelectionSpinner.OnMultipleItemsSelectedListener() {
                 @Override
                 public void selectedIndices(List<Integer> indices) {
                     pd.setIngredients(new ArrayList<Ingredient>());
                     System.out.println("INGREDIENTES: " + indices.size());
                     for(int i=0;i<indices.size();i++){
-                        pd.getIngredients().add(pd.getRecipe().getIngredients().get(indices.get(i)));
+                        pd.getIngredients().add(rec.getIngredients().get(indices.get(i)));
                     }
                 }
 
@@ -507,13 +507,13 @@ public class AddReceta extends AppCompatActivity {
                 utensilios.setItems(luten);
             }
             ingredientes = (MultiSelectionSpinner) rootView.findViewById(R.id.spinnerIngredientes);
-            final List<Ingredient> ingr = pd.getRecipe().getIngredients();
+            final List<Ingredient> ingr = rec.getIngredients();
             ingredientes.setListener(new MultiSelectionSpinner.OnMultipleItemsSelectedListener() {
                 @Override
                 public void selectedIndices(List<Integer> indices) {
                     pd.setUtensils(new ArrayList<Utensil>());
                     for(int i=0;i<indices.size();i++){
-                        pd.getUtensils().add(pd.getRecipe().getUtensils().get(indices.get(i)));
+                        pd.getUtensils().add(rec.getUtensils().get(indices.get(i)));
                     }
                 }
 
@@ -536,16 +536,16 @@ public class AddReceta extends AppCompatActivity {
         public void update(){
             pd = getPasos();
             desc.setText(pd.getInformation());
-            if(pd.getTime()!=0) {
-                tiempo.setText(Objects.toString(pd.getTime(), null));
+            if(pd.getTimer()!=0) {
+                tiempo.setText(Objects.toString(pd.getTimer(), null));
             }
-            final List<Utensil> ute = pd.getRecipe().getUtensils();
+            final List<Utensil> ute = rec.getUtensils();
             utensilios.setListener(new MultiSelectionSpinner.OnMultipleItemsSelectedListener() {
                 @Override
                 public void selectedIndices(List<Integer> indices) {
                     pd.setUtensils(new ArrayList<Utensil>());
                     for(int i=0;i<indices.size();i++){
-                        pd.getUtensils().add(pd.getRecipe().getUtensils().get(indices.get(i)));
+                        pd.getUtensils().add(rec.getUtensils().get(indices.get(i)));
                     }
                 }
 
@@ -561,14 +561,14 @@ public class AddReceta extends AppCompatActivity {
             if(luten.size()>0) {
                 utensilios.setItems(luten);
             }
-            final List<Ingredient> ingr = pd.getRecipe().getIngredients();
+            final List<Ingredient> ingr = rec.getIngredients();
             ingredientes.setListener(new MultiSelectionSpinner.OnMultipleItemsSelectedListener() {
                 @Override
                 public void selectedIndices(List<Integer> indices) {
                     pd.setIngredients(new ArrayList<Ingredient>());
                     System.out.println("INGREDIENTES: " + indices.size());
                     for(int i=0;i<indices.size();i++){
-                        pd.getIngredients().add(pd.getRecipe().getIngredients().get(indices.get(i)));
+                        pd.getIngredients().add(rec.getIngredients().get(indices.get(i)));
                     }
                 }
 
@@ -587,10 +587,10 @@ public class AddReceta extends AppCompatActivity {
         }
         public Step getPasos(){
             if(!tiempo.getText().toString().equals("")){
-                pd.setTime(Integer.parseInt(tiempo.getText().toString()));
+                pd.setTimer(Integer.parseInt(tiempo.getText().toString()));
             }
             else{
-                pd.setTime(0);
+                pd.setTimer(0);
             }
             if(!desc.getText().toString().equals("")){
                 pd.setInformation(desc.getText().toString());

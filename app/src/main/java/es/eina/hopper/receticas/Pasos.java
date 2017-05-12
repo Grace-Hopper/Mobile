@@ -70,23 +70,7 @@ public class Pasos extends AppCompatActivity {
         user = new User(-1,"","");
         if(b != null)
             user = (User)b.getSerializable("user");
-            //rec = (Recipe)b.getSerializable("receta");
-        Utensil a = new Utensil(-1, "cuchillo");
-        List<Utensil> utensilitos = new ArrayList<Utensil>();
-        utensilitos.add(a);
-        a = new Utensil(-1, "tenedor");
-        utensilitos.add(a);
-        List<Ingredient> ingredientitos = new ArrayList<Ingredient>();
-        Ingredient i1 = new Ingredient(-1, "pollas", "un par", null);
-        ingredientitos.add(i1);
-        i1 = new Ingredient(-1, "cojones", "otro par", null);
-        ingredientitos.add(i1);
-        List<Step> pasitos = new ArrayList<Step>();
-        Step c = new Step(-1, null, 50, "freir o algo de eso", utensilitos, ingredientitos);
-        pasitos.add(c);
-        c = new Step(-1, null, 80, "comerme la polla", utensilitos, ingredientitos);
-        pasitos.add(c);
-        rec= new Recipe(-1, "Pollas en vinagre", 200, 6, 0, null, null, utensilitos, ingredientitos, pasitos);
+            rec = (Recipe)b.getSerializable("receta");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pasos);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -95,12 +79,6 @@ public class Pasos extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        //mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        for(int i=0;i<15;i++){
-            //lp.add(new PasosDetalle("CONTENIDO DEL PASO " + i, i*10));
-            /*lp.add(new Step(-1, rec, 60, "WOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\nWOLOLO\n ",
-                    rec.getUtensils(), rec.getIngredients()));*/
-        }
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         setupViewPager(mViewPager,rec.getSteps());
@@ -178,7 +156,6 @@ public class Pasos extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        String contenido;
         Step paso;
         int tiempo;
         boolean crono=false;
@@ -186,8 +163,6 @@ public class Pasos extends AppCompatActivity {
         long seg=0;
         TextView chrono;
         public PlaceholderFragment() {
-            contenido="VACIO ESTE PASO LOCO";
-            tiempo=10;
         }
         public void setArguments(Step pd) {
             paso = pd;
@@ -211,6 +186,7 @@ public class Pasos extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_pasos, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.descripcion);
+            textView.setText(paso.getInformation());
             Spinner spinnerIngredientes = (Spinner) rootView.findViewById(R.id.spinnerIngredientes);
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>
                     (getContext(), android.R.layout.simple_spinner_item,paso.getListIngredients());
@@ -228,6 +204,7 @@ public class Pasos extends AppCompatActivity {
             final Button comen = (Button) rootView.findViewById(R.id.iniciar);
             final Button reini = (Button) rootView.findViewById(R.id.restablecer);
             final Button pararAlarma = (Button) rootView.findViewById(R.id.pararAlarma);
+            tiempo=(int)paso.getTimer()*60;
             if(tiempo>0) {
                 //chrono.setCountDown(true);
                 seg = tiempo;
@@ -235,7 +212,12 @@ public class Pasos extends AppCompatActivity {
                 if (resto > 9)
                     chrono.setText(seg / 60 + ":" + seg % 60);
                 else
-                    chrono.setText(seg / 60 + ":0" + resto);
+                    if(resto==0){
+                        chrono.setText(seg / 60 + ":00");
+                    }
+                    else {
+                        chrono.setText(seg / 60 + ":0" + resto);
+                    }
                     contador = new CountDownTimer(tiempo * 1000, 1000) {
                     public void onTick(long millisUntilFinished) {
                         seg = millisUntilFinished / 1000;
@@ -316,7 +298,12 @@ public class Pasos extends AppCompatActivity {
                                     if (resto > 9)
                                         chrono.setText(seg / 60 + ":" + seg % 60);
                                     else
-                                        chrono.setText(seg / 60 + ":0" + resto);
+                                        if(resto==0){
+                                            chrono.setText(seg / 60 + ":00");
+                                        }
+                                        else {
+                                            chrono.setText(seg / 60 + ":0" + resto);
+                                        }
                                 }
 
                                 public void onFinish() {
@@ -374,7 +361,12 @@ public class Pasos extends AppCompatActivity {
                 reini.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        chrono.setText(tiempo / 60 + ":" + tiempo % 60);
+                        if (tiempo%60==0){
+                            chrono.setText(tiempo/60 + ":00");
+                        }
+                        else {
+                            chrono.setText(tiempo / 60 + ":" + tiempo % 60);
+                        }
                         seg=tiempo;
                         contador.cancel();
                         contador = new CountDownTimer(tiempo * 1000, 1000) {
@@ -384,7 +376,12 @@ public class Pasos extends AppCompatActivity {
                                 if (resto > 9)
                                     chrono.setText(seg / 60 + ":" + seg % 60);
                                 else
-                                    chrono.setText(seg / 60 + ":0" + resto);
+                                    if(resto==0){
+                                        chrono.setText(seg / 60 + ":00");
+                                    }
+                                    else {
+                                        chrono.setText(seg / 60 + ":0" + resto);
+                                    }
                             }
 
                             public void onFinish() {
@@ -442,7 +439,6 @@ public class Pasos extends AppCompatActivity {
                 reini.setVisibility(View.GONE);
                 chrono.setVisibility(View.GONE);
             }
-            textView.setText("holi");
             return rootView;
         }
     }

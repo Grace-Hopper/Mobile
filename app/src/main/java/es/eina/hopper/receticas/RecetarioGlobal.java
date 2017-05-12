@@ -20,12 +20,17 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import es.eina.hopper.adapter.RecipesAdapter;
+import es.eina.hopper.models.Ingredient;
 import es.eina.hopper.models.Recipe;
+import es.eina.hopper.models.Step;
 import es.eina.hopper.models.User;
+import es.eina.hopper.models.Utensil;
 import es.eina.hopper.util.UtilService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -114,6 +119,9 @@ public class RecetarioGlobal extends AppCompatActivity
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+        Gson a = new Gson();
+        Recipe b = new Recipe(-1,"NOMBRE",1,2,3,new byte[]{},user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>());
+        System.out.println(a.toJson(b));
         UtilService service = retrofit.create(UtilService.class);
         Call<List<Recipe>> call = service.getAllRecipes(user.getName());
         call.enqueue(new Callback<List<Recipe>>() {

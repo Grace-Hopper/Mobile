@@ -19,11 +19,11 @@ public class Recipe implements Serializable {
     private long total_time;
     private long person;
     private int outstanding;
-    private byte[] picture;
+    //private byte[] picture;
     private User user;
-    private List<Utensil> utensils = new ArrayList();
     private List<Ingredient> ingredients = new ArrayList();
     private List<Step> steps = new ArrayList();
+    private List<Utensil> utensils = new ArrayList();
 
     public Recipe(){}
 
@@ -34,7 +34,7 @@ public class Recipe implements Serializable {
         this.total_time = total_time;
         this.person = person;
         this.outstanding = outstanding;
-        this.picture = picture;
+        //this.picture = picture;
         this.user = user;
         this.utensils = utensils;
         this.ingredients = ingredients;
@@ -82,11 +82,12 @@ public class Recipe implements Serializable {
     }
 
     public byte[] getPicture() {
-        return picture;
+        //return picture;
+        return new byte[]{};
     }
 
     public void setPicture(byte[] picture) {
-        this.picture = picture;
+        //this.picture = picture;
     }
 
     public User getUser() {

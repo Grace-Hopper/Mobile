@@ -7,16 +7,16 @@ public class Ingredient implements Serializable {
     private long id;
     private String name;
     private String quantity;
-    private List<Recipe> recipes = new ArrayList();
+    private long recipe;
+    private long step;
 
     public Ingredient() {
     }
 
-    public Ingredient(long id, String name, String quantity, List<Recipe> recipes) {
+    public Ingredient(long id, String name, String quantity) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
-        this.recipes = recipes;
     }
 
     public long getId() {
@@ -43,12 +43,19 @@ public class Ingredient implements Serializable {
         this.quantity = quantity;
     }
 
-    public List<Recipe> getRecipes() {
-        return recipes;
+    public long getRecipe() {
+        return recipe;
     }
 
-    public void setRecipes(List<Recipe> recipes) {
-        this.recipes = recipes;
+    public void setRecipes(long recipe) {
+        this.recipe = recipe;
+    }
+    public long getStep() {
+        return step;
+    }
+
+    public void setStep(long step) {
+        this.step = step;
     }
 }
 

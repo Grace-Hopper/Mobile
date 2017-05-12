@@ -46,7 +46,7 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
         this.parent = parent;
         a = this;
         if(ingredientes.size()<1){
-            ingredientes.add(new Ingredient(0,"","",null));
+            ingredientes.add(new Ingredient(0,"",""));
         }
         this.mContext = mContext;
     }
@@ -116,7 +116,7 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
                 public void onClick(View view) {
 
                     cogerDatos=false;
-                    list.add(new Ingredient(-1, "", "", null));
+                    list.add(new Ingredient(-1, "", ""));
                     a.notifyDataSetChanged();
                     ArrayList<Ingredient> li = (ArrayList)list.clone();
                     for(int i=0;i<li.size();i++){

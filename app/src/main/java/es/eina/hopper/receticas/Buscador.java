@@ -48,11 +48,11 @@ public class Buscador extends AppCompatActivity {
                 // If the event is a key-down event on the "enter" button
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    if(mListAdapter.contains(new Ingredient(-1, mTexto.getText().toString(), "", null))){
+                    if(mListAdapter.contains(new Ingredient(-1, mTexto.getText().toString(), ""))){
                         mTexto.setError("Ya ha introducido "+ mTexto.getText().toString() + ".");
                     }
                     else if(!"".equals(mTexto.getText().toString())) {
-                        mListAdapter.addItem(new Ingredient(-1, mTexto.getText().toString(), "", null));
+                        mListAdapter.addItem(new Ingredient(-1, mTexto.getText().toString(), ""));
                         mTexto.setText("");
                     }
                     else{
@@ -67,11 +67,11 @@ public class Buscador extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mListAdapter.contains(new Ingredient(-1, mTexto.getText().toString(), "", null))){
+                if(mListAdapter.contains(new Ingredient(-1, mTexto.getText().toString(), ""))){
                     mTexto.setError("Ya ha introducido "+ mTexto.getText().toString() + ".");
                 }
                 else if(!"".equals(mTexto.getText().toString())) {
-                    mListAdapter.addItem(new Ingredient(-1, mTexto.getText().toString(), "", null));
+                    mListAdapter.addItem(new Ingredient(-1, mTexto.getText().toString(), ""));
                     mTexto.setText("");
                 }
                 else{
