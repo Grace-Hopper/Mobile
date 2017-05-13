@@ -81,7 +81,7 @@ public class RecipesDbAdapter {
 
     private static final String DATABASE_CREATE_INGREDIENTS =
             "create table ingredients (" +
-                    "id BIGINT (6) primary key autoincrement," +
+                    "id INTEGER primary key autoincrement," +
                     "name VARCHAR (32) not null," +
                     "PRIMARY KEY (id)" +
                     ");";
@@ -277,7 +277,7 @@ public class RecipesDbAdapter {
     /**
      * Return a Cursor positioned at the recipe that matches the given rowId
      *
-     * @param rowId id of note to retrieve
+     * @param rowId id of recipe to retrieve
      * @return Cursor positioned to matching recipe, if found
      * @throws SQLException if note could not be found/retrieved
      */
@@ -288,6 +288,108 @@ public class RecipesDbAdapter {
                 mDb.query(true, DATABASE_TABLE_RECIPES, new String[] {RECIPES_KEY_ROWID, RECIPES_KEY_NAME,
                                 RECIPES_KEY_USER, RECIPES_KEY_PERSON, RECIPES_KEY_TOTAL_TIME, RECIPES_KEY_IMAGE}, RECIPES_KEY_ROWID + "=" + rowId, null,
                         null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
+    /**
+     *  Return a Cursor over the list of ingredients of the selected recipe
+     *
+     * @param recipeId id of recipe you want to retrieve the ingredients from
+     * @return Cursor over the list of ingredients
+     */
+    public Cursor fetchRecipeIngredients(long recipeId) throws SQLException {
+
+        String q = "SELECT u.quantity, i.name FROM use_2 u, ingredients i WHERE u.recipe = ? AND u.ingredient = i.id";
+
+        Cursor mCursor =
+                mDb.rawQuery(q, new String[] {Long.toString(recipeId)});
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
+    /**
+     *  Return a Cursor over the list of utensils of the selected recipe
+     *
+     * @param recipeId id of recipe you want to retrieve the utensils from
+     * @return Cursor over the list of ingredients
+     */
+    public Cursor fetchRecipeUtensils(long recipeId) throws SQLException {
+
+        String q = "SELECT ut.name FROM use_1 us, utensils ut WHERE us.recipe = ? AND us.utensil = ut.id";
+
+        Cursor mCursor =
+                mDb.rawQuery(q, new String[] {Long.toString(recipeId)});
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
+    /**
+     *  Return a Cursor over the list of steps of the given recipe
+     *
+     * @param recipeId id of recipe you want to retrieve the steps from
+     * @return Cursor over the list of steps
+     */
+    public Cursor fetchSteps(long recipeId) throws SQLException {
+
+        String q = "SELECT id, step, time, intormation FROM steps s WHERE s.recipe = ? ORDER BY step";
+
+        Cursor mCursor =
+                mDb.rawQuery(q, new String[] {Long.toString(recipeId)});
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
+
+    /**
+     *  Return a Cursor over the list of ingredients of the selected recipe
+     *
+     * @param recipeId id of recipe you want to retrieve the ingredients from
+     * @return Cursor over the list of ingredients
+     */
+    public Cursor fetchStepIngredients(long recipeId, long stepId) throws SQLException {
+
+        String q = "SELECT u.quantity, i.name FROM use_3 u, ingredients i WHERE u.recipe = ? AND u.ingredient = i.id";
+
+        Cursor mCursor =
+                mDb.rawQuery(q, new String[] {Long.toString(recipeId)});
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+
+    }
+
+
+    /**
+     *  Return a Cursor over the list of utensils of the selected recipe
+     *
+     * @param recipeId id of recipe you want to retrieve the utensils from
+     * @return Cursor over the list of ingredients
+     */
+    public Cursor fetchStepUtensils(long recipeId, long stepId) throws SQLException {
+
+        String q = "SELECT ut.name FROM use_4 us, utensils ut WHERE us.recipe = ? AND us.utensil = ut.id";
+
+        Cursor mCursor =
+                mDb.rawQuery(q, new String[] {Long.toString(recipeId)});
+
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
