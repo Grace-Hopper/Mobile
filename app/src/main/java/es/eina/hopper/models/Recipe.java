@@ -19,7 +19,7 @@ public class Recipe implements Serializable {
     private long total_time;
     private long person;
     private int outstanding;
-    //private byte[] picture;
+    private byte[] picture;
     private User user;
     private List<Ingredient> ingredients = new ArrayList();
     private List<Step> steps = new ArrayList();

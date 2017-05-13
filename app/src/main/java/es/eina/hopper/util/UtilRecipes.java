@@ -62,6 +62,7 @@ public class UtilRecipes {
             Ingredient ing = new Ingredient();
             //resul.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.RECIPES_KEY_ROWID)));
             ing.setName(aux.getString(aux.getColumnIndex(RecipesDbAdapter.INGREDIENTS_KEY_NAME)));
+            ing.setName(aux.getString(aux.getColumnIndex(RecipesDbAdapter.USE_KEY_QUANTITY)));
 
 
             ingredients.add(ing);
@@ -186,4 +187,17 @@ public class UtilRecipes {
 
         return listaFinal;
     }
+
+    public static long insertRecipe(String user, Context ctx, Recipe recipe){
+        List<Recipe> listaFinal = new ArrayList<Recipe>();
+        //en local
+        RecipesDbAdapter mDb = new RecipesDbAdapter(ctx);
+        mDb.open();
+
+
+        return 1;
+
+
+    }
+
 }
