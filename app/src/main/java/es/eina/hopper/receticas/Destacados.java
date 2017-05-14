@@ -41,6 +41,7 @@ public class Destacados extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(2).setChecked(true);
         ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user)).setText(user.getName());
     }
 

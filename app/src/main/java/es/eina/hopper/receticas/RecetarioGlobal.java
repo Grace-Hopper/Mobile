@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +48,7 @@ public class RecetarioGlobal extends AppCompatActivity
     User user;
     Activity yo;
     private ListView mList;
+    TextView error;
 
     public ArrayList<Recipe> lista_recetas;
 
@@ -88,6 +91,7 @@ public class RecetarioGlobal extends AppCompatActivity
         ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user)).setText(user.getName());
         mList = (ListView)findViewById(R.id.list);
 
+        navigationView.getMenu().getItem(1).setChecked(true);
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             @Override
@@ -105,7 +109,9 @@ public class RecetarioGlobal extends AppCompatActivity
 
         });
         
-
+        error = (TextView)  findViewById(R.id.ERROR);
+        error.setVisibility(View.VISIBLE);
+        error.setText("LOADING...");
         fillData();
     }
 
@@ -120,7 +126,7 @@ public class RecetarioGlobal extends AppCompatActivity
                 .build();
 
         Gson a = new Gson();
-        Recipe b = new Recipe(-1,"NOMBRE",1,2,3,new byte[]{},user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>());
+        Recipe b = new Recipe(-1,"NOMBRE",1,2,3,"",user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>());
         System.out.println(a.toJson(b));
         UtilService service = retrofit.create(UtilService.class);
         Call<List<Recipe>> call = service.getAllRecipes(user.getName());
@@ -131,6 +137,7 @@ public class RecetarioGlobal extends AppCompatActivity
                 int statusCode = response.code();
                 System.out.println(statusCode);
                 if (statusCode == 200) {
+                    error.setVisibility(View.GONE);
                     lista_recetas = new ArrayList(response.body());
 
                     RecipesAdapter adapter = new RecipesAdapter(RecetarioGlobal.this, lista_recetas);
@@ -144,6 +151,8 @@ public class RecetarioGlobal extends AppCompatActivity
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
                 System.out.println("Fallo to bestia");
+                error.setVisibility(View.VISIBLE);
+                error.setText("NO SE PUDO CONECTAR CON EL SERVIDOR");
             }
         });
 

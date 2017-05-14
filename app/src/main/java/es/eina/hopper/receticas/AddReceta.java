@@ -55,6 +55,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +104,7 @@ public class AddReceta extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         user = new User(-1, "","");
-        rec = new Recipe(-1,"",0,0,0,new byte[]{},user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>());
+        rec = new Recipe(-1,"",0,0,0,"",user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>());
         if(b != null)
             user = (User)b.getSerializable("user");
             rec = (Recipe)b.getSerializable("receta");
@@ -216,11 +217,6 @@ public class AddReceta extends AppCompatActivity {
                     if("".equals(listaPasos.get(i).getInformation()) && numeroErrores < 6){
                         numeroErrores++;
                         error = error + "El paso " + (i+1) + " debe tener informacion.\n";
-                    }
-                    if(listaPasos.get(i).getTimer() <= 0 && numeroErrores < 6){
-                        numeroErrores++;
-                        error = error + "El tiempo del paso " + (i+1) + " debe ser mayor que cero.\n";
-
                     }
                 }
                 

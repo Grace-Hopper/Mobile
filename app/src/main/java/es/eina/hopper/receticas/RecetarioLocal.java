@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class RecetarioLocal
                 Intent i = new Intent(yo, AddReceta.class);
                 Bundle b = new Bundle();
                 b.putSerializable("user", user); //Your id
-                b.putSerializable("receta", new Recipe(-1,"",0,0,0,new byte[]{},user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>()));
+                b.putSerializable("receta", new Recipe(-1,"",0,0,0,"",user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>()));
                 i.putExtras(b); //Put your id to your next Intent
                 startActivity(i);
             }
@@ -87,6 +88,7 @@ public class RecetarioLocal
         navigationView.setNavigationItemSelectedListener(this);
 
         ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user)).setText(user.getName());
+        navigationView.getMenu().getItem(0).setChecked(true);
         mList = (ListView)findViewById(R.id.list);
 
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener(){

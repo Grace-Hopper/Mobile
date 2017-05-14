@@ -1,5 +1,6 @@
 package es.eina.hopper.models;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 
@@ -19,7 +20,7 @@ public class Recipe implements Serializable {
     private long total_time;
     private long person;
     private int outstanding;
-    private byte[] picture;
+    private String picture;
     private User user;
     private List<Ingredient> ingredients = new ArrayList();
     private List<Step> steps = new ArrayList();
@@ -27,14 +28,14 @@ public class Recipe implements Serializable {
 
     public Recipe(){}
 
-    public Recipe(long id, String name, long total_time, long person, int outstanding, byte[] picture,
+    public Recipe(long id, String name, long total_time, long person, int outstanding, String picture,
                  User user, List<Utensil> utensils, List<Ingredient> ingredients,List<Step> steps){
         this.id = id;
         this.name = name;
         this.total_time = total_time;
         this.person = person;
         this.outstanding = outstanding;
-        //this.picture = picture;
+        this.picture = picture;
         this.user = user;
         this.utensils = utensils;
         this.ingredients = ingredients;
@@ -81,13 +82,12 @@ public class Recipe implements Serializable {
         this.outstanding = outstanding;
     }
 
-    public byte[] getPicture() {
-        //return picture;
-        return new byte[]{};
+    public String getPicture() {
+        return picture;
     }
 
-    public void setPicture(byte[] picture) {
-        //this.picture = picture;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     public User getUser() {

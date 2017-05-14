@@ -8,7 +8,14 @@
     tools:context="es.eina.hopper.receticas.RecetarioGlobal"
     tools:showIn="@layout/app_bar_recetario_global">
 
-
+    <TextView
+        android:id="@+id/ERROR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:text="NO SE PUD0 CONECTAR CON EL SERVIDOR"
+        style="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:visibility="gone"/>
 
     <ListView
         android:id="@+id/list"

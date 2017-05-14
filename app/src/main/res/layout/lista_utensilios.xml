@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:hint="Utensilio"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/button"

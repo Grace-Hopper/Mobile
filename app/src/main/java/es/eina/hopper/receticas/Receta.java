@@ -2,6 +2,7 @@ package es.eina.hopper.receticas;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -11,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 
 import es.eina.hopper.models.Recipe;
 import es.eina.hopper.models.User;
@@ -150,14 +153,32 @@ public class Receta extends AppCompatActivity {
                         Recipe resp = response.body();
                         rec=resp;
                         if (resp.getPicture() != null) {
-                            ByteArrayInputStream imageStream = new ByteArrayInputStream(resp.getPicture());
-                            Bitmap theImage = BitmapFactory.decodeStream(imageStream);
-                            imagen.setImageBitmap(theImage);
+                            if(resp.getPicture()!="") {
+                                ByteArrayInputStream imageStream = new ByteArrayInputStream(Base64.decode(resp.getPicture(), Base64.DEFAULT));
+                                Bitmap theImage = BitmapFactory.decodeStream(imageStream);
+                                theImage = Bitmap.createScaledBitmap(theImage, 700, 700, true);
+                                imagen.setImageBitmap(theImage);
+                            }
+                            else{
+                                Bitmap bmp=BitmapFactory.decodeResource(getResources(),R.drawable.recdefault);//image is your image
+                                bmp=Bitmap.createScaledBitmap(bmp, 700,700, true);
+                                imagen.setImageBitmap(bmp);
+                            }
                         }
                         titulo.setText(resp.getName() + "\n");
+                        String ingr="";
+                        for(int i=0;i<resp.getIngredients().size();i++){
+                            ingr+=resp.getIngredients().get(i).getName() +", ";
+                        }
+                        String uten="";
+                        for(int i=0;i<resp.getIngredients().size();i++){
+                            uten+=resp.getIngredients().get(i).getName() +", ";
+                        }
                         info.setText("Duracion: " + resp.getTotal_time() + " min" + "\n" +
                                 "Nº de comensales: " + resp.getPerson() + " personas\n" +
-                                "Creado: " + resp.getUser().getName() + "\n");
+                                "Creado: " + resp.getUser().getName() + "\n" +
+                                "Ingredientes: " + ingr + "\n" +
+                                "Utensilios: " + uten);
 
                     }
                 }
@@ -172,14 +193,32 @@ public class Receta extends AppCompatActivity {
             Recipe resp = UtilRecipes.getRecipe(user.getName(),rowId,this);
             rec=resp;
             if (resp.getPicture() != null) {
-                ByteArrayInputStream imageStream = new ByteArrayInputStream(resp.getPicture());
-                Bitmap theImage = BitmapFactory.decodeStream(imageStream);
-                imagen.setImageBitmap(theImage);
+                if(resp.getPicture()!="") {
+                    ByteArrayInputStream imageStream = new ByteArrayInputStream(Base64.decode(resp.getPicture(), Base64.DEFAULT));
+                    Bitmap theImage = BitmapFactory.decodeStream(imageStream);
+                    theImage = Bitmap.createScaledBitmap(theImage, 700, 700, true);
+                    imagen.setImageBitmap(theImage);
+                }
+                else{
+                    Bitmap bmp=BitmapFactory.decodeResource(getResources(),R.drawable.recdefault);//image is your image
+                    bmp=Bitmap.createScaledBitmap(bmp, 700,700, true);
+                    imagen.setImageBitmap(bmp);
+                }
             }
             titulo.setText(resp.getName() + "\n");
+            String ingr="";
+            for(int i=0;i<resp.getIngredients().size();i++){
+                ingr+=resp.getIngredients().get(i).getName() +", ";
+            }
+            String uten="";
+            for(int i=0;i<resp.getIngredients().size();i++){
+                uten+=resp.getIngredients().get(i).getName() +", ";
+            }
             info.setText("Duracion: " + resp.getTotal_time() + " min" + "\n" +
                     "Nº de comensales: " + resp.getPerson() + " personas\n" +
-                    "Creado: " + resp.getUser().getName() + "\n");
+                    "Creado: " + resp.getUser().getName() + "\n" +
+                    "Ingredientes: " + ingr + "\n" +
+                    "Utensilios: " + uten);
         }
     }
     @Override

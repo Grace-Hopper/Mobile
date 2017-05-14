@@ -42,6 +42,8 @@ public class AcercaDe extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user)).setText(user.getName());
+
+        navigationView.getMenu().getItem(5).setChecked(true);
     }
 
     @Override

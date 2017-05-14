@@ -45,6 +45,7 @@ public class Configuracion extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user)).setText(user.getName());
+        navigationView.getMenu().getItem(3).setChecked(true);
     }
 
     @Override
