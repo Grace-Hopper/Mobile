@@ -12,6 +12,7 @@ import android.util.Base64;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import es.eina.hopper.models.Ingredient;
@@ -200,13 +201,67 @@ public class UtilRecipes {
     }
 
     public static long insertRecipe(String user, Context ctx, Recipe recipe){
-        List<Recipe> listaFinal = new ArrayList<Recipe>();
-        //en local
+
         RecipesDbAdapter mDb = new RecipesDbAdapter(ctx);
         mDb.open();
 
 
-        return 1;
+        // Recupero id usuario
+        Cursor aux = mDb.fetchUser(user);
+        long userId = aux.getLong(aux.getColumnIndex(RecipesDbAdapter.USERS_KEY_ROWID));
+
+        // Inserto la receta
+        long rowId = mDb.insertRecipe(recipe.getName(), recipe.getTotal_time(), recipe.getPerson(), recipe.getPicture(), userId);
+
+        //Inserto ingredientes
+        List<Ingredient> ingredients = recipe.getIngredients();
+        Iterator<Ingredient> ii = ingredients.iterator();
+
+        while(ii.hasNext()){
+            Ingredient ing = ii.next();
+            mDb.insertIngredient(ing.getName(),rowId, ing.getQuantity());
+        }
+
+        //Inserto utensilios
+        List<Utensil> utensils = recipe.getUtensils();
+        Iterator<Utensil> iu = utensils.iterator();
+
+        while(iu.hasNext()){
+            Utensil ut = iu.next();
+            mDb.insertUtensil(ut.getName(),rowId);
+        }
+
+        //Inserto pasos
+        //Inserto utensilios
+        List<Step> steps = recipe.getSteps();
+        Iterator<Step> is = steps.iterator();
+
+        while(iu.hasNext()){
+            Step st = is.next();
+            long stepRowId = mDb.insertStep(st.getTimer(), st.getInformation(), rowId);
+
+
+            //Inserto ingredientes de cada paso
+
+            ingredients = st.getIngredients();
+            ii = ingredients.iterator();
+            while(ii.hasNext()){
+                Ingredient ing = ii.next();
+                mDb.insertStepIngredient(ing.getName(),rowId, ing.getQuantity(), stepRowId);
+            }
+
+            //Inserto utensilios de cada paso
+            utensils = recipe.getUtensils();
+            iu = utensils.iterator();
+
+            while(iu.hasNext()){
+                Utensil ut = iu.next();
+                mDb.insertStepUtensil(ut.getName(),rowId, stepRowId);
+            }
+
+        }
+
+        return rowId;
 
 
     }

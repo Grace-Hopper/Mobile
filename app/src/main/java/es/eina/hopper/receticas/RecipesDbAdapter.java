@@ -78,17 +78,15 @@ public class RecipesDbAdapter {
     private static final String DATABASE_CREATE_UTENSILS =
             "create table utensils (" +
                     "id BIGINT (6) primary key autoincrement," +
-                    "name VARCHAR (32) not null," +
-                    "UNIQUE (name)" +
+                    "name VARCHAR (32) not null unique," +
                     "PRIMARY KEY (id)" +
                     ");";
 
     private static final String DATABASE_CREATE_INGREDIENTS =
             "create table ingredients (" +
                     "id INTEGER primary key autoincrement," +
-                    "name VARCHAR (32) not null," +
-                    "PRIMARY KEY (id)," +
-                    "UNIQUE (name)" +
+                    "name VARCHAR (32) not null unique," +
+                    "PRIMARY KEY (id)" +
                     ");";
 
     private static final String DATABASE_CREATE_STEPS =
@@ -174,21 +172,14 @@ public class RecipesDbAdapter {
 
             db.execSQL(DATABASE_CREATE_USERS);
             db.execSQL(DATABASE_CREATE_RECIPES);
-            /*db.execSQL(DATABASE_CREATE_UTENSILS);
+            db.execSQL(DATABASE_CREATE_UTENSILS);
             db.execSQL(DATABASE_CREATE_INGREDIENTS);
             db.execSQL(DATABASE_CREATE_STEPS);
             db.execSQL(DATABASE_CREATE_USE1);
             db.execSQL(DATABASE_CREATE_USE2);
             db.execSQL(DATABASE_CREATE_USE3);
-            db.execSQL(DATABASE_CREATE_USE4); */
+            db.execSQL(DATABASE_CREATE_USE4);
 
-            db.execSQL("INSERT INTO `users` (`id`, `name`) VALUES " +
-                    "(1, 'angel'), " +
-                    "(2, 'fernando');");
-
-            db.execSQL("INSERT INTO `recipes` (`id`, `name`, `total_time`, `person`, `user`) VALUES " +
-                    " (1, 'Macarroncicos a la maña', 15, 2, 1), " +
-                    "(2,'Pasta al pesto', 20, 2, 2), (3,'Hamburguesa vegana', 20, 2, 2);" );
         }
 
 
@@ -252,7 +243,7 @@ public class RecipesDbAdapter {
     /**
      * Return a Cursor positioned at the user that matches the given rowId
      *
-     * @param rowId id of user to retrieve
+     * @param rowId id of the user to retrieve
      * @return Cursor positioned to matching user, if found
      * @throws SQLException if user could not be found/retrieved
      */
@@ -260,6 +251,24 @@ public class RecipesDbAdapter {
 
         Cursor mCursor =
                 mDb.query(true, DATABASE_TABLE_USERS, new String[] {USERS_KEY_NAME}, USERS_KEY_ROWID + "=" + rowId, null, null, null, null, null);
+
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    /**
+     * Return a Cursor positioned at the user that matches the given rowId
+     *
+     * @param name name of the user to retrieve
+     * @return Cursor positioned to matching user, if found
+     * @throws SQLException if user could not be found/retrieved
+     */
+    public Cursor fetchUser(String name) throws SQLException {
+
+        Cursor mCursor =
+                mDb.query(true, DATABASE_TABLE_USERS, new String[] {USERS_KEY_NAME, USERS_KEY_ROWID}, USERS_KEY_NAME + "=" + name, null, null, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -412,7 +421,7 @@ public class RecipesDbAdapter {
      * @param user recipe's creator
      * @return rowId of the inserted recipe
      */
-    public long insertRecipe(String name, long total_time, long person, byte[] image, long user) throws SQLException {
+    public long insertRecipe(String name, long total_time, long person, String image, long user) throws SQLException {
 
 
         ContentValues cv = new ContentValues();
@@ -438,7 +447,7 @@ public class RecipesDbAdapter {
 
      * @return rowId of the inserted recipe
      */
-    public long insertIngredient(String name, long recipeRowId, long quantity) throws SQLException {
+    public long insertIngredient(String name, long recipeRowId, String quantity) throws SQLException {
 
 
         ContentValues cv = new ContentValues();
@@ -503,9 +512,7 @@ public class RecipesDbAdapter {
     }
 
     /**
-     *  Inserts a utensil in the database and liks it to a recipe.
-     *  If the utensil already existed, it only links it
-     *
+     *  Inserts a step in the database and liks it to a recipe.
      * @param time time of the step to insert
      * @param information information to give about the step
      * @param recipeRowId rowId of the recipe you want to link it to
@@ -527,5 +534,70 @@ public class RecipesDbAdapter {
     }
 
 
+    /**
+     *  Links an ingredient to a step
+     *
+     * @param name name of the ingredient you want to insert
+     * @param recipeRowId rowId of the recipe you want to link it to
+     * @param quantity ingredient's quantity
+     * @param step step the ingredient owns to
+     * @return rowId of the inserted ingredient
+     */
+    public long insertStepIngredient(String name, long recipeRowId, String quantity, long step) throws SQLException {
+
+
+        String q = "SELECT id FROM ingredients i WHERE i.name = ? ";
+
+        Cursor mCursor =
+                mDb.rawQuery(q, new String[] {name});
+
+        long ingredientRowId = mCursor.getLong(mCursor.getColumnIndex(INGREDIENTS_KEY_ROWID));
+
+
+        ContentValues cv = new ContentValues();
+        cv.put(USE_KEY_RECIPE, recipeRowId);
+        cv.put(USE2_KEY_INGREDIENT, ingredientRowId);
+        cv.put(USE_KEY_QUANTITY, quantity);
+        cv.put(STEPS_KEY_STEP, step);
+
+        Long rowId = mDb.insert(DATABASE_TABLE_USE3, null, cv);
+
+        return rowId;
+    }
+
+
+    /**
+     *  Links a utensil to a step
+     *
+     * @param name name of the utensil you want to insert
+     * @param recipeRowId rowId of the recipe you want to link it to
+     * @param step step the ingredient owns to
+     * @return rowId of the inserted recipe
+     */
+    public long insertStepUtensil(String name, long recipeRowId, long step) throws SQLException {
+
+
+        String q = "SELECT u.id FROM utensils u WHERE u.name = ? ";
+
+        Cursor mCursor =
+                mDb.rawQuery(q, new String[] {name});
+
+        long utensilRowId = mCursor.getLong(mCursor.getColumnIndex(INGREDIENTS_KEY_ROWID));
+
+        ContentValues cv = new ContentValues();
+        cv.put(USE_KEY_RECIPE, recipeRowId);
+        cv.put(USE1_KEY_UTENSIL, utensilRowId);
+        cv.put(STEPS_KEY_STEP, step);
+
+        Long rowId = mDb.insert(DATABASE_TABLE_USE3, null, cv);
+
+        return rowId;
+    }
+
+
+
+    public void deleteDatabase() {
+        mDbHelper.onUpgrade(mDb, 2,2);
+    }
 
 }

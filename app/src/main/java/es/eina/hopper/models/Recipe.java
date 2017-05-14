@@ -86,7 +86,9 @@ public class Recipe implements Serializable {
         return picture;
     }
 
+
     public void setPicture(String picture) {
+
         this.picture = picture;
     }
 
