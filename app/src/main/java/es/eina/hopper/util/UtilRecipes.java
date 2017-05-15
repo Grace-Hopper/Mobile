@@ -20,6 +20,7 @@ import es.eina.hopper.models.Recipe;
 import es.eina.hopper.models.Step;
 import es.eina.hopper.models.User;
 import es.eina.hopper.models.Utensil;
+import es.eina.hopper.receticas.LoginActivity;
 import es.eina.hopper.receticas.R;
 import es.eina.hopper.receticas.Receta;
 import es.eina.hopper.receticas.RecipesDbAdapter;
@@ -189,9 +190,10 @@ public class UtilRecipes {
                 resul.setPicture("");
             }
             resul.setTotal_time(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_TOTAL_TIME)));
-            Cursor aux2 = mDb.fetchUser(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER));
 
+            Cursor aux2 = mDb.fetchUser(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER)));
             resul.setUser(new User(-1,aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.USERS_KEY_NAME)),""));
+
             listaFinal.add(resul);
             aux.moveToNext();
         }
@@ -205,9 +207,8 @@ public class UtilRecipes {
         RecipesDbAdapter mDb = new RecipesDbAdapter(ctx);
         mDb.open();
 
-
         // Recupero id usuario
-        Cursor aux = mDb.fetchUser(user);
+        Cursor aux = mDb.fetchUserId(user);
         long userId = aux.getLong(aux.getColumnIndex(RecipesDbAdapter.USERS_KEY_ROWID));
 
         // Inserto la receta
@@ -219,7 +220,9 @@ public class UtilRecipes {
 
         while(ii.hasNext()){
             Ingredient ing = ii.next();
+            System.out.println("Ingrediente " + ing.getName());
             mDb.insertIngredient(ing.getName(),rowId, ing.getQuantity());
+
         }
 
         //Inserto utensilios
@@ -236,10 +239,13 @@ public class UtilRecipes {
         List<Step> steps = recipe.getSteps();
         Iterator<Step> is = steps.iterator();
 
-        while(iu.hasNext()){
-            Step st = is.next();
-            long stepRowId = mDb.insertStep(st.getStep(), st.getTimer(), st.getInformation(), rowId);
+        int numPaso = 1;
+        while(is.hasNext()){
+            System.out.println("Joder, al menos hay uno");
 
+            Step st = is.next();
+            long stepRowId = mDb.insertStep(numPaso, st.getTimer(), st.getInformation(), rowId);
+            System.out.println("StepRowId" + stepRowId);
 
             //Inserto ingredientes de cada paso
 
@@ -247,6 +253,7 @@ public class UtilRecipes {
             ii = ingredients.iterator();
             while(ii.hasNext()){
                 Ingredient ing = ii.next();
+                System.out.println("Ingredienti" + ing.getName());
                 mDb.insertStepIngredient(ing.getName(),rowId, ing.getQuantity(), stepRowId);
             }
 
@@ -258,6 +265,8 @@ public class UtilRecipes {
                 Utensil ut = iu.next();
                 mDb.insertStepUtensil(ut.getName(),rowId, stepRowId);
             }
+
+            numPaso++;
 
         }
 

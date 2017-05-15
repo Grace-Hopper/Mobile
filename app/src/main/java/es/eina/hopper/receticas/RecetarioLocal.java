@@ -120,6 +120,14 @@ public class RecetarioLocal
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        fillData();
+
+    }
+
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         if (v.getId()==R.id.list) {

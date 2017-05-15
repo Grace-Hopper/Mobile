@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Base64;
 import android.util.Log;
 
 /**
@@ -66,7 +67,7 @@ public class RecipesDbAdapter {
     private static final String DATABASE_CREATE_RECIPES =
             "create table recipes (" +
                     "id INTEGER primary key autoincrement ," +
-                    "name VARCHAR (32) not null," +
+                    "name VARCHAR (32) not null unique," +
                     "total_time BIGINT (6) not null," +
                     "person BIGINT (6) not null," +
                     "image BLOB," +
@@ -263,15 +264,32 @@ public class RecipesDbAdapter {
      * @return Cursor positioned to matching user, if found
      * @throws SQLException if user could not be found/retrieved
      */
-    public Cursor fetchUser(String name) throws SQLException {
+    public Cursor fetchUserId(String name) throws SQLException {
 
         Cursor mCursor =
-                mDb.query(true, DATABASE_TABLE_USERS, new String[] {USERS_KEY_NAME, USERS_KEY_ROWID}, USERS_KEY_NAME + "=" + name, null, null, null, null, null);
+                mDb.query(true, DATABASE_TABLE_USERS, new String[] {USERS_KEY_NAME, USERS_KEY_ROWID}, USERS_KEY_NAME + "= '" + name + "'", null, null, null, null, null);
 
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
         return mCursor;
+    }
+
+    /**
+     * Return a Cursor positioned at the user that matches the given rowId
+     *
+     * @param name name of the user to retrieve
+     * @return Cursor positioned to matching user, if found
+     * @throws SQLException if user could not be found/retrieved
+     */
+    public long insertUser(String name) throws SQLException {
+
+        ContentValues cv = new ContentValues();
+        cv.put(USERS_KEY_NAME, name);
+
+        Long rowId = mDb.insertWithOnConflict(DATABASE_TABLE_USERS, null, cv, mDb.CONFLICT_IGNORE);
+
+        return rowId;
     }
 
 
@@ -426,7 +444,7 @@ public class RecipesDbAdapter {
         cv.put(RECIPES_KEY_NAME, name);
         cv.put(RECIPES_KEY_TOTAL_TIME, total_time);
         cv.put(RECIPES_KEY_PERSON, person);
-        cv.put(RECIPES_KEY_IMAGE, image);
+        cv.put(RECIPES_KEY_IMAGE, Base64.decode(image, Base64.DEFAULT));
         cv.put(RECIPES_KEY_USER, user);
 
         Long rowId = mDb.insert(DATABASE_TABLE_RECIPES, null, cv);
@@ -447,22 +465,25 @@ public class RecipesDbAdapter {
      */
     public long insertIngredient(String name, long recipeRowId, String quantity) throws SQLException {
 
+        Cursor mCursor =
+                mDb.query(true, DATABASE_TABLE_INGREDIENTS, new String[] {INGREDIENTS_KEY_ROWID}, INGREDIENTS_KEY_NAME + "= '" + name + "'", null, null, null, null, null);
 
-        ContentValues cv = new ContentValues();
-        cv.put(INGREDIENTS_KEY_NAME, name);
 
-        Long rowId = mDb.insert(DATABASE_TABLE_INGREDIENTS, null, cv);
+        long rowId;
 
-        if (rowId==-1){
-            String q = "SELECT id FROM ingredients i WHERE i.name = ? ";
+        if (!mCursor.moveToFirst()){
 
-            Cursor mCursor =
-                    mDb.rawQuery(q, new String[] {name});
+            ContentValues cv = new ContentValues();
+            cv.put(INGREDIENTS_KEY_NAME, name);
 
+            rowId = mDb.insert(DATABASE_TABLE_INGREDIENTS, null, cv);
+
+        }
+        else{
             rowId = mCursor.getLong(mCursor.getColumnIndex(INGREDIENTS_KEY_ROWID));
         }
 
-        cv.clear();
+        ContentValues cv = new ContentValues();
         cv.put(USE_KEY_RECIPE, recipeRowId);
         cv.put(USE2_KEY_INGREDIENT, rowId);
         cv.put(USE_KEY_QUANTITY, quantity);
@@ -484,21 +505,24 @@ public class RecipesDbAdapter {
      */
     public long insertUtensil(String name, long recipeRowId) throws SQLException {
 
+        Cursor mCursor =
+                mDb.query(true, DATABASE_TABLE_UTENSILS, new String[] {UTENSILS_KEY_ROWID}, UTENSILS_KEY_NAME + "= '" + name + "'", null, null, null, null, null);
 
-        ContentValues cv = new ContentValues();
-        cv.put(UTENSILS_KEY_NAME, name);
+        long rowId;
 
-        Long rowId = mDb.insert(DATABASE_TABLE_UTENSILS, null, cv);
 
-        if (rowId==-1){
-            String q = "SELECT u.id FROM utensils u WHERE u.name = ? ";
 
-            Cursor mCursor =
-                    mDb.rawQuery(q, new String[] {name});
+        if (!mCursor.moveToFirst()){
+            ContentValues cv = new ContentValues();
+            cv.put(UTENSILS_KEY_NAME, name);
 
+            rowId = mDb.insert(DATABASE_TABLE_UTENSILS, null, cv);
+        }
+        else{
             rowId = mCursor.getLong(mCursor.getColumnIndex(INGREDIENTS_KEY_ROWID));
         }
 
+        ContentValues cv = new ContentValues();
         cv.clear();
         cv.put(USE_KEY_RECIPE, recipeRowId);
         cv.put(USE1_KEY_UTENSIL, rowId);
@@ -524,9 +548,11 @@ public class RecipesDbAdapter {
         cv.put(STEPS_KEY_STEP, step);
         cv.put(STEPS_KEY_TIME, time);
         cv.put(STEPS_KEY_INFORMATION, information);
-        cv.put(RECIPES_KEY_ROWID, recipeRowId);
+        cv.put(USE_KEY_RECIPE, recipeRowId);
 
         Long rowId = mDb.insert(DATABASE_TABLE_STEPS, null, cv);
+
+        System.out.println("Insertaito mi arma");
 
         return rowId;
 
@@ -544,14 +570,14 @@ public class RecipesDbAdapter {
      */
     public long insertStepIngredient(String name, long recipeRowId, String quantity, long step) throws SQLException {
 
-
-        String q = "SELECT id FROM ingredients i WHERE i.name = ? ";
+        System.out.println("pues Empieza");
 
         Cursor mCursor =
-                mDb.rawQuery(q, new String[] {name});
+                mDb.query(true, DATABASE_TABLE_INGREDIENTS, new String[] {INGREDIENTS_KEY_ROWID}, INGREDIENTS_KEY_NAME + "= '" + name + "'", null, null, null, null, null);
+        mCursor.moveToFirst();
 
         long ingredientRowId = mCursor.getLong(mCursor.getColumnIndex(INGREDIENTS_KEY_ROWID));
-
+        System.out.println("Consultamediokey");
 
         ContentValues cv = new ContentValues();
         cv.put(USE_KEY_RECIPE, recipeRowId);
@@ -560,6 +586,8 @@ public class RecipesDbAdapter {
         cv.put(STEPS_KEY_STEP, step);
 
         Long rowId = mDb.insert(DATABASE_TABLE_USE3, null, cv);
+
+        System.out.println("Insertame ingrediente-paso cabron");
 
         return rowId;
     }
@@ -575,11 +603,9 @@ public class RecipesDbAdapter {
      */
     public long insertStepUtensil(String name, long recipeRowId, long step) throws SQLException {
 
-
-        String q = "SELECT u.id FROM utensils u WHERE u.name = ? ";
-
         Cursor mCursor =
-                mDb.rawQuery(q, new String[] {name});
+                mDb.query(true, DATABASE_TABLE_UTENSILS, new String[] {UTENSILS_KEY_ROWID}, UTENSILS_KEY_NAME + "= '" + name + "'", null, null, null, null, null);
+        mCursor.moveToFirst();
 
         long utensilRowId = mCursor.getLong(mCursor.getColumnIndex(INGREDIENTS_KEY_ROWID));
 

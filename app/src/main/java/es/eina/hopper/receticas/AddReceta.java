@@ -244,6 +244,7 @@ public class AddReceta extends AppCompatActivity {
                 else{
                     if(local) {
                         //UtilRecipes.insertRecipe(user.getName(),yo,rec);
+                        UtilRecipes.insertRecipe(user.getName(),yo,rec);
                         finish();
                     }
                     else{
@@ -279,6 +280,7 @@ public class AddReceta extends AppCompatActivity {
                             }
                         });
                     }
+
                 }
             }
         });

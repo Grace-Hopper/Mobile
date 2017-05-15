@@ -52,7 +52,7 @@ public class RecipesAdapter extends ArrayAdapter<Recipe> {
         nombre_receta.setText(aux);
         descripcion_receta.setText(Long.toString(myRecipe.getPerson()));
         if(myRecipe.getPicture()!=null) {
-            if (myRecipe.getPicture() == "") {
+            if (myRecipe.getPicture().equals("")) {
                 Bitmap bmp = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.recdefault);//image is your image
                 bmp = Bitmap.createScaledBitmap(bmp, 500, 500, true);
                 imagen_receta.setImageBitmap(bmp);
