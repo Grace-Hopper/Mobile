@@ -92,16 +92,6 @@
                     android:layout_height="100dp"/>
             </LinearLayout>
 
-            <MultiAutoCompleteTextView
-                android:id="@+id/descripcion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:hint="Descripción de la receta"
-                android:inputType="textMultiLine"
-                style="@android:style/TextAppearance.DeviceDefault.Medium"
-                android:gravity="bottom"
-                android:scrollbars="vertical"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

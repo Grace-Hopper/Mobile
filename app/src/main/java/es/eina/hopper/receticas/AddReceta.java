@@ -233,6 +233,7 @@ public class AddReceta extends AppCompatActivity {
                 }
                 else{
                     UtilRecipes.insertRecipe(user.getName(),yo,rec);
+                    finish();
                 }
             }
         });
@@ -636,11 +637,9 @@ public class AddReceta extends AppCompatActivity {
                 }
             });
             nombreReceta = (AutoCompleteTextView) rootView.findViewById(R.id.titulo_receta);
-            MultiAutoCompleteTextView Descripcion = (MultiAutoCompleteTextView) rootView.findViewById(R.id.descripcion);
             nComensales = (EditText) rootView.findViewById(R.id.comensales);
             tiempo = (EditText) rootView.findViewById(R.id.tiempo);
             nombreReceta.setText(receta.getName());
-            Descripcion.setText("");
 
             mListUten = (ListView)rootView.findViewById(R.id.listUtensilios);
             final UtensilAdapter adapter = new UtensilAdapter(getContext(), (ArrayList)receta.getUtensils(),mListUten,getActivity());
