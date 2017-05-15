@@ -54,84 +54,85 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        final Holder holder;
-        if (convertView == null) {
-            holder = new Holder();
-            LayoutInflater inflater =mContext.getLayoutInflater();
-            convertView = inflater.inflate(R.layout.lista_utensilios, null);
-            holder.mUten = (EditText) convertView
-                    .findViewById(R.id.utensilio);
+        if(position<list.size()) {
+            final Holder holder;
+            if (convertView == null) {
+                holder = new Holder();
+                LayoutInflater inflater = mContext.getLayoutInflater();
+                convertView = inflater.inflate(R.layout.lista_utensilios, null);
+                holder.mUten = (EditText) convertView
+                        .findViewById(R.id.utensilio);
 
-            holder.add = (Button) convertView.findViewById(R.id.button);
-            convertView.setTag(holder);
-        } else {
-            holder = (Holder) convertView.getTag();
-        }
-        holder.mUten.setText(list.get(position).getName());
-        TextWatcher watcher= new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-
+                holder.add = (Button) convertView.findViewById(R.id.button);
+                convertView.setTag(holder);
+            } else {
+                holder = (Holder) convertView.getTag();
             }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //Do something or nothing.
+
+            holder.mUten.setText(list.get(position).getName());
+            TextWatcher watcher = new TextWatcher() {
+                public void afterTextChanged(Editable s) {
+                }
+
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    //Do something or nothing.
+                }
+
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    //Do something or nothing
+                    if (holder.mUten.getText().toString().length() >= 2) {
+                        String nombre = holder.mUten.getText().toString().substring(0, 1).toUpperCase() + holder.mUten.getText().toString().substring(1).toLowerCase();
+                        if(!contiene(nombre, position)){
+                            list.get(position).setName(nombre);
+                        }
+                        else{
+                            holder.mUten.setError("Ya ha introducido " + nombre + ".");
+                        }
+                    }
+                    else if(!"".equals(holder.mUten.getText().toString())) {
+                        if (!contiene(holder.mUten.getText().toString().toUpperCase(), position)) {
+                            list.get(position).setName(holder.mUten.getText().toString().toUpperCase());
+                        } else {
+                            holder.mUten.setError("Ya ha introducido " + holder.mUten.getText().toString().toUpperCase() + ".");
+                        }
+                    }
+                }
+            };
+
+            holder.mUten.addTextChangedListener(watcher);
+            if (position == list.size() - 1) {
+                holder.add.setText("+");
+                final ListView lp = this.parent;
+                holder.add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        cogerDatos = false;
+                        list.add(new Utensil(0, ""));
+                        a.notifyDataSetChanged();
+                        AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
+                        cogerDatos = true;
+                    }
+                });
+            } else {
+                holder.add.setText("-");
+                final ListView lp = this.parent;
+                holder.add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        cogerDatos = false;
+                        if (list.size() > 1) {
+                            list.remove(position);
+                        } else {
+                            list.get(position).setName("");
+                        }
+                        a.notifyDataSetChanged();
+                        AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
+                        cogerDatos = true;
+                    }
+                });
             }
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //Do something or nothing
-                if (holder.mUten.getText().toString().length() >= 2) {
-                    String nombre = holder.mUten.getText().toString().substring(0, 1).toUpperCase() + holder.mUten.getText().toString().substring(1).toLowerCase();
-                    if(!contiene(nombre, position)){
-                        list.get(position).setName(nombre);
-                    }
-                    else{
-                        holder.mUten.setError("Ya ha introducido " + nombre + ".");
-                    }
-                }
-                else if(!"".equals(holder.mUten.getText().toString())){
-                    if(!contiene(holder.mUten.getText().toString().toUpperCase(), position)){
-                        list.get(position).setName(holder.mUten.getText().toString().toUpperCase());
-                    }
-                    else {
-                        holder.mUten.setError("Ya ha introducido " + holder.mUten.getText().toString().toUpperCase() + ".");
-                    }
-                }
-            }
-        };
-
-        holder.mUten.addTextChangedListener(watcher);
-        if(position==list.size()-1){
-            holder.add.setText("+");
-            final ListView lp = this.parent;
-            holder.add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    cogerDatos=false;
-                    list.add(new Utensil(0, ""));
-                    a.notifyDataSetChanged();
-                    AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
-                    cogerDatos=true;
-                }
-            });
-        }
-        else{
-            holder.add.setText("-");
-            final ListView lp = this.parent;
-            holder.add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    cogerDatos=false;
-                    if(list.size()>1) {
-                        list.remove(position);
-                    }
-                    else{
-                        list.get(position).setName("");
-                    }
-                    a.notifyDataSetChanged();
-                    AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
-                    cogerDatos=true;
-                }
-            });
         }
         // Return the completed view to render on screen
         return convertView;

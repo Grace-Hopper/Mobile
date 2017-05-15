@@ -229,5 +229,4 @@ public class RecetarioGlobal extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 }

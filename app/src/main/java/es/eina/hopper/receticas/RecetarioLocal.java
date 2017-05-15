@@ -231,4 +231,11 @@ public class RecetarioLocal
     public void CambiarUsuario(){
         finish();
     }
+
+    @Override
+    protected void onPostResume(){
+        super.onPostResume();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.getMenu().getItem(0).setChecked(true);
+    }
 }

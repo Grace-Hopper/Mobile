@@ -16,13 +16,30 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
+import java.util.List;
+
+import es.eina.hopper.adapter.RecipesAdapter;
 import es.eina.hopper.adapter.SearchAdapter;
 import es.eina.hopper.models.Ingredient;
+import es.eina.hopper.models.Recipe;
+import es.eina.hopper.models.Step;
+import es.eina.hopper.models.User;
+import es.eina.hopper.models.Utensil;
+import es.eina.hopper.util.UtilService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Buscador extends AppCompatActivity {
     private Button mAddItemToList;
     public Activity yo;
+    User user;
     private ArrayList<Ingredient> mItems;
     private SearchAdapter mListAdapter;
     @Override
@@ -31,6 +48,11 @@ public class Buscador extends AppCompatActivity {
         //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         yo = this;
         setContentView(R.layout.activity_buscador);
+
+        Bundle b = getIntent().getExtras();
+        user = new User(-1,"","");
+        if(b != null)
+            user = (User)b.getSerializable("user");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -89,6 +111,35 @@ public class Buscador extends AppCompatActivity {
             public void onClick(View view) {
                 LinearLayout lw = (LinearLayout) findViewById(R.id.contenido);
                 lw.removeAllViewsInLayout();
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("https://receticas.herokuapp.com/api/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                UtilService service = retrofit.create(UtilService.class);
+                Call<List<Recipe>> call = service.busqueda(user.getName(), mItems);
+                call.enqueue(new Callback<List<Recipe>>() {
+
+                    @Override
+                    public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                        int statusCode = response.code();
+                        System.out.println(statusCode);
+                        if (statusCode == 200) {
+                            //RECIBES LA PETICION WENA
+                            //lista_recetas = new ArrayList(response.body());
+                            System.out.println(response.body().get(0).getName());
+                        }
+                        else{
+                            //MENSAJE DE ERRROR
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                        //MENSAJE DE ERRROR
+                    }
+                });
 
                 /*mListAdapter = new SearchAdapter(this, mItems,lista);
             lista.setAdapter(mListAdapter);*/

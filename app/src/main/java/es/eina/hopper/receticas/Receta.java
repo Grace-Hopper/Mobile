@@ -1,15 +1,20 @@
 package es.eina.hopper.receticas;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -60,6 +65,12 @@ public class Receta extends AppCompatActivity {
         ImageButton ib = (ImageButton)toolbar.findViewById(R.id.editar);
         final long finalRowId = rowId;
         final long finalRowId1 = rowId;
+        if(local){
+            ib.setVisibility(View.VISIBLE);
+        }
+        else{
+            ib.setVisibility(View.GONE);
+        }
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +80,7 @@ public class Receta extends AppCompatActivity {
                     Recipe a = UtilRecipes.getRecipe(user.getName(), finalRowId,yo);
                     b.putSerializable("user", user); //Your id
                     b.putSerializable("receta",a);
+                    b.putBoolean("local",true);
                     i.putExtras(b); //Put your id to your next Intent
                     startActivity(i);
                 }
@@ -93,6 +105,7 @@ public class Receta extends AppCompatActivity {
                                 Recipe a = response.body();
                                 b.putSerializable("user", user); //Your id
                                 b.putSerializable("receta",a);
+                                b.putBoolean("local",false);
                                 i.putExtras(b); //Put your id to your next Intent
                                 startActivity(i);
                             }
@@ -115,7 +128,7 @@ public class Receta extends AppCompatActivity {
             }
         });*/
 
-        Button comen = (Button) findViewById(R.id.comenzar);
+        final Button comen = (Button) findViewById(R.id.comenzar);
         comen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,6 +140,80 @@ public class Receta extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        final Button pub = (Button) findViewById(R.id.publicar);
+        comen.setVisibility(View.GONE);
+        pub.setVisibility(View.GONE);
+        if(local) {
+            pub.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showProgressBar(true);
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl("https://receticas.herokuapp.com/api/")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+                    UtilService service = retrofit.create(UtilService.class);
+                    Call<Recipe> call = service.updateRecipe(user.getName(), rec.getId(), rec);
+                    call.enqueue(new Callback<Recipe>() {
+                        @Override
+                        public void onResponse(Call<Recipe> call, Response<Recipe> response) {
+                            int statusCode = response.code();
+                            System.out.println(statusCode);
+                            if (statusCode == 200) {
+                                showProgressBar(false);
+                                new AlertDialog.Builder(yo).setTitle("Receta publicada").setMessage("La receta ha sido publicada con exito")
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // continue with delete
+                                            }
+                                        }).show();
+                            } else {
+                                showProgressBar(false);
+                                new AlertDialog.Builder(yo).setTitle("Error").setMessage("No se ha podido publicar la receta, compruebe su conexion a internet")
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // continue with delete
+                                            }
+                                        }).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Recipe> call, Throwable t) {
+                            System.out.println("Fallo to bestia");
+                            showProgressBar(false);
+                            new AlertDialog.Builder(yo).setTitle("Error").setMessage("No se ha podido publicar la receta, compruebe su conexion a internet")
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // continue with delete
+                                            showProgressBar(false);
+                                        }
+                                    }).show();
+                        }
+                    });
+
+                }
+            });
+        }
+        else{
+            pub.setText("AÑADIR A MIS RECETAS");
+            pub.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //UtilRecipes.insertRecipe(user.getName(),yo,rec);
+                    new AlertDialog.Builder(yo).setTitle("RECETA AÑADIDA")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
+                                }
+                            })
+                            .show();
+                }
+            });
+            pub.setVisibility(View.GONE);
+            ib.setVisibility(View.GONE);
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -156,12 +243,12 @@ public class Receta extends AppCompatActivity {
                             if(resp.getPicture()!="") {
                                 ByteArrayInputStream imageStream = new ByteArrayInputStream(Base64.decode(resp.getPicture(), Base64.DEFAULT));
                                 Bitmap theImage = BitmapFactory.decodeStream(imageStream);
-                                theImage = Bitmap.createScaledBitmap(theImage, 700, 700, true);
+                                theImage = Bitmap.createScaledBitmap(theImage, 500, 500, true);
                                 imagen.setImageBitmap(theImage);
                             }
                             else{
                                 Bitmap bmp=BitmapFactory.decodeResource(getResources(),R.drawable.recdefault);//image is your image
-                                bmp=Bitmap.createScaledBitmap(bmp, 700,700, true);
+                                bmp=Bitmap.createScaledBitmap(bmp, 500,500, true);
                                 imagen.setImageBitmap(bmp);
                             }
                         }
@@ -171,8 +258,8 @@ public class Receta extends AppCompatActivity {
                             ingr+=resp.getIngredients().get(i).getName() +", ";
                         }
                         String uten="";
-                        for(int i=0;i<resp.getIngredients().size();i++){
-                            uten+=resp.getIngredients().get(i).getName() +", ";
+                        for(int i=0;i<resp.getUtensils().size();i++){
+                            uten+=resp.getUtensils().get(i).getName() +", ";
                         }
                         info.setText("Duracion: " + resp.getTotal_time() + " min" + "\n" +
                                 "Nº de comensales: " + resp.getPerson() + " personas\n" +
@@ -180,6 +267,8 @@ public class Receta extends AppCompatActivity {
                                 "Ingredientes: " + ingr + "\n" +
                                 "Utensilios: " + uten);
 
+                        comen.setVisibility(View.VISIBLE);
+                        pub.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -196,14 +285,21 @@ public class Receta extends AppCompatActivity {
                 if(resp.getPicture()!="") {
                     ByteArrayInputStream imageStream = new ByteArrayInputStream(Base64.decode(resp.getPicture(), Base64.DEFAULT));
                     Bitmap theImage = BitmapFactory.decodeStream(imageStream);
-                    theImage = Bitmap.createScaledBitmap(theImage, 700, 700, true);
+                    theImage = Bitmap.createScaledBitmap(theImage, 500, 500, true);
                     imagen.setImageBitmap(theImage);
                 }
                 else{
                     Bitmap bmp=BitmapFactory.decodeResource(getResources(),R.drawable.recdefault);//image is your image
-                    bmp=Bitmap.createScaledBitmap(bmp, 700,700, true);
+                    bmp=Bitmap.createScaledBitmap(bmp, 500,500, true);
                     imagen.setImageBitmap(bmp);
                 }
+            }
+            comen.setVisibility(View.VISIBLE);
+            if(!user.getName().equals(rec.getUser().getName())){
+                pub.setVisibility(View.GONE);
+            }
+            else{
+                pub.setVisibility(View.VISIBLE);
             }
             titulo.setText(resp.getName() + "\n");
             String ingr="";
@@ -240,5 +336,32 @@ public class Receta extends AppCompatActivity {
         }
 
         return(super.onOptionsItemSelected(item));
+    }
+    void showProgressBar(final boolean show) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            findViewById(R.id.editar).setVisibility(show ? View.GONE : View.VISIBLE);
+            findViewById(R.id.titulo).setVisibility(show ? View.GONE : View.VISIBLE);
+            findViewById(R.id.Info).setVisibility(show ? View.GONE : View.VISIBLE);
+            findViewById(R.id.comenzar).setVisibility(show ? View.GONE : View.VISIBLE);
+            findViewById(R.id.publicar).setVisibility(show ? View.GONE : View.VISIBLE);
+            findViewById(R.id.imagen).setVisibility(show ? View.GONE : View.VISIBLE);
+            if(!show && local){
+                findViewById(R.id.editar).setVisibility(View.VISIBLE);
+            }
+            else{
+                findViewById(R.id.editar).setVisibility(View.GONE);
+            }
+            final View mProgressView = findViewById(R.id.progreso);
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        }
     }
 }

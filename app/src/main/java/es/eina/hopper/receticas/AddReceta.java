@@ -70,6 +70,12 @@ import es.eina.hopper.models.Step;
 import es.eina.hopper.models.User;
 import es.eina.hopper.models.Utensil;
 import es.eina.hopper.util.UtilRecipes;
+import es.eina.hopper.util.UtilService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.R.attr.fragment;
 import static android.support.v4.view.PagerAdapter.POSITION_NONE;
@@ -103,11 +109,13 @@ public class AddReceta extends AppCompatActivity {
         yo=this;
         Bundle b = getIntent().getExtras();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        final boolean local;
         user = new User(-1, "","");
         rec = new Recipe(-1,"",0,0,0,"",user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>());
         if(b != null)
             user = (User)b.getSerializable("user");
             rec = (Recipe)b.getSerializable("receta");
+            local = b.getBoolean("local");
         System.out.println(rec.getName());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_receta);
@@ -135,20 +143,22 @@ public class AddReceta extends AppCompatActivity {
                 System.out.println("COMENSALES: " + rec.getPerson());
                 System.out.println("TIEMPO: " + rec.getTotal_time());
                 System.out.println("INGREDIENTES:");
-                for(int i=0;i<rec.getIngredients().size();i++){
-                    System.out.println(rec.getIngredients().get(i).getName() + ": " + rec.getIngredients().get(i).getQuantity());
-                }
-                System.out.println("UTENSILIOS:");
-                for(int i=0;i<rec.getUtensils().size();i++){
-                    System.out.println(rec.getUtensils().get(i).getName());
-                }
                 System.out.println("PASOS:");
                 for(int i=0;i<rec.getSteps().size();i++){
                     System.out.println(rec.getSteps().get(i).getInformation());
                     System.out.println(rec.getSteps().get(i).getTimer());
+                    for(int j=0;j<rec.getSteps().get(i).getIngredients().size();j++){
+                        System.out.println(rec.getSteps().get(i).getIngredients().get(j).getName() + ": " + rec.getIngredients().get(i).getQuantity());
+                    }
+                    System.out.println("UTENSILIOS:");
+                    for(int j=0;j<rec.getSteps().get(i).getUtensils().size();j++){
+                        System.out.println(rec.getSteps().get(i).getUtensils().get(j).getName());
+                    }
                 }
 
-                rec.setName(rec.getName().toString().substring(0, 1).toUpperCase() +rec.getName().toString().substring(1).toLowerCase());
+                if(rec.getName().length()>0) {
+                    rec.setName(rec.getName().toString().substring(0, 1).toUpperCase() + rec.getName().toString().substring(1).toLowerCase());
+                }
                 //COMPROBAR SI HAY CAMPOS VACIOS
                 int numeroErrores = 0;
                 String error = new String();
@@ -232,8 +242,43 @@ public class AddReceta extends AppCompatActivity {
                             .show();
                 }
                 else{
-                    UtilRecipes.insertRecipe(user.getName(),yo,rec);
-                    finish();
+                    if(local) {
+                        //UtilRecipes.insertRecipe(user.getName(),yo,rec);
+                        finish();
+                    }
+                    else{
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl("https://receticas.herokuapp.com/api/")
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+
+                        UtilService service = retrofit.create(UtilService.class);
+                        Call<Recipe> call = service.updateRecipe(user.getName(), rec.getId(),rec);
+                        call.enqueue(new Callback<Recipe>() {
+
+                            @Override
+                            public void onResponse(Call<Recipe> call, Response<Recipe> response) {
+                                int statusCode = response.code();
+                                System.out.println(statusCode);
+                                if (statusCode == 200) {
+                                    //Encontrada
+                                    Intent i = new Intent(yo, Receta.class);
+                                    Bundle b = new Bundle();
+                                    Recipe a = response.body();
+                                    b.putSerializable("user", user); //Your id
+                                    b.putBoolean("local",false);
+                                    b.putLong("rowId",rec.getId());
+                                    i.putExtras(b); //Put your id to your next Intent
+                                    startActivity(i);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Recipe> call, Throwable t) {
+                                System.out.println("Fallo to bestia");
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -608,7 +653,6 @@ public class AddReceta extends AppCompatActivity {
          * The fragment argument representing the section number for this
          * fragment.
          */
-        private static final String ARG_SECTION_NUMBER = "section_number";
         private Recipe receta;
         EditText nComensales;
         EditText tiempo;

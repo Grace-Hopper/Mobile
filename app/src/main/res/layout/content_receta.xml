@@ -12,6 +12,16 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp">
 
+    <ProgressBar
+        android:id="@+id/progreso"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/titulo"
         android:layout_width="match_parent"
@@ -46,14 +56,25 @@
 
     <Button
         android:id="@+id/comenzar"
-        style="@style/Widget.AppCompat.Button.Colored"
+        style="?android:textAppearanceSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@color/colorPrimary"
-        android:elevation="0dp"
-        android:text="COMENZAR" />
+        android:layout_marginTop="16dp"
+        android:text="COMENZAR"
+        android:textStyle="bold"
+
+        android:background="#F4511E"
+        android:textColor="#FFFFFF"/>
+    <Button
+        android:id="@+id/publicar"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="PUBLICAR"
+        android:textStyle="bold"
+        android:background="#F4511E"
+        android:textColor="#FFFFFF"/>
 
 </LinearLayout>
 

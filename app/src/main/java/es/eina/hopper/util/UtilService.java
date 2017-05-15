@@ -3,6 +3,7 @@ package es.eina.hopper.util;
 import java.io.Serializable;
 import java.util.List;
 
+import es.eina.hopper.models.Ingredient;
 import es.eina.hopper.models.Recipe;
 import es.eina.hopper.models.User;
 import retrofit2.Call;
@@ -34,6 +35,15 @@ public interface UtilService {
     @GET("recipe")
     Call<Recipe> getRecipe(@Header("Authorization") String name, @Query("id") long id);
 
+    @POST("recipe")
+    Call<Recipe> postRecipe(@Header("Authorization") String name, @Body Recipe recipe);
+
+    @PUT("recipe")
+    Call<Recipe> updateRecipe(@Header("Authorization") String name, @Query("id") long id, @Body Recipe recipe);
+
     @GET("recipes/outstanding")
     Call<List<Recipe>> getDestacados(@Header("Authorization") String name);
+
+    @POST("search")
+    Call<List<Recipe>> busqueda(@Header("Authorization") String name, @Body List<Ingredient> ingr);
    }
