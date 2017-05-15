@@ -77,16 +77,14 @@ public class RecipesDbAdapter {
 
     private static final String DATABASE_CREATE_UTENSILS =
             "create table utensils (" +
-                    "id BIGINT (6) primary key autoincrement," +
-                    "name VARCHAR (32) not null unique," +
-                    "PRIMARY KEY (id)" +
+                    "id INTEGER primary key autoincrement," +
+                    "name VARCHAR (32) not null unique" +
                     ");";
 
     private static final String DATABASE_CREATE_INGREDIENTS =
             "create table ingredients (" +
                     "id INTEGER primary key autoincrement," +
-                    "name VARCHAR (32) not null unique," +
-                    "PRIMARY KEY (id)" +
+                    "name VARCHAR (32) not null unique" +
                     ");";
 
     private static final String DATABASE_CREATE_STEPS =
@@ -191,11 +189,11 @@ public class RecipesDbAdapter {
             db.execSQL("DROP TABLE IF EXISTS recipes");
             db.execSQL("DROP TABLE IF EXISTS utensils");
             db.execSQL("DROP TABLE IF EXISTS ingredients");
+            db.execSQL("DROP TABLE IF EXISTS use_1");
+            db.execSQL("DROP TABLE IF EXISTS use_2");
+            db.execSQL("DROP TABLE IF EXISTS use_3");
+            db.execSQL("DROP TABLE IF EXISTS use_4");
             db.execSQL("DROP TABLE IF EXISTS steps");
-            db.execSQL("DROP TABLE IF EXISTS use1");
-            db.execSQL("DROP TABLE IF EXISTS use2");
-            db.execSQL("DROP TABLE IF EXISTS use3");
-            db.execSQL("DROP TABLE IF EXISTS use4");
             onCreate(db);
         }
     }
@@ -519,10 +517,11 @@ public class RecipesDbAdapter {
 
      * @return rowId of the inserted recipe
      */
-    public long insertStep(long time, String information, long recipeRowId) throws SQLException {
+    public long insertStep(long step, long time, String information, long recipeRowId) throws SQLException {
 
 
         ContentValues cv = new ContentValues();
+        cv.put(STEPS_KEY_STEP, step);
         cv.put(STEPS_KEY_TIME, time);
         cv.put(STEPS_KEY_INFORMATION, information);
         cv.put(RECIPES_KEY_ROWID, recipeRowId);

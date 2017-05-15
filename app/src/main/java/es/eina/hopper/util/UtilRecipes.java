@@ -238,7 +238,7 @@ public class UtilRecipes {
 
         while(iu.hasNext()){
             Step st = is.next();
-            long stepRowId = mDb.insertStep(st.getTimer(), st.getInformation(), rowId);
+            long stepRowId = mDb.insertStep(st.getStep(), st.getTimer(), st.getInformation(), rowId);
 
 
             //Inserto ingredientes de cada paso
