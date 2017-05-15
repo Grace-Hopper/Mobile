@@ -69,7 +69,7 @@ public class MultiSelectionSpinner extends Spinner implements
         builder.setTitle("Seleccione");
         builder.setMultiChoiceItems(_items, mSelection, this);
         _itemsAtStart = getSelectedItemsAsString();
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 System.arraycopy(mSelection, 0, mSelectionAtStart, 0, mSelection.length);
@@ -77,7 +77,8 @@ public class MultiSelectionSpinner extends Spinner implements
                 listener.selectedStrings(getSelectedStrings());
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancelar" +
+                "", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 simple_adapter.clear();
@@ -102,8 +103,8 @@ public class MultiSelectionSpinner extends Spinner implements
         simple_adapter.clear();
         simple_adapter.add(_items[0]);
         Arrays.fill(mSelection, false);
-        mSelection[0] = true;
-        mSelectionAtStart[0] = true;
+        //mSelection[0] = true;
+       // mSelectionAtStart[0] = true;
     }
 
     public void setItems(List<String> items) {
@@ -113,7 +114,7 @@ public class MultiSelectionSpinner extends Spinner implements
         simple_adapter.clear();
         simple_adapter.add(_items[0]);
         Arrays.fill(mSelection, false);
-        mSelection[0] = true;
+       // mSelection[0] = true;
     }
 
     public void setSelection(String[] selection) {

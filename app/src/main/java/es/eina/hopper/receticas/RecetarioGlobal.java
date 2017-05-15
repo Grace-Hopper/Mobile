@@ -67,7 +67,7 @@ public class RecetarioGlobal extends AppCompatActivity
 
         System.out.println(user.getName());
 
-        ImageButton ib = (ImageButton) findViewById(R.id.buscador);
+        FloatingActionButton ib = (FloatingActionButton) findViewById(R.id.fabBuscar);
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -183,6 +183,11 @@ public class RecetarioGlobal extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.mis_recetas) {
+            Intent i = new Intent(this, RecetarioLocal.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
+            startActivity(i);
             finish();
         } else if (id == R.id.recetas) {
 

@@ -33,7 +33,7 @@
     <string name="no_recipes">No hay recetas</string>
     <string name="title_activity_receta">Receta</string>
     <string name="description">¿No sabes que preparar para esa cena especial? ¿O no recuerdas como cocinar ese plato que tanto te gustaba?
-    Facilita tu vida culinaria con Receticas®, la aplicación que te ayuda a decidir, preparar y guardar cualquier receta.\n\n\n\n\n\nAplicación desarrollada por Grace Hopper.</string>
+    Facilita tu vida culinaria con Receticas®, la aplicación que te ayuda a decidir, preparar y guardar cualquier receta.\n\n\n\n\n\n\n\n\nAplicación desarrollada por Grace Hopper.</string>
     <string name="password">Cambiar la contraseña del usuario.</string>
     <string-array name="spinner">
         <item>Array Item One</item>

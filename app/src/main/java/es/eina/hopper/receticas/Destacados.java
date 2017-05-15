@@ -154,7 +154,11 @@ public class Destacados extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.mis_recetas) {
-            finish();
+            Intent i = new Intent(this, RecetarioLocal.class);
+            Bundle b = new Bundle();
+            b.putSerializable("user", user); //Your id
+            i.putExtras(b); //Put your id to your next Intent
+            startActivity(i);
         } else if (id == R.id.recetas) {
             Intent i = new Intent(this, RecetarioGlobal.class);
             Bundle b = new Bundle();

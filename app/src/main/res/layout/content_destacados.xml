@@ -10,18 +10,20 @@
 
     <TextView
         android:id="@+id/ERROR"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:text="NO SE PUD0 CONECTAR CON EL SERVIDOR"
         style="@android:style/TextAppearance.DeviceDefault.Medium"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="8dp" />
 
     <ListView
         android:id="@+id/list"
-        android:layout_width="match_parent"
+        android:layout_width="368dp"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="0dp">
     </ListView>
 

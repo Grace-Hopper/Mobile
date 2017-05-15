@@ -77,9 +77,22 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
             }
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //Do something or nothing
-                if(cogerDatos) {
-                    list.get(position).setName(holder.mUten.getText().toString().substring(0, 1).toUpperCase() + holder.mUten.getText().toString().substring( 1).toLowerCase());
-                    /// mTexto.getText().toString().substring(0, 1).toUpperCase() + mTexto.getText().toString().substring( 1).toLowerCase()
+                if (holder.mUten.getText().toString().length() >= 2) {
+                    String nombre = holder.mUten.getText().toString().substring(0, 1).toUpperCase() + holder.mUten.getText().toString().substring(1).toLowerCase();
+                    if(!contiene(nombre, position)){
+                        list.get(position).setName(nombre);
+                    }
+                    else{
+                        holder.mUten.setError("Ya ha introducido " + nombre + ".");
+                    }
+                }
+                else if(!"".equals(holder.mUten.getText().toString())){
+                    if(!contiene(holder.mUten.getText().toString().toUpperCase(), position)){
+                        list.get(position).setName(holder.mUten.getText().toString().toUpperCase());
+                    }
+                    else {
+                        holder.mUten.setError("Ya ha introducido " + holder.mUten.getText().toString().toUpperCase() + ".");
+                    }
                 }
             }
         };
@@ -135,5 +148,14 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
     }
     public void setCogerDatos(boolean a){
         cogerDatos=a;
+    }
+
+    public boolean contiene(String compare, int position) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getName().equalsIgnoreCase(compare) && i != position) {
+                return true;
+            }
+        }
+        return false;
     }
 }

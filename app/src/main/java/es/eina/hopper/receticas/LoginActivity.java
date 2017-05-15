@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         cambiarVista(false);
 
-
+         //Para resetar BD local
         /*RecipesDbAdapter mDb = new RecipesDbAdapter(this);
         mDb.open();
         mDb.deleteDatabase();*/
@@ -175,6 +175,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         else{
             setContentView(R.layout.activity_login_nc);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+           /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
 
             yo=this;
 

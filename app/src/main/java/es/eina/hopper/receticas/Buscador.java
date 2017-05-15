@@ -2,6 +2,7 @@ package es.eina.hopper.receticas;
 
 import android.app.Activity;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -33,6 +34,7 @@ public class Buscador extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final EditText mTexto = (EditText)findViewById(R.id.buscador);
         final ListView lista = (ListView) findViewById(R.id.listBusqueda);
@@ -81,7 +83,7 @@ public class Buscador extends AppCompatActivity {
             }
         });
 
-        ImageButton fab = (ImageButton) findViewById(R.id.buscadorToolBar);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabBuscar);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

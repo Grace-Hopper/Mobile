@@ -84,8 +84,23 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //Do something or nothing
                 if(cogerDatos) {
-                    list.get(position).setName(holder.mNombre.getText().toString());
-                    // mTexto.getText().toString().substring(0, 1).toUpperCase() + mTexto.getText().toString().substring( 1).toLowerCase()
+                    if (holder.mNombre.getText().toString().length() >= 2) {
+                        String nombre = holder.mNombre.getText().toString().substring(0, 1).toUpperCase() + holder.mNombre.getText().toString().substring(1).toLowerCase();
+                        if(!contiene(nombre, position)){
+                            list.get(position).setName(nombre);
+                        }
+                        else{
+                            holder.mNombre.setError("Ya ha introducido " + nombre + ".");
+                        }
+                    }
+                    else if(!"".equals(holder.mNombre.getText().toString())){
+                        if(!contiene(holder.mNombre.getText().toString().toUpperCase(), position)){
+                            list.get(position).setName(holder.mNombre.getText().toString().toUpperCase());
+                        }
+                        else {
+                            holder.mNombre.setError("Ya ha introducido " + holder.mNombre.getText().toString().toUpperCase() + ".");
+                        }
+                    }
                 }
             }
         };
@@ -102,7 +117,13 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //Do something or nothing
                 if(cogerDatos) {
-                    list.get(position).setQuantity(holder.mCantidad.getText().toString());
+                    if (holder.mCantidad.getText().toString().length() >= 2) {
+                        String cantidad = holder.mCantidad.getText().toString().substring(0, 1).toUpperCase() + holder.mCantidad.getText().toString().substring( 1).toLowerCase();
+                        list.get(position).setQuantity(cantidad);
+                    }
+                    else{
+                        list.get(position).setQuantity(holder.mCantidad.getText().toString().toUpperCase());
+                    }
                 }
             }
         };
@@ -172,9 +193,9 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
         cogerDatos=a;
     }
 
-    public boolean contiene(String compare) {
+    public boolean contiene(String compare, int position) {
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getName().equalsIgnoreCase(compare)) {
+            if (list.get(i).getName().equalsIgnoreCase(compare) && i != position) {
                 return true;
             }
         }

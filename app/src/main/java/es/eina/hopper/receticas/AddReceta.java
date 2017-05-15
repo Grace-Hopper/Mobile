@@ -148,6 +148,7 @@ public class AddReceta extends AppCompatActivity {
                     System.out.println(rec.getSteps().get(i).getTimer());
                 }
 
+                rec.setName(rec.getName().toString().substring(0, 1).toUpperCase() +rec.getName().toString().substring(1).toLowerCase());
                 //COMPROBAR SI HAY CAMPOS VACIOS
                 int numeroErrores = 0;
                 String error = new String();
