@@ -31,6 +31,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -73,6 +74,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static es.eina.hopper.receticas.R.id.parent;
+import static es.eina.hopper.receticas.R.id.user;
 
 
 /**
@@ -117,6 +119,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         cambiarVista(false);
 
+<<<<<<< Updated upstream
+=======
+         //Para resetar BD local
+      /*  RecipesDbAdapter mDb = new RecipesDbAdapter(this);
+        mDb.open();
+        mDb.deleteDatabase();*/
+>>>>>>> Stashed changes
 
         //Para resetar BD local
         RecipesDbAdapter mDb = new RecipesDbAdapter(yo);
@@ -473,6 +482,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // do something useful
+                cambiarVista(false);
+                return(true);
+        }
+
+        return(super.onOptionsItemSelected(item));
     }
 }
 

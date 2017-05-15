@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,70 +11,72 @@
     android:weightSum="1"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp">
-
-    <ProgressBar
-        android:id="@+id/progreso"
-        style="?android:attr/progressBarStyleLarge"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/fab_margin"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_horizontal"
-        android:visibility="gone" />
+        android:orientation="vertical">
+        <ProgressBar
+            android:id="@+id/progreso"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:gravity="center_horizontal"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/titulo"
-        android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="Loading..."
-        android:textColor="@android:color/background_dark"
-        style="@android:style/TextAppearance.DeviceDefault.Large"/>
+        <TextView
+            android:id="@+id/titulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="Loading..."
+            android:textColor="@android:color/background_dark"
+            style="@android:style/TextAppearance.DeviceDefault.Large"/>
 
-    <ImageView
-        android:id="@+id/imagen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/logo1"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="16dp" />
+        <ImageView
+            android:id="@+id/imagen"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/recdefault" />
 
-    <TextView
-        android:id="@+id/Info"
-        style="@android:style/TextAppearance.DeviceDefault.Medium"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginTop="1dp"
-        android:layout_weight="0.76" />
+        <TextView
+            android:id="@+id/Info"
+            style="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
 
-    <Button
-        android:id="@+id/comenzar"
-        style="?android:textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="COMENZAR"
-        android:textStyle="bold"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="1dp"/>
 
-        android:background="#F4511E"
-        android:textColor="#FFFFFF"/>
-    <Button
-        android:id="@+id/publicar"
-        style="?android:textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="PUBLICAR"
-        android:textStyle="bold"
-        android:background="#F4511E"
-        android:textColor="#FFFFFF"/>
+        <Button
+            android:id="@+id/comenzar"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="COMENZAR"
+            android:textStyle="bold"
 
-</LinearLayout>
+            android:background="#F4511E"
+            android:textColor="#FFFFFF"/>
+        <Button
+            android:id="@+id/publicar"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="PUBLICAR"
+            android:textStyle="bold"
+            android:background="#F4511E"
+            android:textColor="#FFFFFF"/>
+        </LinearLayout>
+</ScrollView>
 

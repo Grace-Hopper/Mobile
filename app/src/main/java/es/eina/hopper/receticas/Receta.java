@@ -243,16 +243,16 @@ public class Receta extends AppCompatActivity {
                             if(resp.getPicture()!="") {
                                 ByteArrayInputStream imageStream = new ByteArrayInputStream(Base64.decode(resp.getPicture(), Base64.DEFAULT));
                                 Bitmap theImage = BitmapFactory.decodeStream(imageStream);
-                                theImage = Bitmap.createScaledBitmap(theImage, 500, 500, true);
+                               // theImage = Bitmap.createScaledBitmap(theImage, 500, 500, true);
                                 imagen.setImageBitmap(theImage);
                             }
                             else{
                                 Bitmap bmp=BitmapFactory.decodeResource(getResources(),R.drawable.recdefault);//image is your image
-                                bmp=Bitmap.createScaledBitmap(bmp, 500,500, true);
+                               // bmp=Bitmap.createScaledBitmap(bmp, 500,500, true);
                                 imagen.setImageBitmap(bmp);
                             }
                         }
-                        titulo.setText(resp.getName() + "\n");
+                        titulo.setText(resp.getName());
                         String ingr="";
                         for(int i=0;i<resp.getIngredients().size();i++){
                             ingr+=resp.getIngredients().get(i).getName() +", ";
@@ -285,12 +285,12 @@ public class Receta extends AppCompatActivity {
                 if(resp.getPicture()!="") {
                     ByteArrayInputStream imageStream = new ByteArrayInputStream(Base64.decode(resp.getPicture(), Base64.DEFAULT));
                     Bitmap theImage = BitmapFactory.decodeStream(imageStream);
-                    theImage = Bitmap.createScaledBitmap(theImage, 500, 500, true);
+                    //theImage = Bitmap.createScaledBitmap(theImage, 500, 500, true);
                     imagen.setImageBitmap(theImage);
                 }
                 else{
                     Bitmap bmp=BitmapFactory.decodeResource(getResources(),R.drawable.recdefault);//image is your image
-                    bmp=Bitmap.createScaledBitmap(bmp, 500,500, true);
+                    //bmp=Bitmap.createScaledBitmap(bmp, 500,500, true);
                     imagen.setImageBitmap(bmp);
                 }
             }
