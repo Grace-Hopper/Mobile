@@ -553,6 +553,7 @@ public class AddReceta extends AppCompatActivity {
             List<String> luten = new ArrayList<>();
             for(int i=0;i< ute.size();i++){
                 luten.add(ute.get(i).getName());
+                //mTexto.getText().toString().substring(0, 1).toUpperCase() + mTexto.getText().toString().substring( 1).toLowerCase()
             }
             if(luten.size()>0) {
                 utensilios.setItems(luten);

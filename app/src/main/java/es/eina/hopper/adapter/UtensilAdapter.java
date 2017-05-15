@@ -78,7 +78,8 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //Do something or nothing
                 if(cogerDatos) {
-                    list.get(position).setName(holder.mUten.getText().toString());
+                    list.get(position).setName(holder.mUten.getText().toString().substring(0, 1).toUpperCase() + holder.mUten.getText().toString().substring( 1).toLowerCase());
+                    /// mTexto.getText().toString().substring(0, 1).toUpperCase() + mTexto.getText().toString().substring( 1).toLowerCase()
                 }
             }
         };

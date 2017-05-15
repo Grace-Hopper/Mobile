@@ -85,6 +85,7 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
                 //Do something or nothing
                 if(cogerDatos) {
                     list.get(position).setName(holder.mNombre.getText().toString());
+                    // mTexto.getText().toString().substring(0, 1).toUpperCase() + mTexto.getText().toString().substring( 1).toLowerCase()
                 }
             }
         };
@@ -169,6 +170,15 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
     }
     public void setCogerDatos(boolean a){
         cogerDatos=a;
+    }
+
+    public boolean contiene(String compare) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getName().equalsIgnoreCase(compare)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
