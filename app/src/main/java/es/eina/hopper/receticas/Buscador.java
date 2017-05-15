@@ -1,6 +1,10 @@
 package es.eina.hopper.receticas;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -9,8 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -109,9 +115,8 @@ public class Buscador extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LinearLayout lw = (LinearLayout) findViewById(R.id.contenido);
-                lw.removeAllViewsInLayout();
-
+                showProgressBar(true);
+                lista.setAdapter(new RecipesAdapter(yo,new ArrayList<Recipe>()));
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl("https://receticas.herokuapp.com/api/")
                         .addConverterFactory(GsonConverterFactory.create())
@@ -128,7 +133,24 @@ public class Buscador extends AppCompatActivity {
                         if (statusCode == 200) {
                             //RECIBES LA PETICION WENA
                             //lista_recetas = new ArrayList(response.body());
-                            System.out.println(response.body().get(0).getName());
+                            showProgressBar(false);
+                            lista.setAdapter(new RecipesAdapter(yo,new ArrayList<Recipe>(response.body())));
+                            lista.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                                    Recipe a = (Recipe)parent.getItemAtPosition(position);
+                                    Intent i = new Intent(yo, Receta.class);
+                                    Bundle b = new Bundle();
+                                    b.putSerializable("user", user); //Your id
+                                    b.putLong("rowId",a.getId());
+                                    b.putBoolean("local",false);
+                                    i.putExtras(b); //Put your id to your next Intent
+                                    startActivity(i);
+                                    //or do your stuff
+                                }
+
+                            });
                         }
                         else{
                             //MENSAJE DE ERRROR
@@ -150,5 +172,35 @@ public class Buscador extends AppCompatActivity {
                 //lista.setEmptyView(findViewById(R.id.emptyListView));
             }
         });
+    }
+    void showProgressBar(final boolean show) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            findViewById(R.id.layourIngr).setVisibility(View.GONE);
+            findViewById(R.id.fabBuscar).setVisibility(View.GONE);
+            final View mProgressView = findViewById(R.id.progreso);
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // do something useful
+                System.out.println("ojo");
+                super.getIntent().getExtras().putSerializable("user",user);
+                finish();
+                return(true);
+        }
+
+        return(super.onOptionsItemSelected(item));
     }
 }

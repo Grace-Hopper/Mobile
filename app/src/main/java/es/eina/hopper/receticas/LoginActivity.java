@@ -118,20 +118,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         cambiarVista(false);
-
-<<<<<<< Updated upstream
-=======
          //Para resetar BD local
       /*  RecipesDbAdapter mDb = new RecipesDbAdapter(this);
         mDb.open();
         mDb.deleteDatabase();*/
->>>>>>> Stashed changes
-
-        //Para resetar BD local
-        RecipesDbAdapter mDb = new RecipesDbAdapter(yo);
-
-        mDb.open();
-        mDb.deleteDatabase();
 
     }
 
