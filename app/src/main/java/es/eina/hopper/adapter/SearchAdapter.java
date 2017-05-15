@@ -37,7 +37,6 @@ public class SearchAdapter extends ArrayAdapter<Ingredient> {
     List<Ingredient> list;
     final ArrayAdapter<Ingredient> a;
     ListView parent;
-    boolean cargarDatos = true;
     Activity mContext;
 
     public SearchAdapter(Context context, ArrayList<Ingredient> ingredients, ListView parent, Activity mContext) {
@@ -72,49 +71,20 @@ public class SearchAdapter extends ArrayAdapter<Ingredient> {
 
             }
             holder.mTextView.setText(list.get(position).getName());
-        /*final TextView buscador = (TextView) convertView.findViewById(R.id.buscador);
-        buscador.setText(mIngredient.getName());*/
-            /*TextWatcher watcher= new TextWatcher() {
-                public void afterTextChanged(Editable s) {
-
-                }
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    //Do something or nothing.
-                }
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    //Do something or nothing
-                    if(cargarDatos){
-                        list.get(position).setName(holder.mTextView.getText().toString());
-                    }
-                }
-            };*/
-
-            //holder.mTextView.addTextChangedListener(watcher);
-            //final ImageButton remove = (ImageButton) convertView.findViewById(R.id.button);
             holder.mButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     list.remove(position);
-                    cargarDatos = false;
                     a.notifyDataSetChanged();
-                    cargarDatos = true;
-                    //mostrar();
-                /*for(int i=0;i<list.size();i++){
-                    System.out.println(list.get(i).getName());
-                }*/
                 }
             });
             // Return the completed view to render on screen
         }
         return convertView;
     }
-
-    public void addItem(Ingredient ingredient) {
-        list.add(0, ingredient);
-        cargarDatos = false;
+    public void addItem(Ingredient ingredient){
+        list.add(ingredient);
         a.notifyDataSetChanged();
-        cargarDatos = true;
-        mostrar();
     }
 
     public boolean contains(Ingredient ingredient) {

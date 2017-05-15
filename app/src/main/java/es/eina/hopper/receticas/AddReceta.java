@@ -230,6 +230,9 @@ public class AddReceta extends AppCompatActivity {
                             .setIcon(R.drawable.ic_report_problem_black_24dp)
                             .show();
                 }
+                else{
+                    UtilRecipes.insertRecipe(user.getName(),yo,rec);
+                }
             }
         });
         setSupportActionBar(toolbar);

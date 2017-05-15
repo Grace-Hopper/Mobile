@@ -67,8 +67,8 @@ public class RecetarioGlobal extends AppCompatActivity
 
         System.out.println(user.getName());
 
-        ImageButton fab = (ImageButton) findViewById(R.id.buscador);
-        fab.setOnClickListener(new View.OnClickListener() {
+        ImageButton ib = (ImageButton) findViewById(R.id.buscador);
+        ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(yo, Buscador.class);

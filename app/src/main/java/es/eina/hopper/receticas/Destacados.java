@@ -1,5 +1,6 @@
 package es.eina.hopper.receticas;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,16 +15,42 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import es.eina.hopper.adapter.RecipesAdapter;
+import es.eina.hopper.models.Ingredient;
+import es.eina.hopper.models.Recipe;
+import es.eina.hopper.models.Step;
 import es.eina.hopper.models.User;
+import es.eina.hopper.models.Utensil;
+import es.eina.hopper.util.UtilService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Destacados extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     User user;
+    Activity yo;
+    private ListView mList;
+    TextView error;
+    public ArrayList<Recipe> lista_recetas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        yo=this;
         setContentView(R.layout.activity_destacados);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -33,6 +60,8 @@ public class Destacados extends AppCompatActivity
         if(b != null)
             user = (User)b.getSerializable("user");
 
+        System.out.println(user.getName());
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -41,8 +70,72 @@ public class Destacados extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().getItem(2).setChecked(true);
         ((TextView)navigationView.getHeaderView(0).findViewById(R.id.user)).setText(user.getName());
+        mList = (ListView)findViewById(R.id.list);
+
+        navigationView.getMenu().getItem(2).setChecked(true);
+        mList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                Recipe a = (Recipe)parent.getItemAtPosition(position);
+                Intent i = new Intent(yo, Receta.class);
+                Bundle b = new Bundle();
+                b.putSerializable("user", user); //Your id
+                b.putLong("rowId",a.getId());
+                b.putBoolean("local",false);
+                i.putExtras(b); //Put your id to your next Intent
+                startActivity(i);
+                //or do your stuff
+            }
+
+        });
+
+        error = (TextView)  findViewById(R.id.ERROR);
+        error.setVisibility(View.VISIBLE);
+        error.setText("LOADING...");
+        fillData();
+
+    }
+
+    private void fillData() {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://receticas.herokuapp.com/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        Gson a = new Gson();
+        Recipe b = new Recipe(-1,"NOMBRE",1,2,3,"",user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>());
+        System.out.println(a.toJson(b));
+        UtilService service = retrofit.create(UtilService.class);
+        Call<List<Recipe>> call = service.getDestacados(user.getName());
+        call.enqueue(new Callback<List<Recipe>>() {
+
+            @Override
+            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                int statusCode = response.code();
+                System.out.println(statusCode);
+                if (statusCode == 200) {
+                    error.setVisibility(View.GONE);
+                    lista_recetas = new ArrayList(response.body());
+
+                    RecipesAdapter adapter = new RecipesAdapter(Destacados.this, lista_recetas);
+
+
+                    mList.setAdapter(adapter);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                System.out.println("Fallo to bestia");
+                error.setVisibility(View.VISIBLE);
+                error.setText("NO SE PUDO CONECTAR CON EL SERVIDOR");
+            }
+        });
+
     }
 
     @Override

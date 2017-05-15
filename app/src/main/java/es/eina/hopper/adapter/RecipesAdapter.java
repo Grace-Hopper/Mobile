@@ -51,17 +51,17 @@ public class RecipesAdapter extends ArrayAdapter<Recipe> {
         }
         nombre_receta.setText(aux);
         descripcion_receta.setText(Long.toString(myRecipe.getPerson()));
-        System.out.println(myRecipe.getPicture());
-        if(myRecipe.getPicture()=="") {
-            Bitmap bmp=BitmapFactory.decodeResource(getContext().getResources(),R.drawable.recdefault);//image is your image
-            bmp=Bitmap.createScaledBitmap(bmp, 500,500, true);
-            imagen_receta.setImageBitmap(bmp);
-        }
-        else{
-            ByteArrayInputStream imageStream = new ByteArrayInputStream(Base64.decode(myRecipe.getPicture(), Base64.DEFAULT));
-            Bitmap theImage = BitmapFactory.decodeStream(imageStream);
-            theImage = Bitmap.createScaledBitmap(theImage, 500, 500, true);
-            imagen_receta.setImageBitmap(theImage);
+        if(myRecipe.getPicture()!=null) {
+            if (myRecipe.getPicture() == "") {
+                Bitmap bmp = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.recdefault);//image is your image
+                bmp = Bitmap.createScaledBitmap(bmp, 500, 500, true);
+                imagen_receta.setImageBitmap(bmp);
+            } else {
+                ByteArrayInputStream imageStream = new ByteArrayInputStream(Base64.decode(myRecipe.getPicture(), Base64.DEFAULT));
+                Bitmap theImage = BitmapFactory.decodeStream(imageStream);
+                theImage = Bitmap.createScaledBitmap(theImage, 500, 500, true);
+                imagen_receta.setImageBitmap(theImage);
+            }
         }
         // Return the completed view to render on screen
         return convertView;
