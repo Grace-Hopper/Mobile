@@ -32,6 +32,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,6 +56,9 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -110,13 +114,10 @@ public class AddReceta extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         final boolean local;
-        user = new User(-1, "","");
-        rec = new Recipe(-1,"",0,0,0,"",user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>());
         if(b != null)
             user = (User)b.getSerializable("user");
             rec = (Recipe)b.getSerializable("receta");
             local = b.getBoolean("local");
-        System.out.println(rec.getName());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_receta);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -527,10 +528,9 @@ public class AddReceta extends AppCompatActivity {
             utensilios.setListener(new MultiSelectionSpinner.OnMultipleItemsSelectedListener() {
                 @Override
                 public void selectedIndices(List<Integer> indices) {
-                    pd.setIngredients(new ArrayList<Ingredient>());
-                    System.out.println("INGREDIENTES: " + indices.size());
+                    pd.setUtensils(new ArrayList<Utensil>());
                     for(int i=0;i<indices.size();i++){
-                        pd.getIngredients().add(rec.getIngredients().get(indices.get(i)));
+                        pd.getUtensils().add(rec.getUtensils().get(indices.get(i)));
                     }
                 }
 
@@ -551,9 +551,9 @@ public class AddReceta extends AppCompatActivity {
             ingredientes.setListener(new MultiSelectionSpinner.OnMultipleItemsSelectedListener() {
                 @Override
                 public void selectedIndices(List<Integer> indices) {
-                    pd.setUtensils(new ArrayList<Utensil>());
+                    pd.setIngredients(new ArrayList<Ingredient>());
                     for(int i=0;i<indices.size();i++){
-                        pd.getUtensils().add(rec.getUtensils().get(indices.get(i)));
+                        pd.getIngredients().add(rec.getIngredients().get(indices.get(i)));
                     }
                 }
 
@@ -793,7 +793,12 @@ public class AddReceta extends AppCompatActivity {
         }
         public void setImagen(String path){
             System.out.println("VAYA IMAGEN GUAPA");
-            imagen.setImageBitmap(getScaledBitmap(path, 800, 800));
+            Bitmap a = getScaledBitmap(path, 800, 800);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            a.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            rec.setPicture(Base64.encodeToString(byteArray,Base64.DEFAULT));
+            imagen.setImageBitmap(a);
         }
         private Bitmap getScaledBitmap(String picturePath, int width, int height) {
             BitmapFactory.Options sizeOptions = new BitmapFactory.Options();

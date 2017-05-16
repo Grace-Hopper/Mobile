@@ -44,6 +44,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -326,18 +328,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 public void onResponse(Call<User> call, Response<User> response) {
                     showProgress(false);
                     int statusCode = response.code();
-                    User user = response.body();
+                    User user1 = response.body();
                     System.out.println(statusCode);
                     if(statusCode == 200){
                         //aceptado el login
                         //Registro usuario como local
                         RecipesDbAdapter mDb = new RecipesDbAdapter(yo);
                         mDb.open();
-                        mDb.insertUser(user.getName());
+                        mDb.insertUser(user1.getName());
 
                         Intent i = new Intent(yo, RecetarioLocal.class);
                         Bundle b = new Bundle();
-                        b.putSerializable("user", user); //Your id
+                        Gson a = new Gson();
+                        System.out.println(a.toJson(user1));
+                        b.putSerializable("user", user1); //Your id
                         i.putExtras(b); //Put your id to your next Intent
                         startActivity(i);
                         finish();

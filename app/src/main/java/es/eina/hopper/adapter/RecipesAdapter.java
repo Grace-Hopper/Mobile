@@ -57,6 +57,7 @@ public class RecipesAdapter extends ArrayAdapter<Recipe> {
                 bmp = Bitmap.createScaledBitmap(bmp, 500, 500, true);
                 imagen_receta.setImageBitmap(bmp);
             } else {
+                System.out.println("IMAGEN: " + myRecipe.getPicture());
                 ByteArrayInputStream imageStream = new ByteArrayInputStream(Base64.decode(myRecipe.getPicture(), Base64.DEFAULT));
                 Bitmap theImage = BitmapFactory.decodeStream(imageStream);
                 theImage = Bitmap.createScaledBitmap(theImage, 500, 500, true);

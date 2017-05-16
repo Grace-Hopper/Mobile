@@ -26,6 +26,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 
@@ -56,7 +58,6 @@ public class Receta extends AppCompatActivity {
         yo = this;
         Bundle b = getIntent().getExtras();
         long rowId = 1; // or other values
-        user = new User(-1,"","");
         if(b != null)
             rowId = b.getLong("rowId");
             local = b.getBoolean("local");
@@ -154,7 +155,8 @@ public class Receta extends AppCompatActivity {
                             .build();
 
                     UtilService service = retrofit.create(UtilService.class);
-                    Call<Recipe> call = service.updateRecipe(user.getName(), rec.getId(), rec);
+                    rec.setUser(user);
+                    Call<Recipe> call = service.postRecipe(user.getName(), rec);
                     call.enqueue(new Callback<Recipe>() {
                         @Override
                         public void onResponse(Call<Recipe> call, Response<Recipe> response) {
@@ -201,7 +203,7 @@ public class Receta extends AppCompatActivity {
             pub.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //UtilRecipes.insertRecipe(user.getName(),yo,rec);
+                    UtilRecipes.insertRecipe(user.getName(),yo,rec);
                     new AlertDialog.Builder(yo).setTitle("RECETA AÑADIDA")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -307,8 +309,8 @@ public class Receta extends AppCompatActivity {
                 ingr+=resp.getIngredients().get(i).getName() +", ";
             }
             String uten="";
-            for(int i=0;i<resp.getIngredients().size();i++){
-                uten+=resp.getIngredients().get(i).getName() +", ";
+            for(int i=0;i<resp.getUtensils().size();i++){
+                uten+=resp.getUtensils().get(i).getName() +", ";
             }
             info.setText("Duracion: " + resp.getTotal_time() + " min" + "\n" +
                     "Nº de comensales: " + resp.getPerson() + " personas\n" +

@@ -56,7 +56,6 @@ public class RecetarioLocal
         setContentView(R.layout.activity_recetario_local);
 
         Bundle b = getIntent().getExtras();
-        user = new User(-1,"","");
         if(b != null)
             user = (User)b.getSerializable("user");
 
