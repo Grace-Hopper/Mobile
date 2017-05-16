@@ -373,7 +373,7 @@ public class RecipesDbAdapter {
      */
     public Cursor fetchSteps(long recipeId) throws SQLException {
 
-        String q = "SELECT id, step, time, intormation FROM steps s WHERE s.recipe = ? ORDER BY step";
+        String q = "SELECT step, time, information FROM steps s WHERE s.recipe = ? ORDER BY step";
 
         Cursor mCursor =
                 mDb.rawQuery(q, new String[] {Long.toString(recipeId)});
@@ -552,8 +552,6 @@ public class RecipesDbAdapter {
 
         Long rowId = mDb.insert(DATABASE_TABLE_STEPS, null, cv);
 
-        System.out.println("Insertaito mi arma");
-
         return rowId;
 
     }
@@ -570,14 +568,12 @@ public class RecipesDbAdapter {
      */
     public long insertStepIngredient(String name, long recipeRowId, String quantity, long step) throws SQLException {
 
-        System.out.println("pues Empieza");
 
         Cursor mCursor =
                 mDb.query(true, DATABASE_TABLE_INGREDIENTS, new String[] {INGREDIENTS_KEY_ROWID}, INGREDIENTS_KEY_NAME + "= '" + name + "'", null, null, null, null, null);
         mCursor.moveToFirst();
 
         long ingredientRowId = mCursor.getLong(mCursor.getColumnIndex(INGREDIENTS_KEY_ROWID));
-        System.out.println("Consultamediokey");
 
         ContentValues cv = new ContentValues();
         cv.put(USE_KEY_RECIPE, recipeRowId);
@@ -586,8 +582,6 @@ public class RecipesDbAdapter {
         cv.put(STEPS_KEY_STEP, step);
 
         Long rowId = mDb.insert(DATABASE_TABLE_USE3, null, cv);
-
-        System.out.println("Insertame ingrediente-paso cabron");
 
         return rowId;
     }
@@ -614,7 +608,7 @@ public class RecipesDbAdapter {
         cv.put(USE1_KEY_UTENSIL, utensilRowId);
         cv.put(STEPS_KEY_STEP, step);
 
-        Long rowId = mDb.insert(DATABASE_TABLE_USE3, null, cv);
+        Long rowId = mDb.insert(DATABASE_TABLE_USE4, null, cv);
 
         return rowId;
     }
