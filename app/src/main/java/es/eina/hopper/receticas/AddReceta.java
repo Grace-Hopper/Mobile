@@ -243,7 +243,7 @@ public class AddReceta extends AppCompatActivity {
                 }
                 else{
                     if(local) {
-                        //UtilRecipes.insertRecipe(user.getName(),yo,rec);
+                        System.out.println("daleconyo");
                         UtilRecipes.insertRecipe(user.getName(),yo,rec);
                         finish();
                     }

@@ -61,84 +61,30 @@ public class UtilRecipes {
 
         //Recupero ingredientes de la receta
         aux = mDb.fetchRecipeIngredients(rowId);
-        aux.moveToFirst();
 
         List<Ingredient> ingredients = new ArrayList();
 
-        while(!aux.isAfterLast()){
+        if (aux.moveToFirst()) {
+            while (!aux.isAfterLast()) {
 
-            Ingredient ing = new Ingredient();
-            //resul.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.RECIPES_KEY_ROWID)));
-            ing.setName(aux.getString(aux.getColumnIndex(RecipesDbAdapter.INGREDIENTS_KEY_NAME)));
-            ing.setName(aux.getString(aux.getColumnIndex(RecipesDbAdapter.USE_KEY_QUANTITY)));
+                Ingredient ing = new Ingredient();
+                //resul.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.RECIPES_KEY_ROWID)));
+                ing.setName(aux.getString(aux.getColumnIndex(RecipesDbAdapter.INGREDIENTS_KEY_NAME)));
+                ing.setQuantity(aux.getString(aux.getColumnIndex(RecipesDbAdapter.USE_KEY_QUANTITY)));
 
 
-            ingredients.add(ing);
-            aux.moveToNext();
+                ingredients.add(ing);
+                aux.moveToNext();
+            }
         }
 
         resul.setIngredients(ingredients);
 
         //Recupero utensilios de la receta
         aux = mDb.fetchRecipeUtensils(rowId);
-        aux.moveToFirst();
 
         List<Utensil> utensils = new ArrayList();
-
-        while(!aux.isAfterLast()){
-
-            Utensil ut = new Utensil();
-            //ut.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.RECIPES_KEY_ROWID)));
-            ut.setName(aux.getString(aux.getColumnIndex(RecipesDbAdapter.UTENSILS_KEY_NAME)));
-
-
-            utensils.add(ut);
-            aux.moveToNext();
-        }
-
-        resul.setUtensils(utensils);
-
-        //Recupero pasos de la receta
-        aux = mDb.fetchSteps(rowId);
-        aux.moveToFirst();
-
-        List<Step> steps = new ArrayList();
-
-        while(!aux.isAfterLast()){
-
-            Step s = new Step();
-            //ut.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.RECIPES_KEY_ROWID)));
-            Long stepNumber = aux.getLong(aux.getColumnIndex(RecipesDbAdapter.STEPS_KEY_STEP));
-            s.setStep(stepNumber);
-            s.setTimer(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.STEPS_KEY_TIME)));
-            s.setInformation(aux.getString(aux.getColumnIndex(RecipesDbAdapter.STEPS_KEY_INFORMATION)));
-
-            //Recupero ingredientes del paso
-            aux2 = mDb.fetchStepIngredients(rowId, stepNumber);
-            aux2.moveToFirst();
-
-            ingredients = new ArrayList();
-
-            while(!aux2.isAfterLast()){
-
-                Ingredient ing = new Ingredient();
-                //resul.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.RECIPES_KEY_ROWID)));
-                ing.setName(aux2.getString(aux.getColumnIndex(RecipesDbAdapter.INGREDIENTS_KEY_NAME)));
-
-
-                ingredients.add(ing);
-                aux.moveToNext();
-            }
-
-            s.setIngredients(ingredients);
-
-
-            //Recupero utensilios del paso
-            aux2 = mDb.fetchStepUtensils(rowId, stepNumber);
-            aux2.moveToFirst();
-
-            utensils = new ArrayList();
-
+        if (aux.moveToFirst()){
             while(!aux.isAfterLast()){
 
                 Utensil ut = new Utensil();
@@ -149,12 +95,69 @@ public class UtilRecipes {
                 utensils.add(ut);
                 aux.moveToNext();
             }
+        }
 
-            s.setUtensils(utensils);
+        resul.setUtensils(utensils);
+
+        //Recupero pasos de la receta
+        aux = mDb.fetchSteps(rowId);
+
+        List<Step> steps = new ArrayList();
+
+        if(aux.moveToFirst()) {
+            while (!aux.isAfterLast()) {
+
+                Step s = new Step();
+                //ut.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.RECIPES_KEY_ROWID)));
+                Long stepNumber = aux.getLong(aux.getColumnIndex(RecipesDbAdapter.STEPS_KEY_STEP));
+                s.setStep(stepNumber);
+                s.setTimer(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.STEPS_KEY_TIME)));
+                s.setInformation(aux.getString(aux.getColumnIndex(RecipesDbAdapter.STEPS_KEY_INFORMATION)));
+
+                //Recupero ingredientes del paso
+                aux2 = mDb.fetchStepIngredients(rowId, stepNumber);
+                ingredients = new ArrayList();
+
+                if(aux2.moveToFirst()) {
+                    while (!aux2.isAfterLast()) {
+
+                        Ingredient ing = new Ingredient();
+                        ing.setName(aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.INGREDIENTS_KEY_NAME)));
+                        ing.setQuantity(aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.USE_KEY_QUANTITY)));
 
 
-            steps.add(s);
-            aux.moveToNext();
+                        ingredients.add(ing);
+                        aux2.moveToNext();
+                    }
+                }
+
+                s.setIngredients(ingredients);
+
+
+                //Recupero utensilios del paso
+                aux2 = mDb.fetchStepUtensils(rowId, stepNumber);
+
+                utensils = new ArrayList();
+
+                if(aux2.moveToFirst()) {
+                    while (!aux2.isAfterLast()) {
+
+                        Utensil ut = new Utensil();
+                        //ut.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.RECIPES_KEY_ROWID)));
+                        ut.setName(aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.UTENSILS_KEY_NAME)));
+
+
+                        utensils.add(ut);
+                        aux2.moveToNext();
+                    }
+                }
+
+                s.setUtensils(utensils);
+
+
+                steps.add(s);
+                aux.moveToNext();
+            }
         }
 
         resul.setSteps(steps);
@@ -254,7 +257,7 @@ public class UtilRecipes {
             while(ii.hasNext()){
                 Ingredient ing = ii.next();
                 System.out.println("Ingredienti" + ing.getName());
-                mDb.insertStepIngredient(ing.getName(),rowId, ing.getQuantity(), stepRowId);
+                mDb.insertStepIngredient(ing.getName(),rowId, "-1", stepRowId);
             }
 
             //Inserto utensilios de cada paso
