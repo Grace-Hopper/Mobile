@@ -680,17 +680,41 @@ public class AddReceta extends AppCompatActivity {
             nombreReceta.setText(receta.getName());
 
             final EditText uten = (EditText) rootView.findViewById(R.id.utensilio);
+            uten.setOnKeyListener(new View.OnKeyListener() {
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    // If the event is a key-down event on the "enter" button
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                            (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        if(!uten.getText().toString().equals("")) {
+                            if(!((UtensilAdapter) mListUten.getAdapter()).addItem(new Utensil(-1, uten.getText().toString()))){
+                                uten.setError("Utensilio ya introducido");
+                                uten.requestFocus();
+                            }
+                            else{
+                                uten.setText("");
+                                uten.requestFocus();
+                            }
+                        }
+                        else{
+                            uten.setError("No puede ser vacio");
+                            uten.requestFocus();
+                        }
+                    }
+                    return false;
+                }
+            });
             Button addUte = (Button) rootView.findViewById(R.id.adduten);
             addUte.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(!uten.getText().toString().equals("")) {
                         if(!((UtensilAdapter) mListUten.getAdapter()).addItem(new Utensil(-1, uten.getText().toString()))){
-                            uten.setError("Ingrediente ya introducido");
+                            uten.setError("Utensilio ya introducido");
                             uten.requestFocus();
                         }
                         else{
                             uten.setText("");
+                            uten.requestFocus();
                         }
                     }
                     else{
@@ -713,6 +737,32 @@ public class AddReceta extends AppCompatActivity {
 
             final EditText ingr = (EditText) rootView.findViewById(R.id.ingredienteText);
             final EditText quant = (EditText) rootView.findViewById(R.id.ingredienteQuantity);
+
+            quant.setOnKeyListener(new View.OnKeyListener() {
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    // If the event is a key-down event on the "enter" button
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                            (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        if (!ingr.getText().toString().equals("") && !quant.getText().toString().equals("")) {
+                            if (!((IngredientsAdapter) mListIngr.getAdapter()).addItem(new Ingredient(-1, ingr.getText().toString(), quant.getText().toString()))) {
+                                ingr.setError("Ingrediente ya introducido");
+                                ingr.requestFocus();
+                            } else {
+                                ingr.setText("");
+                                quant.setText("");
+                                ingr.requestFocus();
+                            }
+                        } else if (ingr.getText().toString().equals("")) {
+                            ingr.setError("No puede ser vacio");
+                            ingr.requestFocus();
+                        } else {
+                            quant.setError("No puede ser vacio");
+                            quant.requestFocus();
+                        }
+                    }
+                    return false;
+                }
+            });
             Button add = (Button) rootView.findViewById(R.id.ingredienteButton);
             add.setOnClickListener(new View.OnClickListener() {
                 @Override

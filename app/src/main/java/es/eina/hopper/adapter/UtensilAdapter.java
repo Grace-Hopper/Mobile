@@ -103,7 +103,7 @@ public class UtensilAdapter extends ArrayAdapter<Utensil> {
     public boolean addItem(Utensil utensil){
         if(!contiene(utensil.getName(),-1)){
             utensil.setName(utensil.getName().substring(0, 1).toUpperCase() + utensil.getName().substring( 1).toLowerCase());
-            list.add(utensil);
+            list.add(0, utensil);
             a.notifyDataSetChanged();
             AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(parent);
             return true;

@@ -110,7 +110,7 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
     public boolean addItem(Ingredient ingredient){
         if(!contiene(ingredient.getName(),-1)){
             ingredient.setName(ingredient.getName().substring(0, 1).toUpperCase() + ingredient.getName().substring( 1).toLowerCase());
-            list.add(ingredient);
+            list.add(0, ingredient);
             a.notifyDataSetChanged();
             AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(parent);
             return true;
