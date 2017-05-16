@@ -72,6 +72,7 @@ public class RecetarioLocal
                 Bundle b = new Bundle();
                 b.putSerializable("user", user); //Your id
                 b.putSerializable("receta", new Recipe(-1,"",0,0,0,"",user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>()));
+                b.putBoolean("local",true);
                 i.putExtras(b); //Put your id to your next Intent
                 startActivity(i);
             }

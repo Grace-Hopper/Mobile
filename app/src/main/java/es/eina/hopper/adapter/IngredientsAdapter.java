@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -45,19 +46,16 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
         list = ingredientes;
         this.parent = parent;
         a = this;
-        if(ingredientes.size()<1){
-            ingredientes.add(new Ingredient(0,"",""));
-        }
         this.mContext = mContext;
     }
     private class Holder
     {
-        EditText mNombre;
-        EditText mCantidad;
-        Button add;
+        TextView mNombre;
+        TextView mCantidad;
+        Button borrar;
     }
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         // Get the data item for this position
         // Check if an existing view is being reused, otherwise inflate the view
         final Holder holder;
@@ -65,117 +63,24 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
             holder = new Holder();
             LayoutInflater inflater =mContext.getLayoutInflater();
             convertView = inflater.inflate(R.layout.lista_ingredientes, null);
-            holder.mNombre = (EditText) convertView.findViewById(R.id.ingredienteText);
-            holder.mCantidad = (EditText) convertView.findViewById(R.id.ingredienteQuantity);
-            holder.add = (Button) convertView.findViewById(R.id.ingredienteButton);
+            holder.mNombre = (TextView) convertView.findViewById(R.id.ingredienteText);
+            holder.mCantidad = (TextView) convertView.findViewById(R.id.ingredienteQuantity);
+            holder.borrar = (Button) convertView.findViewById(R.id.eliminar);
             convertView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
         }
         // Lookup view for data population
         holder.mNombre.setText(list.get(position).getName());
-        TextWatcher watcher= new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //Do something or nothing.
-            }
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //Do something or nothing
-                if(cogerDatos) {
-                    if (holder.mNombre.getText().toString().length() >= 2) {
-                        String nombre = holder.mNombre.getText().toString().substring(0, 1).toUpperCase() + holder.mNombre.getText().toString().substring(1).toLowerCase();
-                        if(!contiene(nombre, position)){
-                            list.get(position).setName(nombre);
-                        }
-                        else{
-                            holder.mNombre.setError("Ya ha introducido " + nombre + ".");
-                        }
-                    }
-                    else if(!"".equals(holder.mNombre.getText().toString())){
-                        if(!contiene(holder.mNombre.getText().toString().toUpperCase(), position)){
-                            list.get(position).setName(holder.mNombre.getText().toString().toUpperCase());
-                        }
-                        else {
-                            holder.mNombre.setError("Ya ha introducido " + holder.mNombre.getText().toString().toUpperCase() + ".");
-                        }
-                    }
-                }
-            }
-        };
-
-        holder.mNombre.addTextChangedListener(watcher);
         holder.mCantidad.setText(list.get(position).getQuantity());
-        TextWatcher watcher1= new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-
+        holder.borrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                list.remove(position);
+                a.notifyDataSetChanged();
+                AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren((ListView) parent);
             }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //Do something or nothing.
-            }
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //Do something or nothing
-                if(cogerDatos) {
-                    if (holder.mCantidad.getText().toString().length() >= 2) {
-                        String cantidad = holder.mCantidad.getText().toString().substring(0, 1).toUpperCase() + holder.mCantidad.getText().toString().substring( 1).toLowerCase();
-                        list.get(position).setQuantity(cantidad);
-                    }
-                    else{
-                        list.get(position).setQuantity(holder.mCantidad.getText().toString().toUpperCase());
-                    }
-                }
-            }
-        };
-
-        holder.mCantidad.addTextChangedListener(watcher1);
-
-        if(position==list.size()-1){
-            holder.add.setText("+");
-            final ListView lp = this.parent;
-            holder.add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    cogerDatos=false;
-                    list.add(new Ingredient(-1, "", ""));
-                    a.notifyDataSetChanged();
-                    ArrayList<Ingredient> li = (ArrayList)list.clone();
-                    for(int i=0;i<li.size();i++){
-                        System.out.println("INGREDIENTES: " + li.get(i).getName());
-                    }
-                    AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
-                    cogerDatos=true;
-                    for(int i=0;i<li.size();i++){
-                        System.out.println("INGREDIENTES: " + li.get(i).getName());
-                    }
-                }
-            });
-        }
-        else{
-            holder.add.setText("-");
-            final ListView lp = this.parent;
-            holder.add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    cogerDatos=false;
-                    if(list.size()>1) {
-                        list.remove(position);
-                    }
-                    else {
-                        list.get(position).setName("");
-                        list.get(position).setQuantity("");
-                    }
-                    a.notifyDataSetChanged();
-                    AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(lp);
-                    cogerDatos=true;
-                    for(int i=0;i<list.size();i++){
-                        System.out.println("INGREDIENTES: " + list.get(i).getName());
-                    }
-                }
-            });
-        }
+        });
         // Return the completed view to render on screen
         return convertView;
     }
@@ -200,6 +105,19 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
             }
         }
         return false;
+    }
+
+    public boolean addItem(Ingredient ingredient){
+        if(!contiene(ingredient.getName(),-1)){
+            ingredient.setName(ingredient.getName().substring(0, 1).toUpperCase() + ingredient.getName().substring( 1).toLowerCase());
+            list.add(ingredient);
+            a.notifyDataSetChanged();
+            AddReceta.DescripcionReceta.setListViewHeightBasedOnChildren(parent);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
 

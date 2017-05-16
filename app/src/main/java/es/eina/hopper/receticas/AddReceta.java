@@ -145,15 +145,7 @@ public class AddReceta extends AppCompatActivity {
                 System.out.println("INGREDIENTES:");
                 System.out.println("PASOS:");
                 for(int i=0;i<rec.getSteps().size();i++){
-                    System.out.println(rec.getSteps().get(i).getInformation());
-                    System.out.println(rec.getSteps().get(i).getTimer());
-                    for(int j=0;j<rec.getSteps().get(i).getIngredients().size();j++){
-                        System.out.println(rec.getSteps().get(i).getIngredients().get(j).getName() + ": " + rec.getIngredients().get(i).getQuantity());
-                    }
-                    System.out.println("UTENSILIOS:");
-                    for(int j=0;j<rec.getSteps().get(i).getUtensils().size();j++){
-                        System.out.println(rec.getSteps().get(i).getUtensils().get(j).getName());
-                    }
+                    rec.getSteps().get(i).setStep(i);
                 }
 
                 if(rec.getName().length()>0) {
@@ -687,6 +679,27 @@ public class AddReceta extends AppCompatActivity {
             tiempo = (EditText) rootView.findViewById(R.id.tiempo);
             nombreReceta.setText(receta.getName());
 
+            final EditText uten = (EditText) rootView.findViewById(R.id.utensilio);
+            Button addUte = (Button) rootView.findViewById(R.id.adduten);
+            addUte.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!uten.getText().toString().equals("")) {
+                        if(!((UtensilAdapter) mListUten.getAdapter()).addItem(new Utensil(-1, uten.getText().toString()))){
+                            uten.setError("Ingrediente ya introducido");
+                            uten.requestFocus();
+                        }
+                        else{
+                            uten.setText("");
+                        }
+                    }
+                    else{
+                        uten.setError("No puede ser vacio");
+                        uten.requestFocus();
+                    }
+                }
+            });
+
             mListUten = (ListView)rootView.findViewById(R.id.listUtensilios);
             final UtensilAdapter adapter = new UtensilAdapter(getContext(), (ArrayList)receta.getUtensils(),mListUten,getActivity());
             mListUten.setAdapter(adapter);
@@ -697,6 +710,34 @@ public class AddReceta extends AppCompatActivity {
                     receta.setUtensils(adapter.getUtensilios());
                 }
             });
+
+            final EditText ingr = (EditText) rootView.findViewById(R.id.ingredienteText);
+            final EditText quant = (EditText) rootView.findViewById(R.id.ingredienteQuantity);
+            Button add = (Button) rootView.findViewById(R.id.ingredienteButton);
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!ingr.getText().toString().equals("") && !quant.getText().toString().equals("")) {
+                        if(!((IngredientsAdapter) mListIngr.getAdapter()).addItem(new Ingredient(-1, ingr.getText().toString(), quant.getText().toString()))){
+                            ingr.setError("Ingrediente ya introducido");
+                            ingr.requestFocus();
+                        }
+                        else{
+                            ingr.setText("");
+                            quant.setText("");
+                        }
+                    }
+                    else if(ingr.getText().toString().equals("")){
+                        ingr.setError("No puede ser vacio");
+                        ingr.requestFocus();
+                    }
+                    else{
+                        quant.setError("No puede ser vacio");
+                        quant.requestFocus();
+                    }
+                }
+            });
+
             mListIngr = (ListView)rootView.findViewById(R.id.listIngredientes);
             final IngredientsAdapter adapterIngr = new IngredientsAdapter(getContext(), (ArrayList)receta.getIngredients(),mListIngr,getActivity());
             mListIngr.setAdapter(adapterIngr);
