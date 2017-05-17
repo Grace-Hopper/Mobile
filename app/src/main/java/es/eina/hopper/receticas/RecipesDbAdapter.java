@@ -35,7 +35,8 @@ public class RecipesDbAdapter {
     public static final String RECIPES_KEY_TOTAL_TIME = "total_time";
     public static final String RECIPES_KEY_PERSON = "person";
     public static final String RECIPES_KEY_IMAGE = "image";
-    public static final String RECIPES_KEY_USER = "user";
+    public static final String RECIPES_KEY_OWNER = "owner";
+    public static final String RECIPES_KEY_CREATOR = "creator";
 
     public static final String UTENSILS_KEY_ROWID = "id";
     public static final String UTENSILS_KEY_NAME = "name";
@@ -71,8 +72,9 @@ public class RecipesDbAdapter {
                     "total_time BIGINT (6) not null," +
                     "person BIGINT (6) not null," +
                     "image BLOB," +
-                    "user BIGINT (6)," +
-                    "FOREIGN KEY (user) references users(id)" +
+                    "owner BIGINT (6)," +
+                    "creator VARCHAR (32)," +
+                    "FOREIGN KEY (creator) references users(id)" +
                     ");";
 
 
@@ -298,10 +300,13 @@ public class RecipesDbAdapter {
      *
      * @return Cursor over all notes
      */
-    public Cursor fetchAllRecipes () {
+    public Cursor fetchAllRecipes (String user) {
+
+        Cursor aux = fetchUserId(user);
+        Long ownerId = aux.getLong(aux.getColumnIndex(USERS_KEY_ROWID));
 
         return mDb.query(DATABASE_TABLE_RECIPES, new String[] {RECIPES_KEY_ROWID, RECIPES_KEY_NAME,
-                RECIPES_KEY_USER, RECIPES_KEY_PERSON, RECIPES_KEY_TOTAL_TIME, RECIPES_KEY_IMAGE}, null, null, null, null, null);
+                RECIPES_KEY_OWNER, RECIPES_KEY_CREATOR, RECIPES_KEY_PERSON, RECIPES_KEY_TOTAL_TIME, RECIPES_KEY_IMAGE}, RECIPES_KEY_OWNER + "=" + ownerId , null, null, null, null);
     }
 
     /**
@@ -316,7 +321,7 @@ public class RecipesDbAdapter {
         Cursor mCursor =
 
                 mDb.query(true, DATABASE_TABLE_RECIPES, new String[] {RECIPES_KEY_ROWID, RECIPES_KEY_NAME,
-                                RECIPES_KEY_USER, RECIPES_KEY_PERSON, RECIPES_KEY_TOTAL_TIME, RECIPES_KEY_IMAGE}, RECIPES_KEY_ROWID + "=" + rowId, null,
+                                RECIPES_KEY_OWNER, RECIPES_KEY_CREATOR, RECIPES_KEY_PERSON, RECIPES_KEY_TOTAL_TIME, RECIPES_KEY_IMAGE}, RECIPES_KEY_ROWID + "=" + rowId, null,
                         null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -434,10 +439,11 @@ public class RecipesDbAdapter {
      * @param total_time time you spend on the recipe
      * @param person number of persons the recipe is indicated for
      * @param image recipe's image
-     * @param user recipe's creator
+     * @param creator recipe's creator
+     * @param owner recipe's owner
      * @return rowId of the inserted recipe
      */
-    public long insertRecipe(String name, long total_time, long person, String image, long user) throws SQLException {
+    public long insertRecipe(String name, long total_time, long person, String image, long owner, String creator) throws SQLException {
 
 
         ContentValues cv = new ContentValues();
@@ -445,7 +451,9 @@ public class RecipesDbAdapter {
         cv.put(RECIPES_KEY_TOTAL_TIME, total_time);
         cv.put(RECIPES_KEY_PERSON, person);
         cv.put(RECIPES_KEY_IMAGE, Base64.decode(image, Base64.DEFAULT));
-        cv.put(RECIPES_KEY_USER, user);
+        cv.put(RECIPES_KEY_CREATOR, creator);
+        cv.put(RECIPES_KEY_OWNER, owner);
+
 
         Long rowId = mDb.insert(DATABASE_TABLE_RECIPES, null, cv);
 

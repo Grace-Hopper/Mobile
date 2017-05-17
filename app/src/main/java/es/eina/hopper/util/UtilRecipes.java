@@ -55,9 +55,8 @@ public class UtilRecipes {
         }
         resul.setTotal_time(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_TOTAL_TIME)));
 
-        Cursor aux2 = mDb.fetchUser(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER)));
 
-        resul.setUser(new User(-1,aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.USERS_KEY_NAME)),""));
+        resul.setUser(new User(-1, aux.getString(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_CREATOR)),""));
 
         //Recupero ingredientes de la receta
         aux = mDb.fetchRecipeIngredients(rowId);
@@ -88,6 +87,7 @@ public class UtilRecipes {
             while(!aux.isAfterLast()){
 
                 Utensil ut = new Utensil();
+                System.out.println("Utensilname :" + aux.getString(aux.getColumnIndex(RecipesDbAdapter.UTENSILS_KEY_NAME)));
                 //ut.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.RECIPES_KEY_ROWID)));
                 ut.setName(aux.getString(aux.getColumnIndex(RecipesDbAdapter.UTENSILS_KEY_NAME)));
 
@@ -103,6 +103,8 @@ public class UtilRecipes {
         aux = mDb.fetchSteps(rowId);
 
         List<Step> steps = new ArrayList();
+
+        Cursor aux2;
 
         if(aux.moveToFirst()) {
             while (!aux.isAfterLast()) {
@@ -143,7 +145,6 @@ public class UtilRecipes {
                     while (!aux2.isAfterLast()) {
 
                         Utensil ut = new Utensil();
-                        //ut.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.RECIPES_KEY_ROWID)));
                         ut.setName(aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.UTENSILS_KEY_NAME)));
 
 
@@ -175,10 +176,10 @@ public class UtilRecipes {
         mDb.open();
 
 
-        Cursor aux = mDb.fetchAllRecipes();
+        Cursor aux = mDb.fetchAllRecipes(user);
 
         aux.moveToFirst();
-
+        System.out.println("Usuar2 " + user);
         System.out.println("Numero de filas " + aux.getCount());
         while(!aux.isAfterLast()){
 
@@ -194,8 +195,7 @@ public class UtilRecipes {
             }
             resul.setTotal_time(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_TOTAL_TIME)));
 
-            Cursor aux2 = mDb.fetchUser(aux.getLong(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_USER)));
-            resul.setUser(new User(-1,aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.USERS_KEY_NAME)),""));
+            resul.setUser(new User(-1,aux.getString(aux.getColumnIndex(RecipesDbAdapter.RECIPES_KEY_CREATOR)),""));
 
             listaFinal.add(resul);
             aux.moveToNext();
@@ -210,12 +210,13 @@ public class UtilRecipes {
         RecipesDbAdapter mDb = new RecipesDbAdapter(ctx);
         mDb.open();
 
-        // Recupero id usuario
+        // Recupero id del propietario
+        System.out.println("Usuarioooo " + user);
         Cursor aux = mDb.fetchUserId(user);
         long userId = aux.getLong(aux.getColumnIndex(RecipesDbAdapter.USERS_KEY_ROWID));
 
         // Inserto la receta
-        long rowId = mDb.insertRecipe(recipe.getName(), recipe.getTotal_time(), recipe.getPerson(), recipe.getPicture(), userId);
+        long rowId = mDb.insertRecipe(recipe.getName(), recipe.getTotal_time(), recipe.getPerson(), recipe.getPicture(), userId, recipe.getUser().getName());
 
         //Inserto ingredientes
         List<Ingredient> ingredients = recipe.getIngredients();
