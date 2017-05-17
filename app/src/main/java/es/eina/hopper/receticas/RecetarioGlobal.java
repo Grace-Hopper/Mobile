@@ -112,7 +112,12 @@ public class RecetarioGlobal extends AppCompatActivity
         error = (TextView)  findViewById(R.id.ERROR);
         error.setVisibility(View.VISIBLE);
         error.setText("LOADING...");
-        fillData();
+        if(!user.getPassword().equals("")) {
+            fillData();
+        }
+        else{
+            error.setText("ES NECESARIO LOGGEARSE");
+        }
     }
 
     /**
@@ -124,10 +129,6 @@ public class RecetarioGlobal extends AppCompatActivity
                 .baseUrl("https://receticas.herokuapp.com/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
-        Gson a = new Gson();
-        Recipe b = new Recipe(-1,"NOMBRE",1,2,3,"",user,new ArrayList<Utensil>(),new ArrayList<Ingredient>(),new ArrayList<Step>());
-        System.out.println(a.toJson(b));
         UtilService service = retrofit.create(UtilService.class);
         Call<List<Recipe>> call = service.getAllRecipes(user.getName());
         call.enqueue(new Callback<List<Recipe>>() {

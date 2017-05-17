@@ -148,53 +148,62 @@ public class Receta extends AppCompatActivity {
             pub.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showProgressBar(true);
-                    Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl("https://receticas.herokuapp.com/api/")
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .build();
+                    if(!user.getPassword().equals("")) {
+                        showProgressBar(true);
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl("https://receticas.herokuapp.com/api/")
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
 
-                    UtilService service = retrofit.create(UtilService.class);
-                    rec.setUser(user);
-                    Call<Recipe> call = service.postRecipe(user.getName(), rec);
-                    call.enqueue(new Callback<Recipe>() {
-                        @Override
-                        public void onResponse(Call<Recipe> call, Response<Recipe> response) {
-                            int statusCode = response.code();
-                            System.out.println(statusCode);
-                            if (statusCode == 200) {
-                                showProgressBar(false);
-                                new AlertDialog.Builder(yo).setTitle("Receta publicada").setMessage("La receta ha sido publicada con exito")
-                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                // continue with delete
-                                            }
-                                        }).show();
-                            } else {
+                        UtilService service = retrofit.create(UtilService.class);
+                        rec.setUser(user);
+                        Call<Recipe> call = service.postRecipe(user.getName(), rec);
+                        call.enqueue(new Callback<Recipe>() {
+                            @Override
+                            public void onResponse(Call<Recipe> call, Response<Recipe> response) {
+                                int statusCode = response.code();
+                                System.out.println(statusCode);
+                                if (statusCode == 200) {
+                                    showProgressBar(false);
+                                    new AlertDialog.Builder(yo).setTitle("Receta publicada").setMessage("La receta ha sido publicada con exito")
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // continue with delete
+                                                }
+                                            }).show();
+                                } else {
+                                    showProgressBar(false);
+                                    new AlertDialog.Builder(yo).setTitle("Error").setMessage("No se ha podido publicar la receta, compruebe su conexion a internet")
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // continue with delete
+                                                }
+                                            }).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Recipe> call, Throwable t) {
+                                System.out.println("Fallo to bestia");
                                 showProgressBar(false);
                                 new AlertDialog.Builder(yo).setTitle("Error").setMessage("No se ha podido publicar la receta, compruebe su conexion a internet")
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 // continue with delete
+                                                showProgressBar(false);
                                             }
                                         }).show();
                             }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Recipe> call, Throwable t) {
-                            System.out.println("Fallo to bestia");
-                            showProgressBar(false);
-                            new AlertDialog.Builder(yo).setTitle("Error").setMessage("No se ha podido publicar la receta, compruebe su conexion a internet")
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // continue with delete
-                                            showProgressBar(false);
-                                        }
-                                    }).show();
-                        }
-                    });
-
+                        });
+                    }
+                    else{
+                        new AlertDialog.Builder(yo).setTitle("Error").setMessage("Necesita logearse para publicar una receta")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // continue with delete
+                                    }
+                                }).show();
+                    }
                 }
             });
         }
