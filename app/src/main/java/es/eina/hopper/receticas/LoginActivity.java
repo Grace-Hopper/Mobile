@@ -121,9 +121,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         cambiarVista(false);
          //Para resetar BD local
-        RecipesDbAdapter mDb = new RecipesDbAdapter(this);
+        /*RecipesDbAdapter mDb = new RecipesDbAdapter(this);
         mDb.open();
-        mDb.deleteDatabase();
+        mDb.deleteDatabase();*/
 
     }
 

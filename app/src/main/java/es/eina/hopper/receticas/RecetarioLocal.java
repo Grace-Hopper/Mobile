@@ -48,6 +48,7 @@ public class RecetarioLocal
     private ListView mList;
     public ArrayList<Recipe> lista_recetas;
     Activity yo;
+    RecipesDbAdapter mDb;
 
 
     @Override
@@ -60,6 +61,7 @@ public class RecetarioLocal
             user = (User)b.getSerializable("user");
 
         yo=this;
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -154,6 +156,15 @@ public class RecetarioLocal
             b.putSerializable("receta", a);
             i.putExtras(b); //Put your id to your next Intent
             startActivity(i);
+        }
+        else if(menuItemIndex==1){
+            Recipe a = (Recipe)mList.getItemAtPosition(info.position);
+            System.out.println("Id weon "  + a.getId());
+
+            RecipesDbAdapter mDb = new RecipesDbAdapter(this);
+            mDb.open();
+            mDb.deleteRecipe(a.getId());
+            fillData();
         }
         return true;
     }

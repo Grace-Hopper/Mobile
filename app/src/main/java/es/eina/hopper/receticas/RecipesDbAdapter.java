@@ -468,7 +468,6 @@ public class RecipesDbAdapter {
      *
      * @param name name of the ingredient you want to insert
      * @param recipeRowId rowId of the recipe you want to link it to
-
      * @return rowId of the inserted recipe
      */
     public long insertIngredient(String name, long recipeRowId, String quantity) throws SQLException {
@@ -508,7 +507,6 @@ public class RecipesDbAdapter {
      *
      * @param name name of the utensil you want to insert
      * @param recipeRowId rowId of the recipe you want to link it to
-
      * @return rowId of the inserted recipe
      */
     public long insertUtensil(String name, long recipeRowId) throws SQLException {
@@ -546,7 +544,6 @@ public class RecipesDbAdapter {
      * @param time time of the step to insert
      * @param information information to give about the step
      * @param recipeRowId rowId of the recipe you want to link it to
-
      * @return rowId of the inserted recipe
      */
     public long insertStep(long step, long time, String information, long recipeRowId) throws SQLException {
@@ -625,6 +622,15 @@ public class RecipesDbAdapter {
 
     public void deleteDatabase() {
         mDbHelper.onUpgrade(mDb, 2,2);
+    }
+
+    public void deleteRecipe(long rowId){
+        mDb.delete(DATABASE_TABLE_USE4, USE_KEY_RECIPE + "=" + rowId, null);
+        mDb.delete(DATABASE_TABLE_USE3, USE_KEY_RECIPE + "=" + rowId, null);
+        mDb.delete(DATABASE_TABLE_USE2, USE_KEY_RECIPE + "=" + rowId, null);
+        mDb.delete(DATABASE_TABLE_USE1, USE_KEY_RECIPE + "=" + rowId, null);
+        mDb.delete(DATABASE_TABLE_RECIPES, RECIPES_KEY_ROWID + "=" + rowId, null);
+
     }
 
 }
