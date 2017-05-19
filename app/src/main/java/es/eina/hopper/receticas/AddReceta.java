@@ -547,6 +547,7 @@ public class AddReceta extends AppCompatActivity {
                 public void selectedIndices(List<Integer> indices) {
                     pd.setUtensils(new ArrayList<Utensil>());
                     for(int i=0;i<indices.size();i++){
+                        System.out.println("INDICE: " + indices.get(i));
                         pd.getUtensils().add(rec.getUtensils().get(indices.get(i)));
                     }
                 }
@@ -602,6 +603,7 @@ public class AddReceta extends AppCompatActivity {
                 public void selectedIndices(List<Integer> indices) {
                     pd.setUtensils(new ArrayList<Utensil>());
                     for(int i=0;i<indices.size();i++){
+                        System.out.println("INDICE: " + indices.get(i));
                         pd.getUtensils().add(rec.getUtensils().get(indices.get(i)));
                     }
                 }
@@ -644,17 +646,20 @@ public class AddReceta extends AppCompatActivity {
             }
         }
         public Step getPasos(){
-            if(!tiempo.getText().toString().equals("")){
-                pd.setTimer(Integer.parseInt(tiempo.getText().toString()));
+            if(tiempo!=null) {
+                if (!tiempo.getText().toString().equals("")) {
+                    pd.setTimer(Integer.parseInt(tiempo.getText().toString()));
+                } else {
+                    pd.setTimer(0);
+                }
             }
-            else{
-                pd.setTimer(0);
-            }
-            if(!desc.getText().toString().equals("")){
-                pd.setInformation(desc.getText().toString());
-            }
-            else{
-                pd.setInformation("");
+            if(desc!=null){
+                if(!desc.getText().toString().equals("")){
+                    pd.setInformation(desc.getText().toString());
+                }
+                else{
+                    pd.setInformation("");
+                }
             }
             return pd;
         }

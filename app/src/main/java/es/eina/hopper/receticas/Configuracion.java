@@ -90,108 +90,115 @@ public class Configuracion extends AppCompatActivity
 
         mPasswordActual.setError(null);
         mPasswordView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String pass = mPasswordActual.getText().toString();
-        String password = mPasswordView.getText().toString();
-        String passwordRep = mPasswordRepView.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(password)) {
-            mPasswordView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordView;
-            cancel = true;
-        }else if (!isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
+        if(user.getPassword().equals("")){
+            new AlertDialog.Builder(yo).setTitle("Error").setMessage("Necesita logearse para cambiar su contraseña")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                        }
+                    }).show();
         }
+        else{
+            // Store values at the time of the login attempt.
+            String pass = mPasswordActual.getText().toString();
+            String password = mPasswordView.getText().toString();
+            String passwordRep = mPasswordRepView.getText().toString();
 
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(passwordRep)) {
-            mPasswordRepView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordRepView;
-            cancel = true;
-        }else if (!password.equals(passwordRep)) {
-            mPasswordRepView.setError(getString(R.string.password_dont_match));
-            focusView = mPasswordRepView;
-            cancel = true;
-        }
+            boolean cancel = false;
+            View focusView = null;
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(pass)) {
-            mPasswordActual.setError(getString(R.string.error_field_required));
-            focusView = mPasswordActual;
-            cancel = true;
-        } else if (!isEmailValid(pass)) {
-            mPasswordActual.setError(getString(R.string.error_invalid_email));
-            focusView = mPasswordActual;
-            cancel = true;
-        } else if(!pass.equals(user.getPassword())){
-            mPasswordActual.setError("La contraseña no coincide con la actual");
-            focusView = mPasswordActual;
-            cancel = true;
-        }
+            // Check for a valid password, if the user entered one.
+            if (TextUtils.isEmpty(password)) {
+                mPasswordView.setError(getString(R.string.error_field_required));
+                focusView = mPasswordView;
+                cancel = true;
+            }else if (!isPasswordValid(password)) {
+                mPasswordView.setError(getString(R.string.error_invalid_password));
+                focusView = mPasswordView;
+                cancel = true;
+            }
 
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://receticas.herokuapp.com/api/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+            // Check for a valid password, if the user entered one.
+            if (TextUtils.isEmpty(passwordRep)) {
+                mPasswordRepView.setError(getString(R.string.error_field_required));
+                focusView = mPasswordRepView;
+                cancel = true;
+            }else if (!password.equals(passwordRep)) {
+                mPasswordRepView.setError(getString(R.string.password_dont_match));
+                focusView = mPasswordRepView;
+                cancel = true;
+            }
 
-            UtilService service = retrofit.create(UtilService.class);
-            User u = new User(user.getId(),user.getName(),password);
-            Call<User> call = service.actualizar(u);
-            call.enqueue(new Callback<User>() {
+            // Check for a valid email address.
+            if (TextUtils.isEmpty(pass)) {
+                mPasswordActual.setError(getString(R.string.error_field_required));
+                focusView = mPasswordActual;
+                cancel = true;
+            } else if (!isEmailValid(pass)) {
+                mPasswordActual.setError(getString(R.string.error_invalid_email));
+                focusView = mPasswordActual;
+                cancel = true;
+            } else if(!pass.equals(user.getPassword())){
+                mPasswordActual.setError("La contraseña no coincide con la actual");
+                focusView = mPasswordActual;
+                cancel = true;
+            }
 
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    showProgress(false);
-                    int statusCode = response.code();
-                    User user = response.body();
-                    System.out.println(statusCode);
-                    if(statusCode == 200 || statusCode == 201){
-                        //aceptado el login
-                        new AlertDialog.Builder(yo).setTitle("Contraseña cambiada").setMessage("La contraseña se ha actualizado correctamente")
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // continue with delete
-                                        Intent i = new Intent(yo, RecetarioLocal.class);
-                                        startActivity(i);
-                                    }
-                                })
-                                .setIcon(R.drawable.ic_info_black_24dp)
-                                .show();
+            if (cancel) {
+                // There was an error; don't attempt login and focus the first
+                // form field with an error.
+                focusView.requestFocus();
+            } else {
+                // Show a progress spinner, and kick off a background task to
+                // perform the user login attempt.
+                showProgress(true);
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("https://receticas.herokuapp.com/api/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                UtilService service = retrofit.create(UtilService.class);
+                User u = new User(user.getId(), user.getName(), password);
+                Call<User> call = service.actualizar(u);
+                call.enqueue(new Callback<User>() {
+
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        showProgress(false);
+                        int statusCode = response.code();
+                        User user = response.body();
+                        System.out.println(statusCode);
+                        if (statusCode == 200 || statusCode == 201) {
+                            //aceptado el login
+                            new AlertDialog.Builder(yo).setTitle("Contraseña cambiada").setMessage("La contraseña se ha actualizado correctamente")
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // continue with delete
+                                            Intent i = new Intent(yo, RecetarioLocal.class);
+                                            startActivity(i);
+                                        }
+                                    })
+                                    .setIcon(R.drawable.ic_info_black_24dp)
+                                    .show();
+                        } else if (statusCode == 422 || statusCode == 401) {
+                            //error de validacion
+                            mPasswordActual.setError("El usuario ya existe");
+                            mPasswordActual.requestFocus();
+                        } else {
+                            //error de validacion
+                            mPasswordActual.setError("Error en el servidor");
+                            mPasswordActual.requestFocus();
+                        }
                     }
-                    else if(statusCode == 422 || statusCode == 401){
-                        //error de validacion
-                        mPasswordActual.setError("El usuario ya existe");
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        showProgress(false);
+                        mPasswordActual.setError("Error de conexion");
                         mPasswordActual.requestFocus();
                     }
-                    else {
-                        //error de validacion
-                        mPasswordActual.setError("Error en el servidor");
-                        mPasswordActual.requestFocus();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    showProgress(false);
-                    mPasswordActual.setError("Error de conexion");
-                    mPasswordActual.requestFocus();
-                }
-            });
+                });
+            }
         }
     }
 
