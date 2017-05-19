@@ -58,6 +58,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.Array;
@@ -106,7 +107,7 @@ public class AddReceta extends AppCompatActivity {
     User user;
     public static Recipe rec;
     int numPasos = 0;
-
+    boolean edit=false;
     private static int RESULT_LOAD_IMAGE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +122,14 @@ public class AddReceta extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_receta);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Añadir receta");
+        if(rec.getName().equals("")) {
+            toolbar.setTitle("Añadir receta");
+            edit=false;
+        }
+        else{
+            toolbar.setTitle("Editar receta");
+            edit = true;
+        }
         ImageButton guardar = (ImageButton)toolbar.findViewById(R.id.guardar);
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,8 +245,16 @@ public class AddReceta extends AppCompatActivity {
                 }
                 else{
                     if(local) {
-                        System.out.println("daleconyo");
-                        UtilRecipes.insertRecipe(user.getName(),yo,rec);
+                        if(!edit) {
+                            UtilRecipes.insertRecipe(user.getName(), yo, rec);
+                        }
+                        else{
+                            RecipesDbAdapter mDb = new RecipesDbAdapter(yo);
+                            mDb.open();
+                            mDb.deleteRecipe(rec.getId());
+                            UtilRecipes.insertRecipe(user.getName(), yo, rec);
+                            Receta.recetica(rec);
+                        }
                         finish();
                     }
                     else{
@@ -667,7 +683,19 @@ public class AddReceta extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_descripcion_receta, container, false);
-            imagen = (ImageButton)rootView.findViewById(R.id.imagen_rec);
+            imagen = (ImageButton) rootView.findViewById(R.id.imagen_rec);
+
+            if(rec.getPicture()!=null && !rec.getPicture().equals("")){
+                ByteArrayInputStream imageStream = new ByteArrayInputStream(Base64.decode(rec.getPicture(), Base64.DEFAULT));
+                Bitmap theImage = BitmapFactory.decodeStream(imageStream);
+                //theImage = Bitmap.createScaledBitmap(theImage, 500, 500, true);
+                imagen.setImageBitmap(theImage);
+            }
+            else {
+                Bitmap bmp=BitmapFactory.decodeResource(getResources(),R.drawable.recdefault);//image is your image
+                //bmp=Bitmap.createScaledBitmap(bmp, 500,500, true);
+                imagen.setImageBitmap(bmp);
+            }
             imagen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -844,9 +872,9 @@ public class AddReceta extends AppCompatActivity {
         }
         public void setImagen(String path){
             System.out.println("VAYA IMAGEN GUAPA");
-            Bitmap a = getScaledBitmap(path, 800, 800);
+            Bitmap a = getScaledBitmap(path, 500, 500);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            a.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            a.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] byteArray = stream.toByteArray();
             rec.setPicture(Base64.encodeToString(byteArray,Base64.DEFAULT));
             imagen.setImageBitmap(a);

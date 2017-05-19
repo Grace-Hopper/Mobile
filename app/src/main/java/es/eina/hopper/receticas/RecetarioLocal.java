@@ -150,6 +150,7 @@ public class RecetarioLocal
 
         if(menuItemIndex==0){
             Recipe a = (Recipe)mList.getItemAtPosition(info.position);
+            a = UtilRecipes.getRecipe(user.getName(),a.getId(),yo);
             Intent i = new Intent(yo, AddReceta.class);
             Bundle b = new Bundle();
             b.putSerializable("user", user); //Your id

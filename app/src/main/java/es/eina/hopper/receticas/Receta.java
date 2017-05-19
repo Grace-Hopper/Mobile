@@ -45,7 +45,11 @@ public class Receta extends AppCompatActivity {
     User user;
     Activity yo;
     boolean local;
-    Recipe rec;
+    static Recipe rec;
+    static ImageView imagen;
+    static TextView titulo;
+    static TextView info;
+    static Bitmap aux;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //"rowId" "local" 1 true 0 false
@@ -58,6 +62,7 @@ public class Receta extends AppCompatActivity {
         yo = this;
         Bundle b = getIntent().getExtras();
         long rowId = 1; // or other values
+        aux = BitmapFactory.decodeResource(getResources(),R.drawable.recdefault);
         if(b != null)
             rowId = b.getLong("rowId");
             local = b.getBoolean("local");
@@ -78,7 +83,13 @@ public class Receta extends AppCompatActivity {
                 if(local){
                     Intent i = new Intent(yo, AddReceta.class);
                     Bundle b = new Bundle();
-                    Recipe a = UtilRecipes.getRecipe(user.getName(), finalRowId,yo);
+                    Recipe a;
+                    try {
+                         a = UtilRecipes.getRecipe(user.getName(), finalRowId, yo);
+                    }
+                    catch (Exception excep){
+                        a = rec;
+                    }
                     b.putSerializable("user", user); //Your id
                     b.putSerializable("receta",a);
                     b.putBoolean("local",true);
@@ -228,9 +239,9 @@ public class Receta extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final ImageView imagen = (ImageView) findViewById(R.id.imagen);
-        final TextView titulo = (TextView)  findViewById(R.id.titulo);
-        final TextView info = (TextView)  findViewById(R.id.Info);
+        imagen = (ImageView) findViewById(R.id.imagen);
+        titulo = (TextView)  findViewById(R.id.titulo);
+        info = (TextView)  findViewById(R.id.Info);
         UtilRecipes u = new UtilRecipes();
         if(!local) {
             Retrofit retrofit = new Retrofit.Builder()
@@ -374,5 +385,36 @@ public class Receta extends AppCompatActivity {
                 }
             });
         }
+    }
+    public static void recetica(Recipe a){
+        rec = a;
+        Recipe resp = rec;
+        if (resp.getPicture() != null) {
+            if(resp.getPicture()!="") {
+                ByteArrayInputStream imageStream = new ByteArrayInputStream(Base64.decode(resp.getPicture(), Base64.DEFAULT));
+                Bitmap theImage = BitmapFactory.decodeStream(imageStream);
+                //theImage = Bitmap.createScaledBitmap(theImage, 500, 500, true);
+                imagen.setImageBitmap(theImage);
+            }
+            else{
+                Bitmap bmp=aux;//image is your image
+                //bmp=Bitmap.createScaledBitmap(bmp, 500,500, true);
+                imagen.setImageBitmap(bmp);
+            }
+        }
+        titulo.setText(resp.getName() + "\n");
+        String ingr="";
+        for(int i=0;i<resp.getIngredients().size();i++){
+            ingr+=resp.getIngredients().get(i).getName() +", ";
+        }
+        String uten="";
+        for(int i=0;i<resp.getUtensils().size();i++){
+            uten+=resp.getUtensils().get(i).getName() +", ";
+        }
+        info.setText("Duracion: " + resp.getTotal_time() + " min" + "\n" +
+                "Nº de comensales: " + resp.getPerson() + " personas\n" +
+                "Creado: " + resp.getUser().getName() + "\n" +
+                "Ingredientes: " + ingr + "\n" +
+                "Utensilios: " + uten);
     }
 }
