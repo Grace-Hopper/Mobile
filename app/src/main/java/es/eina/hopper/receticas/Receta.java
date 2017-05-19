@@ -277,15 +277,24 @@ public class Receta extends AppCompatActivity {
                         titulo.setText(resp.getName());
                         String ingr="";
                         for(int i=0;i<resp.getIngredients().size();i++){
-                            ingr+=resp.getIngredients().get(i).getName() + " (" + resp.getIngredients().get(i).getQuantity() + "), ";
+                            if(i == resp.getIngredients().size() - 1){
+                                ingr+=resp.getIngredients().get(i).getName() + " (" + resp.getIngredients().get(i).getQuantity() + ").";
+                            }
+                            else{
+                                ingr+=resp.getIngredients().get(i).getName() + " (" + resp.getIngredients().get(i).getQuantity() + "), ";
+                            }
                         }
                         String uten="";
                         for(int i=0;i<resp.getUtensils().size();i++){
-                            uten+=resp.getUtensils().get(i).getName() +", ";
+                            if(i == resp.getUtensils().size() - 1){
+                                uten += resp.getUtensils().get(i).getName() + ".";
+                            }else {
+                                uten += resp.getUtensils().get(i).getName() + ", ";
+                            }
                         }
                         info.setText("Duracion: " + resp.getTotal_time() + " min" + "\n" +
                                 "Nº de comensales: " + resp.getPerson() + " personas\n" +
-                                "Creado: " + resp.getUser().getName() + "\n" +
+                                "Creada por: " + resp.getUser().getName() + "\n" +
                                 "Ingredientes: " + ingr + "\n" +
                                 "Utensilios: " + uten);
 
@@ -326,15 +335,24 @@ public class Receta extends AppCompatActivity {
             titulo.setText(resp.getName() + "\n");
             String ingr="";
             for(int i=0;i<resp.getIngredients().size();i++){
-                ingr+=resp.getIngredients().get(i).getName() + " (" + resp.getIngredients().get(i).getQuantity() + "), ";
+                if(i == resp.getIngredients().size() - 1){
+                    ingr+=resp.getIngredients().get(i).getName() + " (" + resp.getIngredients().get(i).getQuantity() + ").";
+                }
+                else{
+                    ingr+=resp.getIngredients().get(i).getName() + " (" + resp.getIngredients().get(i).getQuantity() + "), ";
+                }
             }
             String uten="";
             for(int i=0;i<resp.getUtensils().size();i++){
-                uten+=resp.getUtensils().get(i).getName() +", ";
+                if(i == resp.getUtensils().size() - 1){
+                    uten += resp.getUtensils().get(i).getName() + ".";
+                }else {
+                    uten += resp.getUtensils().get(i).getName() + ", ";
+                }
             }
             info.setText("Duracion: " + resp.getTotal_time() + " min" + "\n" +
                     "Nº de comensales: " + resp.getPerson() + " personas\n" +
-                    "Creado: " + resp.getUser().getName() + "\n" +
+                    "Creada por: " + resp.getUser().getName() + "\n" +
                     "Ingredientes: " + ingr + "\n" +
                     "Utensilios: " + uten);
         }
@@ -405,7 +423,12 @@ public class Receta extends AppCompatActivity {
         titulo.setText(resp.getName() + "\n");
         String ingr="";
         for(int i=0;i<resp.getIngredients().size();i++){
-            ingr+=resp.getIngredients().get(i).getName() + " (" + resp.getIngredients().get(i).getQuantity() + "), ";
+            if(i == resp.getIngredients().size() - 1){
+                ingr+=resp.getIngredients().get(i).getName() + " (" + resp.getIngredients().get(i).getQuantity() + ").";
+            }
+            else{
+                ingr+=resp.getIngredients().get(i).getName() + " (" + resp.getIngredients().get(i).getQuantity() + "), ";
+            }
         }
         String uten="";
         for(int i=0;i<resp.getUtensils().size();i++){

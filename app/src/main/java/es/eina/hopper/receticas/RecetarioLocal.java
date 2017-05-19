@@ -118,7 +118,6 @@ public class RecetarioLocal
         });
         registerForContextMenu(mList);
         fillData();
-
     }
 
     @Override

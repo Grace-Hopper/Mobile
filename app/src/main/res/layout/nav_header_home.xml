@@ -17,16 +17,19 @@
         android:id="@+id/imageView"
         android:layout_width="100dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center_vertical|left"
+        android:layout_gravity="center_vertical"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@drawable/recdefault"
-        android:layout_weight="1"/>
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/icono"
+        android:layout_weight="1">
+    </ImageView>
 
     <TextView
         android:id="@+id/user"
         android:layout_width="match_parent"
         style="@android:style/TextAppearance.DeviceDefault.Medium"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
