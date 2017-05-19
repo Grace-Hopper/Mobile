@@ -277,7 +277,7 @@ public class Receta extends AppCompatActivity {
                         titulo.setText(resp.getName());
                         String ingr="";
                         for(int i=0;i<resp.getIngredients().size();i++){
-                            ingr+=resp.getIngredients().get(i).getName() +", ";
+                            ingr+=resp.getIngredients().get(i).getName() + " (" + resp.getIngredients().get(i).getQuantity() + "), ";
                         }
                         String uten="";
                         for(int i=0;i<resp.getUtensils().size();i++){
@@ -326,7 +326,7 @@ public class Receta extends AppCompatActivity {
             titulo.setText(resp.getName() + "\n");
             String ingr="";
             for(int i=0;i<resp.getIngredients().size();i++){
-                ingr+=resp.getIngredients().get(i).getName() +", ";
+                ingr+=resp.getIngredients().get(i).getName() + " (" + resp.getIngredients().get(i).getQuantity() + "), ";
             }
             String uten="";
             for(int i=0;i<resp.getUtensils().size();i++){
@@ -405,7 +405,7 @@ public class Receta extends AppCompatActivity {
         titulo.setText(resp.getName() + "\n");
         String ingr="";
         for(int i=0;i<resp.getIngredients().size();i++){
-            ingr+=resp.getIngredients().get(i).getName() +", ";
+            ingr+=resp.getIngredients().get(i).getName() + " (" + resp.getIngredients().get(i).getQuantity() + "), ";
         }
         String uten="";
         for(int i=0;i<resp.getUtensils().size();i++){

@@ -21,6 +21,8 @@ import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+
 import es.eina.hopper.models.User;
 import es.eina.hopper.util.UtilService;
 import retrofit2.Call;
@@ -132,7 +134,7 @@ public class Registrarse extends AppCompatActivity {
                     .build();
 
             UtilService service = retrofit.create(UtilService.class);
-            User u = new User(-1,email,password);
+            final User u = new User(-1,email,password);
             Call<User> call = service.sigin(u);
             call.enqueue(new Callback<User>() {
 
@@ -144,8 +146,20 @@ public class Registrarse extends AppCompatActivity {
                     System.out.println(statusCode);
                     if(statusCode == 200 || statusCode == 201){
                         //aceptado el login
-                        Intent i = new Intent(yo, LoginActivity.class);
+                       //Intent i = new Intent(yo, LoginActivity.class);
+                        //startActivity(i);
+                        RecipesDbAdapter mDb = new RecipesDbAdapter(yo);
+                        mDb.open();
+                        mDb.insertUser(u.getName());
+
+                        Intent i = new Intent(yo, RecetarioLocal.class);
+                        Bundle b = new Bundle();
+                        Gson a = new Gson();
+                        System.out.println(a.toJson(u));
+                        b.putSerializable("user", u); //Your id
+                        i.putExtras(b); //Put your id to your next Intent
                         startActivity(i);
+                        finish();
                     }
                     else if(statusCode == 422 || statusCode == 401){
                         //error de validacion
