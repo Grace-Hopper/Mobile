@@ -231,8 +231,9 @@ public class Receta extends AppCompatActivity {
                             esta=true;
                         }
                     }
-                    for(int i=0;i<rec.getSteps().size();i++)
+                    for(int i=0;i<rec.getSteps().size();i++) {
                         System.out.println("NUM UTENS EN PASO " + i + " : " + rec.getSteps().get(i).getListUtensils());
+                    }
                     if(!esta) {
                         UtilRecipes.insertRecipe(user.getName(), yo, rec);
 

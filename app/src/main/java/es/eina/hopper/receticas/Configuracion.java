@@ -171,7 +171,7 @@ public class Configuracion extends AppCompatActivity
                     public void onResponse(Call<User> call, Response<User> response) {
                         showProgress(false);
                         int statusCode = response.code();
-                       final User user = response.body();
+                        user = response.body();
                         System.out.println(statusCode);
                         if (statusCode == 200 || statusCode == 201) {
                             //aceptado el login
@@ -179,12 +179,7 @@ public class Configuracion extends AppCompatActivity
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             // continue with delete
-                                            Intent i = new Intent(yo, RecetarioLocal.class);
-                                            Bundle b = new Bundle();
-                                            b.putSerializable("user", user); //Your id
-                                            b.putBoolean("local",true);
-                                            i.putExtras(b); //Put your id to your next Intent
-                                            startActivity(i);
+                                            RecetarioLocal.update(user);
                                             finish();
                                         }
                                     })

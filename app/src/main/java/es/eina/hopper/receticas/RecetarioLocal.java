@@ -44,7 +44,7 @@ public class RecetarioLocal
         extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    User user;
+    static User user;
     private ListView mList;
     public ArrayList<Recipe> lista_recetas;
     Activity yo;
@@ -249,6 +249,10 @@ public class RecetarioLocal
     }
     public void CambiarUsuario(){
         finish();
+    }
+
+    public static void update(User u){
+        user = u;
     }
 
     @Override
