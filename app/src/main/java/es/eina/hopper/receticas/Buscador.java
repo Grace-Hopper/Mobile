@@ -3,10 +3,12 @@ package es.eina.hopper.receticas;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -115,53 +117,64 @@ public class Buscador extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showProgressBar(true);
-                lista.setAdapter(new RecipesAdapter(yo,new ArrayList<Recipe>()));
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("https://receticas.herokuapp.com/api/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-
-                UtilService service = retrofit.create(UtilService.class);
-                Call<List<Recipe>> call = service.busqueda(user.getName(), mItems);
-                call.enqueue(new Callback<List<Recipe>>() {
-
-                    @Override
-                    public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                        int statusCode = response.code();
-                        System.out.println(statusCode);
-                        if (statusCode == 200) {
-                            //RECIBES LA PETICION WENA
-                            //lista_recetas = new ArrayList(response.body());
-                            showProgressBar(false);
-                            lista.setAdapter(new RecipesAdapter(yo,new ArrayList<Recipe>(response.body())));
-                            lista.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                                    Recipe a = (Recipe)parent.getItemAtPosition(position);
-                                    Intent i = new Intent(yo, Receta.class);
-                                    Bundle b = new Bundle();
-                                    b.putSerializable("user", user); //Your id
-                                    b.putLong("rowId",a.getId());
-                                    b.putBoolean("local",false);
-                                    i.putExtras(b); //Put your id to your next Intent
-                                    startActivity(i);
-                                    //or do your stuff
+                if(mListAdapter.getIngredientes().size() == 0){
+                    new AlertDialog.Builder(yo).setTitle("Error").setMessage("Debe introducir al menos un ingrediente para comenzar la busqueda.")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
                                 }
+                            })
+                            .setIcon(R.drawable.ic_report_problem_black_24dp)
+                            .show();
+                }
+                else{
+                    showProgressBar(true);
+                    lista.setAdapter(new RecipesAdapter(yo,new ArrayList<Recipe>()));
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl("https://receticas.herokuapp.com/api/")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
 
-                            });
+                    UtilService service = retrofit.create(UtilService.class);
+                    Call<List<Recipe>> call = service.busqueda(user.getName(), mItems);
+                    call.enqueue(new Callback<List<Recipe>>() {
+
+                        @Override
+                        public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                            int statusCode = response.code();
+                            System.out.println(statusCode);
+                            if (statusCode == 200) {
+                                //RECIBES LA PETICION WENA
+                                //lista_recetas = new ArrayList(response.body());
+                                showProgressBar(false);
+                                lista.setAdapter(new RecipesAdapter(yo,new ArrayList<Recipe>(response.body())));
+                                lista.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                                        Recipe a = (Recipe)parent.getItemAtPosition(position);
+                                        Intent i = new Intent(yo, Receta.class);
+                                        Bundle b = new Bundle();
+                                        b.putSerializable("user", user); //Your id
+                                        b.putLong("rowId",a.getId());
+                                        b.putBoolean("local",false);
+                                        i.putExtras(b); //Put your id to your next Intent
+                                        startActivity(i);
+                                        //or do your stuff
+                                    }
+
+                                });
+                            }
+                            else{
+                                //MENSAJE DE ERRROR
+                            }
                         }
-                        else{
+
+                        @Override
+                        public void onFailure(Call<List<Recipe>> call, Throwable t) {
                             //MENSAJE DE ERRROR
                         }
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                        //MENSAJE DE ERRROR
-                    }
-                });
+                    });
 
                 /*mListAdapter = new SearchAdapter(this, mItems,lista);
             lista.setAdapter(mListAdapter);*/
@@ -169,7 +182,8 @@ public class Buscador extends AppCompatActivity {
                 if(((LinearLayout) pantalla).getChildCount() > 0) {
                     ((LinearLayout) pantalla).removeAllViews();
                 }*/
-                //lista.setEmptyView(findViewById(R.id.emptyListView));
+                    //lista.setEmptyView(findViewById(R.id.emptyListView));
+                }
             }
         });
     }

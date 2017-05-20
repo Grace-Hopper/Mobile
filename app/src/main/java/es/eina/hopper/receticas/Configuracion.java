@@ -142,7 +142,12 @@ public class Configuracion extends AppCompatActivity
                 mPasswordActual.setError("La contraseña no coincide con la actual");
                 focusView = mPasswordActual;
                 cancel = true;
+            } else if(pass.equals(password)){
+                mPasswordView.setError("La contraseña no puede ser igual a la actual");
+                focusView = mPasswordView;
+                cancel = true;
             }
+
 
             if (cancel) {
                 // There was an error; don't attempt login and focus the first
@@ -166,16 +171,21 @@ public class Configuracion extends AppCompatActivity
                     public void onResponse(Call<User> call, Response<User> response) {
                         showProgress(false);
                         int statusCode = response.code();
-                        User user = response.body();
+                       final User user = response.body();
                         System.out.println(statusCode);
                         if (statusCode == 200 || statusCode == 201) {
                             //aceptado el login
-                            new AlertDialog.Builder(yo).setTitle("Contraseña cambiada").setMessage("La contraseña se ha actualizado correctamente")
+                            new AlertDialog.Builder(yo).setTitle("Contraseña cambiada").setMessage("La contraseña se ha actualizado correctamente.")
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             // continue with delete
                                             Intent i = new Intent(yo, RecetarioLocal.class);
+                                            Bundle b = new Bundle();
+                                            b.putSerializable("user", user); //Your id
+                                            b.putBoolean("local",true);
+                                            i.putExtras(b); //Put your id to your next Intent
                                             startActivity(i);
+                                            finish();
                                         }
                                     })
                                     .setIcon(R.drawable.ic_info_black_24dp)

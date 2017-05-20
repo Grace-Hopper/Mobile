@@ -35,6 +35,7 @@
             android:maxLines="1"
             android:hint="Ingrediente..."
             android:layout_weight="1"
+            android:inputType="textCapSentences"
             android:drawableLeft="@drawable/ic_search_black_24dp"
             android:layout_gravity="start"
             android:paddingTop="15dp"
