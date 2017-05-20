@@ -152,7 +152,14 @@ public class AddReceta extends AppCompatActivity {
                 System.out.println("USEEEEER: " + rec.getUser().getName());
                 System.out.println("COMENSALES: " + rec.getPerson());
                 System.out.println("TIEMPO: " + rec.getTotal_time());
-                System.out.println("INGREDIENTES:");
+                System.out.println("INGREDIENTES:\n");
+                for(int i = 0; i < rec.getIngredients().size(); i++){
+                    System.out.println("Ingrediente" + i + ": " + rec.getIngredients().get(i).getName() + ": " + rec.getIngredients().get(i).getQuantity());
+                }
+                System.out.println("UTENSILIOS:\n");
+                for(int i = 0; i < rec.getUtensils().size(); i++){
+                    System.out.println("Utensilio" + i + ": " + rec.getUtensils().get(i).getName());
+                }
                 System.out.println("PASOS:");
                 for(int i=0;i<rec.getSteps().size();i++){
                     rec.getSteps().get(i).setStep(i);
