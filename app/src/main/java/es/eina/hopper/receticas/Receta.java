@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.util.List;
 
 import es.eina.hopper.models.Recipe;
 import es.eina.hopper.models.User;
@@ -223,14 +224,35 @@ public class Receta extends AppCompatActivity {
             pub.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UtilRecipes.insertRecipe(user.getName(),yo,rec);
-                    new AlertDialog.Builder(yo).setTitle("RECETA AÑADIDA")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // continue with delete
-                                }
-                            })
-                            .show();
+                    List<Recipe> aux = UtilRecipes.getAll(user.getName(),yo);
+                    boolean esta=false;
+                    for(int i=0;i<aux.size();i++){
+                        if(aux.get(i).getName().equals(rec.getName()) && aux.get(i).getUser().getName().equals(rec.getUser().getName())){
+                            esta=true;
+                        }
+                    }
+                    for(int i=0;i<rec.getSteps().size();i++)
+                        System.out.println("NUM UTENS EN PASO " + i + " : " + rec.getSteps().get(i).getListUtensils());
+                    if(!esta) {
+                        UtilRecipes.insertRecipe(user.getName(), yo, rec);
+
+                        new AlertDialog.Builder(yo).setTitle("RECETA AÑADIDA")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // continue with delete
+                                    }
+                                })
+                                .show();
+                    }
+                    else{
+                        new AlertDialog.Builder(yo).setTitle("ERROR").setMessage("Ya tiene añadida una receta con este nombre del mismo autor")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // continue with delete
+                                    }
+                                })
+                                .show();
+                    }
                 }
             });
             pub.setVisibility(View.GONE);
