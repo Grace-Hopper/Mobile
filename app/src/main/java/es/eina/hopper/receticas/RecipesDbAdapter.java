@@ -399,10 +399,10 @@ public class RecipesDbAdapter {
      */
     public Cursor fetchStepIngredients(long recipeId, long stepId) throws SQLException {
 
-        String q = "SELECT u.quantity, i.name FROM use_3 u, ingredients i WHERE u.recipe = ? AND u.ingredient = i.id";
+        String q = "SELECT u.quantity, i.name FROM use_3 u, ingredients i WHERE u.recipe = ? AND u.ingredient = i.id AND u.step = ?";
 
         Cursor mCursor =
-                mDb.rawQuery(q, new String[] {Long.toString(recipeId)});
+                mDb.rawQuery(q, new String[] {Long.toString(recipeId), Long.toString(stepId)});
 
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -420,10 +420,10 @@ public class RecipesDbAdapter {
      */
     public Cursor fetchStepUtensils(long recipeId, long stepId) throws SQLException {
 
-        String q = "SELECT ut.name FROM use_4 us, utensils ut WHERE us.recipe = ? AND us.utensil = ut.id";
+        String q = "SELECT ut.name FROM use_4 us, utensils ut WHERE us.recipe = ? AND us.utensil = ut.id AND us.step = ?";
 
         Cursor mCursor =
-                mDb.rawQuery(q, new String[] {Long.toString(recipeId)});
+                mDb.rawQuery(q, new String[] {Long.toString(recipeId), Long.toString(stepId)});
 
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -629,6 +629,7 @@ public class RecipesDbAdapter {
         mDb.delete(DATABASE_TABLE_USE3, USE_KEY_RECIPE + "=" + rowId, null);
         mDb.delete(DATABASE_TABLE_USE2, USE_KEY_RECIPE + "=" + rowId, null);
         mDb.delete(DATABASE_TABLE_USE1, USE_KEY_RECIPE + "=" + rowId, null);
+        mDb.delete(DATABASE_TABLE_STEPS, USE_KEY_RECIPE + "=" + rowId, null);
         mDb.delete(DATABASE_TABLE_RECIPES, RECIPES_KEY_ROWID + "=" + rowId, null);
 
     }

@@ -239,7 +239,6 @@ public class UtilRecipes {
         }
 
         //Inserto pasos
-        //Inserto utensilios
         List<Step> steps = recipe.getSteps();
         Iterator<Step> is = steps.iterator();
 

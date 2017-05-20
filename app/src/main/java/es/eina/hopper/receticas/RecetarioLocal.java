@@ -48,7 +48,6 @@ public class RecetarioLocal
     private ListView mList;
     public ArrayList<Recipe> lista_recetas;
     Activity yo;
-    RecipesDbAdapter mDb;
 
 
     @Override
