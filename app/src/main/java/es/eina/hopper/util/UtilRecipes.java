@@ -87,7 +87,7 @@ public class UtilRecipes {
             while(!aux.isAfterLast()){
 
                 Utensil ut = new Utensil();
-                System.out.println("Utensilname :" + aux.getString(aux.getColumnIndex(RecipesDbAdapter.UTENSILS_KEY_NAME)));
+                //System.out.println("Utensilname :" + aux.getString(aux.getColumnIndex(RecipesDbAdapter.UTENSILS_KEY_NAME)));
                 //ut.setId(aux.getInt(aux.getColumnIndexOrThrow(RecipesDbAdapter.RECIPES_KEY_ROWID)));
                 ut.setName(aux.getString(aux.getColumnIndex(RecipesDbAdapter.UTENSILS_KEY_NAME)));
 
@@ -103,6 +103,7 @@ public class UtilRecipes {
         aux = mDb.fetchSteps(rowId);
 
         List<Step> steps = new ArrayList();
+
 
         Cursor aux2;
 
@@ -126,7 +127,7 @@ public class UtilRecipes {
                         Ingredient ing = new Ingredient();
                         ing.setName(aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.INGREDIENTS_KEY_NAME)));
                         ing.setQuantity(aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.USE_KEY_QUANTITY)));
-
+                        System.out.println("Mostrar ing paso" + ing.getName());
 
                         ingredients.add(ing);
                         aux2.moveToNext();
@@ -146,7 +147,7 @@ public class UtilRecipes {
 
                         Utensil ut = new Utensil();
                         ut.setName(aux2.getString(aux2.getColumnIndex(RecipesDbAdapter.UTENSILS_KEY_NAME)));
-
+                        System.out.println("Mostrar ut paso" + ut.getName());
 
                         utensils.add(ut);
                         aux2.moveToNext();
@@ -161,6 +162,7 @@ public class UtilRecipes {
             }
         }
 
+        System.out.print("Numpasos " + steps.size());
         resul.setSteps(steps);
 
 
@@ -179,8 +181,8 @@ public class UtilRecipes {
         Cursor aux = mDb.fetchAllRecipes(user);
 
         aux.moveToFirst();
-        System.out.println("Usuar2 " + user);
-        System.out.println("Numero de filas " + aux.getCount());
+        //System.out.println("Usuar2 " + user);
+        //System.out.println("Numero de filas " + aux.getCount());
         while(!aux.isAfterLast()){
 
             Recipe resul = new Recipe();
@@ -211,7 +213,7 @@ public class UtilRecipes {
         mDb.open();
 
         // Recupero id del propietario
-        System.out.println("Usuarioooo " + user);
+        //System.out.println("Usuarioooo " + user);
         Cursor aux = mDb.fetchUserId(user);
         long userId = aux.getLong(aux.getColumnIndex(RecipesDbAdapter.USERS_KEY_ROWID));
 
@@ -224,7 +226,6 @@ public class UtilRecipes {
 
         while(ii.hasNext()){
             Ingredient ing = ii.next();
-            System.out.println("Ingrediente " + ing.getName());
             mDb.insertIngredient(ing.getName(),rowId, ing.getQuantity());
 
         }
@@ -242,13 +243,12 @@ public class UtilRecipes {
         List<Step> steps = recipe.getSteps();
         Iterator<Step> is = steps.iterator();
 
-        int numPaso = 1;
         while(is.hasNext()){
-            System.out.println("Joder, al menos hay uno");
 
             Step st = is.next();
-            long stepRowId = mDb.insertStep(numPaso, st.getTimer(), st.getInformation(), rowId);
-            System.out.println("StepRowId" + stepRowId);
+            long numPaso = st.getStep();
+            System.out.println("Numpaso insertar " +  numPaso);
+            long stepRowId = mDb.insertStep(st.getStep(), st.getTimer(), st.getInformation(), rowId);
 
             //Inserto ingredientes de cada paso
 
@@ -256,20 +256,20 @@ public class UtilRecipes {
             ii = ingredients.iterator();
             while(ii.hasNext()){
                 Ingredient ing = ii.next();
-                System.out.println("Ingredienti" + ing.getName());
+                System.out.println("Ing-paso " + ing.getName() + " numPaso " + numPaso);
                 mDb.insertStepIngredient(ing.getName(),rowId, "-1", stepRowId);
             }
 
             //Inserto utensilios de cada paso
-            utensils = recipe.getUtensils();
+            utensils = st.getUtensils();
             iu = utensils.iterator();
 
             while(iu.hasNext()){
                 Utensil ut = iu.next();
+                System.out.println("Ut-paso " + ut.getName() + " numPaso " + numPaso);
                 mDb.insertStepUtensil(ut.getName(),rowId, stepRowId);
             }
 
-            numPaso++;
 
         }
 

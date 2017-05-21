@@ -158,7 +158,7 @@ public class RecetarioLocal
         }
         else if(menuItemIndex==1){
             Recipe a = (Recipe)mList.getItemAtPosition(info.position);
-            System.out.println("Id weon "  + a.getId());
+            //System.out.println("Id weon "  + a.getId());
 
             RecipesDbAdapter mDb = new RecipesDbAdapter(this);
             mDb.open();

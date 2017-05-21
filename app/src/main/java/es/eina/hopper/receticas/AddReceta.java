@@ -114,11 +114,15 @@ public class AddReceta extends AppCompatActivity {
         yo=this;
         Bundle b = getIntent().getExtras();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        final boolean local;
-        if(b != null)
-            user = (User)b.getSerializable("user");
-            rec = (Recipe)b.getSerializable("receta");
+        boolean local=false;
+        if(b != null ) {
+            user = (User) b.getSerializable("user");
+            rec = (Recipe) b.getSerializable("receta");
             local = b.getBoolean("local");
+        }
+
+
+        numPasos = rec.getSteps().size();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_receta);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -131,6 +135,7 @@ public class AddReceta extends AppCompatActivity {
             edit = true;
         }
         ImageButton guardar = (ImageButton)toolbar.findViewById(R.id.guardar);
+        final boolean finalLocal = local;
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,7 +167,7 @@ public class AddReceta extends AppCompatActivity {
                 }
                 System.out.println("PASOS:");
                 for(int i=0;i<rec.getSteps().size();i++){
-                    rec.getSteps().get(i).setStep(i);
+                    rec.getSteps().get(i).setStep(i+1);
                     System.out.println("PASO " + i + ": UTENSILIOS");
                     for(int j=0;j<rec.getSteps().get(i).getUtensils().size();j++){
                         System.out.println(rec.getSteps().get(i).getUtensils().get(j).getName());
@@ -247,7 +252,7 @@ public class AddReceta extends AppCompatActivity {
                         error = error + "El paso " + (i+1) + " debe tener informacion.\n";
                     }
                 }
-                
+
                 if(numeroErrores > 0){
                     new AlertDialog.Builder(yo).setTitle("Error").setMessage(error)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -259,7 +264,7 @@ public class AddReceta extends AppCompatActivity {
                             .show();
                 }
                 else{
-                    if(local) {
+                    if(finalLocal) {
                         if(!edit) {
                             UtilRecipes.insertRecipe(user.getName(), yo, rec);
                         }

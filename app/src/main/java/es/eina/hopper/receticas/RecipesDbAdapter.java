@@ -606,7 +606,7 @@ public class RecipesDbAdapter {
                 mDb.query(true, DATABASE_TABLE_UTENSILS, new String[] {UTENSILS_KEY_ROWID}, UTENSILS_KEY_NAME + "= '" + name + "'", null, null, null, null, null);
         mCursor.moveToFirst();
 
-        long utensilRowId = mCursor.getLong(mCursor.getColumnIndex(INGREDIENTS_KEY_ROWID));
+        long utensilRowId = mCursor.getLong(mCursor.getColumnIndex(UTENSILS_KEY_ROWID));
 
         ContentValues cv = new ContentValues();
         cv.put(USE_KEY_RECIPE, recipeRowId);

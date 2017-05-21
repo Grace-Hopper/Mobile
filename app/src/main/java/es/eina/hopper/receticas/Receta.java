@@ -126,7 +126,7 @@ public class Receta extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<Recipe> call, Throwable t) {
-                            System.out.println("Fallo to bestia");
+                            //System.out.println("Fallo to bestia");
                         }
                     });
                 }
@@ -196,7 +196,7 @@ public class Receta extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<Recipe> call, Throwable t) {
-                                System.out.println("Fallo to bestia");
+                                //System.out.println("Fallo to bestia");
                                 showProgressBar(false);
                                 new AlertDialog.Builder(yo).setTitle("Error").setMessage("No se ha podido publicar la receta, compruebe su conexion a internet")
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -231,9 +231,7 @@ public class Receta extends AppCompatActivity {
                             esta=true;
                         }
                     }
-                    for(int i=0;i<rec.getSteps().size();i++) {
-                        System.out.println("NUM UTENS EN PASO " + i + " : " + rec.getSteps().get(i).getListUtensils());
-                    }
+
                     if(!esta) {
                         UtilRecipes.insertRecipe(user.getName(), yo, rec);
 
@@ -328,7 +326,7 @@ public class Receta extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<Recipe> call, Throwable t) {
-                    System.out.println("Fallo to bestia");
+                    //System.out.println("Fallo to bestia");
                 }
             });
         }
@@ -382,7 +380,7 @@ public class Receta extends AppCompatActivity {
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        System.out.println("Esto se llama puto amo");
+        //System.out.println("Esto se llama puto amo");
         super.onSaveInstanceState(outState);
         outState.putSerializable("user",user);
     }
@@ -392,7 +390,7 @@ public class Receta extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // do something useful
-                System.out.println("ojo");
+                //System.out.println("ojo");
                 super.getIntent().getExtras().putSerializable("user",user);
                 finish();
                 return(true);

@@ -209,7 +209,6 @@ public class Buscador extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // do something useful
-                System.out.println("ojo");
                 super.getIntent().getExtras().putSerializable("user",user);
                 finish();
                 return(true);

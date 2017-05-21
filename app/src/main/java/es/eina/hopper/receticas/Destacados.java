@@ -60,7 +60,7 @@ public class Destacados extends AppCompatActivity
         if(b != null)
             user = (User)b.getSerializable("user");
 
-        System.out.println(user.getName());
+        //System.out.println(user.getName());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -130,7 +130,7 @@ public class Destacados extends AppCompatActivity
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                System.out.println("Fallo to bestia");
+                //System.out.println("Fallo to bestia");
                 error.setVisibility(View.VISIBLE);
                 error.setText("NO SE PUDO CONECTAR CON EL SERVIDOR");
             }

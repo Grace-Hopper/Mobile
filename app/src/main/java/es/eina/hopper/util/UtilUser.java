@@ -31,7 +31,7 @@ public class UtilUser {
 
         aux.moveToFirst();
 
-        System.out.println("Numero de filas " + aux.getCount());
+        //System.out.println("Numero de filas " + aux.getCount());
         while(!aux.isAfterLast()){
 
             User resul = new User(-1,"","");
